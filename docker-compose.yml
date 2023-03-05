@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+    #service 1: definition of mysql database
+    db:
+      image: mysql
+      container_name: pet-db
+      environment:
+        - MYSQL_ROOT_PASSWORD=admin123
+        - MYSQL_PASSWORD=admin123
+      security_opt:
+        - seccomp:unconfined
+      ports:
+        - "3306:3306"
+      volumes:
+        - "./data/BackendPetDB.sql:/docker-entrypoint-initdb.d/1.sql"
+#        - "~/tmp/pet/mysql/data/db:/var/lib/mysql" #数据文件挂载
+#        - "~/tmp/pet/mysql/data/conf:/etc/mysql/conf.d" #配置文件挂载
+#        - "~/tmp/pet/mysql/log:/var/log/mysql" #日志文件挂载
+      restart: always
+
+  #service 2: definition of spring-boot app
+    graphqlSpringBoot:                      #it is just a name, which will be used only in this file.
+      image: pet-hospital-springboot                  #name of the image after dockerfile executes
+      container_name: spring-boot-pet       #name of the container created from docker image
+      build:
+        context: .                          #docker file path (. means root directory)
+        dockerfile: Dockerfile              #docker file name
+      ports:
+        - "8080:8080"                       #docker containter port with your os port
+      restart: always
+      environment:
+        - spring.datasource.url=jdbc:mysql://pet-db:3306/PetHospitalDB?createDatabaseIfNotExist=true&useSSL=true&characterEncoding=utf-8
+        - spring.datasource.username=root
+        - spring.datasource.password=admin123
+      depends_on:                           #define dependencies of this app
+        - db                                #dependency name
