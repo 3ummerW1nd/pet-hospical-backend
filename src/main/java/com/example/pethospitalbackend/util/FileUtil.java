@@ -17,8 +17,7 @@ public class FileUtil {
     private static String ACCOUNT_NAME = "pethospitalresources";
     private static String ACCOUNT_KEY = "lipM7B7z2eRwa4x8I1WVjAA6vsthMm/Mz1oDyC+BSOYugJ+2gy0FRIyy86C/8TmEG6SYIev1uT/m+AStXwcPnA==";
     private static String END_POINT = "core.windows.net";
-
-    private static String CONTAINER_NAME = "pethospitalfiles";
+    private static String CONTAINER_NAME = "pethospicalfiles";
 
     private static CloudBlobContainer container = null;
 
@@ -27,7 +26,6 @@ public class FileUtil {
         String format = "DefaultEndpointsProtocol={0};AccountName={1};AccountKey={2};EndpointSuffix={3}";
         CloudStorageAccount storageAccount = null;
         CloudBlobClient blobClient = null;
-        CloudBlobContainer container = null;
         try {
             // 获得StorageAccount对象
             storageAccount = CloudStorageAccount.parse(
@@ -55,23 +53,12 @@ public class FileUtil {
     public static String upload(String path) {
         try {
             String fileName = UUID.randomUUID().toString();
-            CloudBlockBlob blob = container.getBlockBlobReference("fileName");
+            CloudBlockBlob blob = container.getBlockBlobReference(fileName);
             // 上传到Azure Container
-            File file = new File(path);
-            blob.uploadFromFile(file.getPath());
+            blob.uploadFromFile(path);
             // 上传后的文件大小
-            long blobSize = blob.getProperties().getLength();
-            // 本地文件大小
-            long localSize = file.length();
-            // 校验
-            if (blobSize != localSize) {
-                // 删除blob
-                blob.deleteIfExists();
-                return "fail";
-            } else {
-                System.out.println("上传成功");
-                return fileName;
-            }
+            // todo:校验上传完成
+            return fileName;
         } catch (URISyntaxException | StorageException | IOException e) {
             e.printStackTrace();
         }
