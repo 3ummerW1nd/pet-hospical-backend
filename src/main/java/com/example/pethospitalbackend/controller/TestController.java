@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "测试接口", tags = "test")
 public class TestController {
 
-    @PostMapping(value = "/test")
+    @GetMapping(value = "/test")
     @ApiOperation(value = "test")
     public String test(){
         return "success";
