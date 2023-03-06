@@ -61,8 +61,8 @@ public class FileUtil {
             return fileName;
         } catch (URISyntaxException | StorageException | IOException e) {
             e.printStackTrace();
+            return e.getMessage();
         }
-        return "fail";
     }
 
 }
