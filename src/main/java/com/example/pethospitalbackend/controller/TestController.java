@@ -1,9 +1,7 @@
 package com.example.pethospitalbackend.controller;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,7 +12,7 @@ public class TestController {
 
     @PostMapping(value = "/test")
     @ApiOperation(value = "test")
-    public String saveUser(){
+    public String test(){
         return "success";
     }
 }
