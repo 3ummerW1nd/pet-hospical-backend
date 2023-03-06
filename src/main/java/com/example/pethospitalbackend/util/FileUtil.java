@@ -50,12 +50,12 @@ public class FileUtil {
     }
 
 
-    public static String upload(String path) {
+    public static String upload(File file) {
         try {
             String fileName = UUID.randomUUID().toString();
             CloudBlockBlob blob = container.getBlockBlobReference(fileName);
             // 上传到Azure Container
-            blob.uploadFromFile(path);
+            blob.uploadFromFile(file.getPath());
             // 上传后的文件大小
             // todo:校验上传完成
             return fileName;

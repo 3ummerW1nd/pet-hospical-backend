@@ -5,6 +5,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+
 @RestController
 @RequestMapping("/test")
 //说明接口文件
@@ -19,8 +21,8 @@ public class TestController {
 
     @PostMapping(value = "/upload")
     @ApiOperation(value = "upload")
-    public String upload(String path){
-        return FileUtil.upload(path);
+    public String upload(File file){
+        return FileUtil.upload(file);
     }
 
     @GetMapping(value = "/download")
