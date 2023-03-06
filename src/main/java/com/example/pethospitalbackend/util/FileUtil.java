@@ -2,6 +2,7 @@ package com.example.pethospitalbackend.util;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.StorageException;
+import com.microsoft.azure.storage.blob.BlobInputStream;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
@@ -14,10 +15,10 @@ import java.text.MessageFormat;
 import java.util.UUID;
 
 public class FileUtil {
-    private static String ACCOUNT_NAME = "pethospitalresources";
-    private static String ACCOUNT_KEY = "lipM7B7z2eRwa4x8I1WVjAA6vsthMm/Mz1oDyC+BSOYugJ+2gy0FRIyy86C/8TmEG6SYIev1uT/m+AStXwcPnA==";
-    private static String END_POINT = "core.windows.net";
-    private static String CONTAINER_NAME = "pethospicalfiles";
+    private static final String ACCOUNT_NAME = "pethospitalresources";
+    private static final String ACCOUNT_KEY = "lipM7B7z2eRwa4x8I1WVjAA6vsthMm/Mz1oDyC+BSOYugJ+2gy0FRIyy86C/8TmEG6SYIev1uT/m+AStXwcPnA==";
+    private static final String END_POINT = "core.windows.net";
+    private static final String CONTAINER_NAME = "pethospicalfiles";
 
     private static CloudBlobContainer container = null;
 
@@ -39,14 +40,14 @@ public class FileUtil {
         }
     }
 
-    public static void download(String blobPath, String targetPath) {
-        String finalPath = targetPath.concat(blobPath);
+    public static BlobInputStream download(String blobPath) {
         try {
             CloudBlockBlob blob = container.getBlockBlobReference(blobPath);
-            blob.downloadToFile(finalPath);
-        } catch (URISyntaxException | StorageException | IOException e) {
+            return blob.openInputStream();
+        } catch (URISyntaxException | StorageException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 
