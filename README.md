@@ -5,3 +5,6 @@
 ### **push代码到main branch的代码请不要使用本地调试使用的数据库配置**
 
 swagger页面请访问
+
+可以根据这个图来理解
+![img.png](img.png)
