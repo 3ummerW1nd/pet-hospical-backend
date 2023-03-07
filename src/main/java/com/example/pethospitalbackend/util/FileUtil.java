@@ -6,9 +6,12 @@ import com.microsoft.azure.storage.blob.BlobInputStream;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.text.MessageFormat;
@@ -40,23 +43,16 @@ public class FileUtil {
         }
     }
 
-    public static BlobInputStream download(String blobPath) {
-        try {
-            CloudBlockBlob blob = container.getBlockBlobReference(blobPath);
-            return blob.openInputStream();
-        } catch (URISyntaxException | StorageException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-
-    public static String upload(File file) {
+    public static String upload(MultipartFile file) {
+        System.out.println(file == null);
         try {
             String fileName = UUID.randomUUID().toString();
             CloudBlockBlob blob = container.getBlockBlobReference(fileName);
             // 上传到Azure Container
-            blob.uploadFromFile(file.getPath());
+            InputStream inputStream = file.getInputStream();
+            System.out.println(inputStream.available());
+            blob.upload(inputStream, inputStream.available());
             // 上传后的文件大小
             // todo:校验上传完成
             return fileName;
