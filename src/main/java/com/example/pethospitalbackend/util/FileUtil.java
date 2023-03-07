@@ -23,6 +23,8 @@ public class FileUtil {
     private static final String END_POINT = "core.windows.net";
     private static final String CONTAINER_NAME = "pethospicalfiles";
 
+    private static final String AZURE_STORAGE_ENDPOINT = "https://pethospitalresources.blob.core.windows.net/pethospicalfiles/";
+
     private static CloudBlobContainer container = null;
 
     static {
@@ -55,7 +57,7 @@ public class FileUtil {
             blob.upload(inputStream, inputStream.available());
             // 上传后的文件大小
             // todo:校验上传完成
-            return fileName;
+            return AZURE_STORAGE_ENDPOINT + fileName;
         } catch (URISyntaxException | StorageException | IOException e) {
             e.printStackTrace();
             return e.getMessage();
