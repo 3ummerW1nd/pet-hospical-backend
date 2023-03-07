@@ -19,3 +19,7 @@ jobs:
           # Optional inputs
           # skip-tags: true
           # skip-recent: 5
+  permissions:
+    actions: read
+    contents: read
+    security-events: write
