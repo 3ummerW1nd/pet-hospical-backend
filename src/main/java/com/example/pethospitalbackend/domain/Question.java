@@ -28,4 +28,10 @@ public class Question {
     private String d;
     @Column(length = 2)
     private String answer;
+
+    public interface SimpleInfo{
+        Integer getId();
+        Integer getDisease_type_id();
+        String getTitle();
+    }
 }
