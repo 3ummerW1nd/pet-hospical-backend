@@ -25,7 +25,7 @@ public class TestController {
     @GetMapping(value = "/test")
     @ApiOperation(value = "test")
     public String test(){
-        return "success";
+        return "aaaaa";
     }
 
     @PostMapping(value = "/upload")
