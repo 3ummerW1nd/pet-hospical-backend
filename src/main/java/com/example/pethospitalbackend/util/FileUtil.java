@@ -57,7 +57,7 @@ public class FileUtil {
             blob.upload(inputStream, inputStream.available());
             // 上传后的文件大小
             // todo:校验上传完成
-            return AZURE_STORAGE_ENDPOINT + fileName;
+            return fileName;
         } catch (URISyntaxException | StorageException | IOException e) {
             e.printStackTrace();
             return e.getMessage();
