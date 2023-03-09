@@ -35,6 +35,7 @@ public class WebAppConfig implements WebMvcConfigurer {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public CommonResponse exceptionHandler(HttpServletRequest request, Exception e){
+        e.printStackTrace();
         return CommonResponse.builder().message(e.getMessage()).code(00000).build();
     }
 

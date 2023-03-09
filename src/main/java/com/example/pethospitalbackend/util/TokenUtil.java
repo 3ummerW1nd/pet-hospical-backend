@@ -38,6 +38,7 @@ public class TokenUtil {
     }
 
     public static UserRole getUserRoleFromToken(String token) {
+        token = token.split(" ")[1];
         DecodedJWT jwt = JWT.decode(token);
         return UserRole.builder()
                 .id(jwt.getClaim("id").asInt())

@@ -1,5 +1,6 @@
 package com.example.pethospitalbackend.controller;
 
+import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.util.FileUtil;
 import com.microsoft.azure.storage.blob.BlobInputStream;
 import com.microsoft.azure.storage.blob.BlobOutputStream;
@@ -24,13 +25,13 @@ public class TestController {
 
     @GetMapping(value = "/test")
     @ApiOperation(value = "test")
-    public String test(){
-        return "aaaaa";
+    public CommonResponse test(){
+        return CommonResponse.builder().code(0000).message("success").data("success").build();
     }
 
     @PostMapping(value = "/upload")
     @ApiOperation(value = "upload")
-    public String upload(MultipartFile file){
-        return FileUtil.upload(file);
+    public CommonResponse upload(MultipartFile file){
+        return CommonResponse.builder().code(0000).message("success").data(FileUtil.upload(file)).build();
     }
 }
