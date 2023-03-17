@@ -37,8 +37,8 @@ public class UserController {
     @NoLoginMethod
     @ApiOperation(value = "用户列表")
     @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
-    public CommonResponse getAllUsers(@RequestParam("offset") Integer offset) {
-        return userService.getAllUsers(offset);
+    public CommonResponse getAllUsers(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+        return userService.getAllUsers(currentPage, content);
     }
 
 }

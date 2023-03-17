@@ -17,7 +17,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public CommonResponse getAllUsers(Integer offset) {
+    public CommonResponse getAllUsers(Integer offset, String content) {
         if (offset <= 0) {
             return CommonResponse.builder()
                     .code(40001)
@@ -32,7 +32,13 @@ public class UserService {
                     .build();
         }
         offset -= 1;
-        List<UserInfo> allUsers = userRepository.findUsers(10, offset * 10);
+        List<UserInfo> allUsers = null;
+        if (content.isEmpty()) {
+            allUsers = userRepository.findUsers(10, offset * 10);
+        } else {
+            allUsers = userRepository.findUsers(10, offset * 10);
+            // todo:搜索
+        }
         UserPageInfo userPageInfo = null;
         userPageInfo = UserPageInfo.builder()
                 .currentPage(offset + 1)
