@@ -1,18 +1,14 @@
 package com.example.pethospitalbackend.domain.user;
 
-import lombok.Builder;
-import lombok.Data;
 
-@Data
-@Builder
-public class UserInfo {
-    private Integer id;
+public interface UserInfo {
+    Integer getId();
 
-    private String name;
+    String getName();
 
-    private String phoneNumber;
+    String getPhoneNumber();
 
-    private Boolean role;
+    Boolean getRole();
 
-    private Integer level;
+    Integer getLevel();
 }

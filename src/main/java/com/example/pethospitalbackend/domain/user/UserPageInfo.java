@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class UserPageInfo {
-    private Integer pageNo;
-    private Integer pageCount;
+    private Integer currentPage;
+    private Integer totalPages;
     private List<UserInfo> users;
 }

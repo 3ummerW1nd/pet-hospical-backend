@@ -16,12 +16,12 @@ public class TestController {
     @GetMapping(value = "/test")
     @ApiOperation(value = "test")
     public CommonResponse test(){
-        return CommonResponse.builder().code(0000).message("success").data("success").build();
+        return CommonResponse.builder().code(0000).message("success").result("success").build();
     }
 
     @PostMapping(value = "/upload")
     @ApiOperation(value = "upload")
     public CommonResponse upload(MultipartFile file){
-        return CommonResponse.builder().code(0000).message("success").data(FileUtil.upload(file)).build();
+        return CommonResponse.builder().code(0000).message("success").result(FileUtil.upload(file)).build();
     }
 }

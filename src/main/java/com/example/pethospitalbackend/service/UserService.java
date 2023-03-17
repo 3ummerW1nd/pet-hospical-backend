@@ -32,17 +32,17 @@ public class UserService {
                     .build();
         }
         offset -= 1;
-        List<UserInfo> allUsers = userRepository.findUsers(10, offset);
+        List<UserInfo> allUsers = userRepository.findUsers(10, offset * 10);
         UserPageInfo userPageInfo = null;
         userPageInfo = UserPageInfo.builder()
-                .pageNo(offset)
-                .pageCount(count)
+                .currentPage(offset + 1)
+                .totalPages(count)
                 .users(allUsers)
                 .build();
         return CommonResponse.builder()
                 .code(00000)
                 .message("成功获取用户列表")
-                .data(userPageInfo)
+                .result(userPageInfo)
                 .build();
     }
 
@@ -68,7 +68,7 @@ public class UserService {
                 .build();
         userRepository.save(user);
         return CommonResponse.builder()
-                .data(user)
+                .result(user)
                 .message("注册成功")
                 .code(10000)
                 .build();
@@ -86,7 +86,7 @@ public class UserService {
         return CommonResponse.builder()
                 .code(10000)
                 .message("登陆成功")
-                .data(token)
+                .result(token)
                 .build();
     }
 }

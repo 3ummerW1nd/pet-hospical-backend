@@ -49,7 +49,7 @@ public class PetProfileService {
         return CommonResponse.builder()
                 .code(00000)
                 .message("创建宠物档案成功")
-                .data(petProfile)
+                .result(petProfile)
                 .build();
     }
 
