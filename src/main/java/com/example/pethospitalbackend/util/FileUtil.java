@@ -1,5 +1,6 @@
 package com.example.pethospitalbackend.util;
 
+import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.BlobInputStream;
@@ -15,6 +16,8 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class FileUtil {
@@ -24,6 +27,17 @@ public class FileUtil {
     private static final String CONTAINER_NAME = "pethospicalfiles";
 
     private static final String AZURE_STORAGE_ENDPOINT = "https://pethospitalresources.blob.core.windows.net/pethospicalfiles/";
+
+    private static final Set<String> allowAvatarType = new HashSet<String>(){{
+        add("jpg");
+        add("png");
+        add("jpeg");
+        add("bmp");
+        add("JPG");
+        add("PNG");
+        add("BMP");
+        add("JPEG");
+    }};
 
     private static CloudBlobContainer container = null;
 
@@ -62,6 +76,11 @@ public class FileUtil {
             e.printStackTrace();
             return e.getMessage();
         }
+    }
+
+    public static boolean isImage(MultipartFile multipartFile) {
+        String fileSuffix = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
+        return allowAvatarType.contains(fileSuffix);
     }
 
 }

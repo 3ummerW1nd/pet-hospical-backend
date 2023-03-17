@@ -23,14 +23,8 @@ public class User {
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(64)")
     private String name;
 
-    @Column(name = "avatar", columnDefinition = "VARCHAR(64)")
-    private String avatar;
-
     @Column(name = "password", columnDefinition = "VARCHAR(64)")
     private String password;
-
-    @Column(name = "gender")
-    private Boolean gender;
 
     @Column(name = "phoneNumber")
     private String phoneNumber;
