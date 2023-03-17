@@ -10,5 +10,5 @@ import java.util.List;
 public class UserPageInfo {
     private Integer pageNo;
     private Integer pageCount;
-    private List<User> users;
+    private List<UserInfo> users;
 }

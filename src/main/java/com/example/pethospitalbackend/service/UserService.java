@@ -1,6 +1,7 @@
 package com.example.pethospitalbackend.service;
 
 import com.example.pethospitalbackend.domain.user.User;
+import com.example.pethospitalbackend.domain.user.UserInfo;
 import com.example.pethospitalbackend.domain.user.UserPageInfo;
 import com.example.pethospitalbackend.repository.UserRepository;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
@@ -31,7 +32,7 @@ public class UserService {
                     .build();
         }
         offset -= 1;
-        List<User> allUsers = userRepository.findUsers(10, offset);
+        List<UserInfo> allUsers = userRepository.findUsers(10, offset);
         UserPageInfo userPageInfo = null;
         userPageInfo = UserPageInfo.builder()
                 .pageNo(offset)
