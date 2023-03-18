@@ -26,4 +26,8 @@ public class Disease {
     private String treatment;   //治疗
     private String media_ids;
 
+    public interface DiseaseInfo{
+        Integer getId();
+        Integer getDisease_Type_Id();
+    }
 }
