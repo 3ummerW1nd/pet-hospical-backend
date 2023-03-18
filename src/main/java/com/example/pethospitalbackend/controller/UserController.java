@@ -7,7 +7,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/user")
@@ -23,10 +22,8 @@ public class UserController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public CommonResponse register(@RequestParam("name") String name,
                                    @RequestParam("phoneNumber") String phoneNumber,
-                                   @RequestParam("password") String password,
-                                   @RequestParam("avatar") MultipartFile avatar,
-                                   @RequestParam("gender") Boolean gender) {
-        return userService.register(name, phoneNumber, password, avatar, gender);
+                                   @RequestParam("password") String password) {
+        return userService.register(name, phoneNumber, password);
     }
 
     @NoLoginMethod
@@ -35,6 +32,13 @@ public class UserController {
     public CommonResponse login(@RequestParam("phoneNumber") String phoneNumber,
                                 @RequestParam("password") String password) {
         return userService.login(phoneNumber, password);
+    }
+
+    @NoLoginMethod
+    @ApiOperation(value = "用户列表")
+    @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
+    public CommonResponse getAllUsers(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+        return userService.getAllUsers(currentPage, content);
     }
 
 }
