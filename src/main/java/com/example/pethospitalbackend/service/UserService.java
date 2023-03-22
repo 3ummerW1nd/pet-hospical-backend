@@ -2,7 +2,7 @@ package com.example.pethospitalbackend.service;
 
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.domain.user.UserInfo;
-import com.example.pethospitalbackend.domain.user.UserPageInfo;
+import com.example.pethospitalbackend.domain.PageInfo;
 import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.repository.UserRepository;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
@@ -35,22 +35,21 @@ public class UserService {
         }
         offset -= 1;
         List<UserInfo> allUsers = null;
-        if (content.isEmpty()) {
+        if (content == null || content.isEmpty()) {
             allUsers = userRepository.findUsers(10, offset * 10);
         } else {
-            allUsers = userRepository.findUsers(10, offset * 10);
-            // todo:搜索
+            allUsers = userRepository.findUsersByName(10, offset * 10, content);
         }
-        UserPageInfo userPageInfo = null;
-        userPageInfo = UserPageInfo.builder()
+        PageInfo pageInfo = null;
+        pageInfo = PageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .users(allUsers)
+                .data(allUsers)
                 .build();
         return CommonResponse.builder()
-                .code(00000)
+                .code(10000)
                 .message("成功获取用户列表")
-                .result(userPageInfo)
+                .result(pageInfo)
                 .build();
     }
 
@@ -104,6 +103,7 @@ public class UserService {
                 .build();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public CommonResponse deleteUserById(Integer id) {
         userRepository.deleteById(id);
         return CommonResponse.builder()
@@ -112,16 +112,17 @@ public class UserService {
                 .build();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public CommonResponse updateUserById(Integer id, String name, Boolean role, Integer level, UserRole operator) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (!optionalUser.isPresent()) {
             return CommonResponse.builder()
-                    .code(20003)
+                    .code(20004)
                     .message("找不到用户，请确认ID是否正确")
                     .build();
         }
         User user = optionalUser.get();
-        if (name != null) {
+        if (name != null && !name.isEmpty()) {
             if (operator.getId().equals(id))
                 user.setName(name);
             else
@@ -140,11 +141,17 @@ public class UserService {
                         .build();
         }
         if (level != null) {
+            if (level < 1 || level > 5) {
+                return CommonResponse.builder()
+                        .code(20007)
+                        .message("等级只有1到5")
+                        .build();
+            }
             if (operator.getRole())
                 user.setRole(role);
             else
                 return CommonResponse.builder()
-                        .code(20006)
+                        .code(20008)
                         .message("只有管理员可以改等级")
                         .build();
         }
@@ -152,7 +159,6 @@ public class UserService {
         return CommonResponse.builder()
                 .code(10000)
                 .message("更新成功")
-                .result(user)
                 .build();
     }
 }
