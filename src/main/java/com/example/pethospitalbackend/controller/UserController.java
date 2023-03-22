@@ -1,8 +1,11 @@
 package com.example.pethospitalbackend.controller;
 
+import com.example.pethospitalbackend.annotation.AdminMethod;
 import com.example.pethospitalbackend.annotation.NoLoginMethod;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
+import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.service.UserService;
+import com.example.pethospitalbackend.util.TokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +45,25 @@ public class UserController {
         return userService.login(phoneNumber, password, false);
     }
 
-    @NoLoginMethod
+    @AdminMethod
     @ApiOperation(value = "用户列表")
     @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
     public CommonResponse getAllUsers(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
         return userService.getAllUsers(currentPage, content);
     }
 
+    @AdminMethod
+    @ApiOperation(value = "删除指定用户")
+    @RequestMapping(value = "/deleteOneUser", method = RequestMethod.POST)
+    public CommonResponse deleteOneUser(Integer id) {
+        return userService.deleteUserById(id);
+    }
+
+
+    @ApiOperation(value = "更新指定用户")
+    @RequestMapping(value = "/updateOneUser", method = RequestMethod.POST)
+    public CommonResponse updateOneUser(@RequestHeader("Authorization") String token, Integer id, String name, Boolean role, Integer level) {
+        UserRole userRole = TokenUtil.getUserRoleFromToken(token);
+        return userService.updateUserById(id, name, role, level, userRole);
+    }
 }

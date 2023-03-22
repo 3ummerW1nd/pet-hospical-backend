@@ -3,6 +3,7 @@ package com.example.pethospitalbackend.service;
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.domain.user.UserInfo;
 import com.example.pethospitalbackend.domain.user.UserPageInfo;
+import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.repository.UserRepository;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.util.TokenUtil;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -99,6 +101,58 @@ public class UserService {
                 .code(10000)
                 .message("登陆成功")
                 .result(token)
+                .build();
+    }
+
+    public CommonResponse deleteUserById(Integer id) {
+        userRepository.deleteById(id);
+        return CommonResponse.builder()
+                .code(10000)
+                .message("删除成功")
+                .build();
+    }
+
+    public CommonResponse updateUserById(Integer id, String name, Boolean role, Integer level, UserRole operator) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            return CommonResponse.builder()
+                    .code(20003)
+                    .message("找不到用户，请确认ID是否正确")
+                    .build();
+        }
+        User user = optionalUser.get();
+        if (name != null) {
+            if (operator.getId().equals(id))
+                user.setName(name);
+            else
+                return CommonResponse.builder()
+                        .code(20005)
+                        .message("只有用户自己可以改自己的名字")
+                        .build();
+        }
+        if (role != null) {
+            if (operator.getRole())
+                user.setRole(role);
+            else
+                return CommonResponse.builder()
+                        .code(20006)
+                        .message("只有管理员可以改权限")
+                        .build();
+        }
+        if (level != null) {
+            if (operator.getRole())
+                user.setRole(role);
+            else
+                return CommonResponse.builder()
+                        .code(20006)
+                        .message("只有管理员可以改等级")
+                        .build();
+        }
+        userRepository.save(user);
+        return CommonResponse.builder()
+                .code(10000)
+                .message("更新成功")
+                .result(user)
                 .build();
     }
 }
