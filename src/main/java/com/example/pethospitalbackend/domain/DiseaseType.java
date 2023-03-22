@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +20,14 @@ public class DiseaseType {
     private String type;
     @Column(length = 20)
     private String name;
+
+    public interface DiseaseTypeInfo{
+        Integer getId();
+        String getName();
+    }
+
+    public interface DiseaseNameInfo{
+        String getType();
+        String getName();
+    }
 }

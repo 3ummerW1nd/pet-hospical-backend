@@ -27,11 +27,11 @@ public class Test {
             for(String s : o.keySet())
                 System.out.println(s + ":" + o.get(s));*/
 
-        Collection<Question.SimpleInfo> collection = questionRepository.searchQuestion("es");
-        for(Question.SimpleInfo s : collection){
-            System.out.println(s);
-            System.out.println(s.getTitle());
-        }
+//        Collection<Question.SimpleInfo> collection = questionRepository.searchQuestion("es");
+//        for(Question.SimpleInfo s : collection){
+//            System.out.println(s);
+//            System.out.println(s.getTitle());
+//        }
 
         //System.out.println(questionRepository.test("es"));
     }

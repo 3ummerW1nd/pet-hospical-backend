@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface PaperRepository extends JpaRepository<Paper,Integer> {
 
-    @Query(value = "select * from paper where name like %?1%", nativeQuery = true)
-    List<Paper> searchPaper(String text);
+    @Query(value = "select * from paper where disease_type_id =?1 and name like %?2%", nativeQuery = true)
+    List<Paper> searchPaperByDiseaseAndText(int id,String text);
 
     @Query(value = "select * from paper where disease_type_id =?1", nativeQuery = true)
     List<Paper> searchPaperByDisease(int id);
