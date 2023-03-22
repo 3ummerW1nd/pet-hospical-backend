@@ -27,11 +27,19 @@ public class UserController {
     }
 
     @NoLoginMethod
-    @ApiOperation(value = "用户登陆")
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public CommonResponse login(@RequestParam("phoneNumber") String phoneNumber,
+    @ApiOperation(value = "后台用户登陆")
+    @RequestMapping(value = "/loginBackManage", method = RequestMethod.POST)
+    public CommonResponse loginBack(@RequestParam("phoneNumber") String phoneNumber,
                                 @RequestParam("password") String password) {
-        return userService.login(phoneNumber, password);
+        return userService.login(phoneNumber, password, true);
+    }
+
+    @NoLoginMethod
+    @ApiOperation(value = "前台用户登陆")
+    @RequestMapping(value = "/loginFrontLearn", method = RequestMethod.POST)
+    public CommonResponse loginFront(@RequestParam("phoneNumber") String phoneNumber,
+                                @RequestParam("password") String password) {
+        return userService.login(phoneNumber, password, false);
     }
 
     @NoLoginMethod

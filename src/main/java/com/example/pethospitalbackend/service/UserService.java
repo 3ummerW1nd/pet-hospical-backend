@@ -80,12 +80,18 @@ public class UserService {
                 .build();
     }
 
-    public CommonResponse login(String phoneNumber, String password) {
+    public CommonResponse login(String phoneNumber, String password, boolean backend) {
         User user = userRepository.findUserByPhoneNumber(phoneNumber);
         if (user == null || !user.getPassword().equals(TokenUtil.inputPassToFormPass(password))) {
             return CommonResponse.builder()
                     .code(20002)
                     .message("用户不存在或密码错误")
+                    .build();
+        }
+        if (backend && !user.getRole()) {
+            return CommonResponse.builder()
+                    .code(20003)
+                    .message("权限不足，只有管理员可以登陆后台系统")
                     .build();
         }
         String token = TokenUtil.getToken(user.getId(), user.getRole());
