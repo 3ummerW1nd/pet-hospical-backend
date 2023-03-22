@@ -6,6 +6,7 @@ import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.DiseaseRepository;
 import com.example.pethospitalbackend.repository.DiseaseTypeRepository;
 import lombok.SneakyThrows;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class DiseaseManage {
             disease_types.add(disease_type);
             i++;
         }
-        return CommonResponse.builder().data(disease_types).message("获取成功").code(0).build();
+        return CommonResponse.builder().result(disease_types).message("获取成功").code(0).build();
     }
 
     //获取所有病例
@@ -59,13 +60,13 @@ public class DiseaseManage {
             diseasesInfo.put("disease_name",names.getName());
             diseasesInfos.add(diseasesInfo);
         }
-        return CommonResponse.builder().data(diseasesInfos).message("获取成功").code(0).build();
+        return CommonResponse.builder().result(diseasesInfos).message("获取成功").code(0).build();
     }
 
     //获取所有病例
     public CommonResponse addOneDisease(int disease_type_id, String symptom, String examination, String diagnosis,
                                          String treatment, String image, String video, String image_description,
-                                         String video_description, String disease_name){
+                                         String video_description, String disease_name) throws JSONException {
         Collection<Disease.DiseaseInfo> infos = diseaseRepository.getAllDisease();
         List<JSONObject> diseasesInfos = new ArrayList<>();
         for(Disease.DiseaseInfo info : infos){
@@ -76,7 +77,7 @@ public class DiseaseManage {
             diseasesInfo.put("disease_name",names.getName());
             diseasesInfos.add(diseasesInfo);
         }
-        return CommonResponse.builder().data(diseasesInfos).message("获取成功").code(0).build();
+        return CommonResponse.builder().result(diseasesInfos).message("获取成功").code(0).build();
     }
 
 }

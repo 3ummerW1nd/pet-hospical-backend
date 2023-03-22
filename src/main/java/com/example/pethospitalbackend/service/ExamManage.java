@@ -61,7 +61,7 @@ public class ExamManage {
         Question q = questionRepository.getOne(question_id);
         String d_name = diseaseTypeRepository.findNameById(q.getDisease_type_id());
         QuestionInfo questionInfo = new QuestionInfo(q,d_name);
-        return CommonResponse.builder().data(questionInfo).message("获取成功").code(0).build();
+        return CommonResponse.builder().result(questionInfo).message("获取成功").code(0).build();
     }
 
     //获取所有试题
@@ -78,7 +78,7 @@ public class ExamManage {
             questionInfos.add(qs);
         }
 
-        return CommonResponse.builder().data(questionInfos).message("获取成功").code(0).build();
+        return CommonResponse.builder().result(questionInfos).message("获取成功").code(0).build();
     }
 
     //修改单个试题
@@ -105,7 +105,7 @@ public class ExamManage {
             qs.put("question_id",s.getId());
             questionInfos.add(qs);
         }
-        return CommonResponse.builder().data(questionInfos).message("搜索成功").code(0).build();
+        return CommonResponse.builder().result(questionInfos).message("搜索成功").code(0).build();
     }
 
     /*//试题模糊搜索
@@ -121,7 +121,7 @@ public class ExamManage {
             qs.put("question_id",s.getId());
             questionInfos.add(qs);
         }
-        return CommonResponse.builder().data(questionInfos).message("搜索成功").code(0).build();
+        return CommonResponse.builder().result(questionInfos).message("搜索成功").code(0).build();
     }
 
     //试题病类搜索
@@ -137,7 +137,7 @@ public class ExamManage {
             qs.put("question_id",s.getId());
             questionInfos.add(qs);
         }
-        return CommonResponse.builder().data(questionInfos).message("搜索成功").code(0).build();
+        return CommonResponse.builder().result(questionInfos).message("搜索成功").code(0).build();
     }*/
 
     //添加单张试卷
@@ -172,7 +172,7 @@ public class ExamManage {
             PaperInfo info = new PaperInfo(paper,d_name);
             paperInfos.add(info);
         }
-        return CommonResponse.builder().data(paperInfos).message("获取成功").code(0).build();
+        return CommonResponse.builder().result(paperInfos).message("获取成功").code(0).build();
     }
 
     //获取单张试卷详情
@@ -200,7 +200,7 @@ public class ExamManage {
         paperInfo.put("name",paper.getName());
         paperInfo.put("score",score);
 
-        return CommonResponse.builder().data(paperInfo).message("获取成功").code(0).build();
+        return CommonResponse.builder().result(paperInfo).message("获取成功").code(0).build();
     }
 
     //修改单张试卷
@@ -223,7 +223,7 @@ public class ExamManage {
             PaperInfo info = new PaperInfo(paper,d_name);
             paperInfos.add(info);
         }
-        return CommonResponse.builder().data(paperInfos).message("查询成功").code(0).build();
+        return CommonResponse.builder().result(paperInfos).message("查询成功").code(0).build();
     }
 
     /*//试卷模糊查询
@@ -235,7 +235,7 @@ public class ExamManage {
             PaperInfo info = new PaperInfo(paper,d_name);
             paperInfos.add(info);
         }
-        return CommonResponse.builder().data(paperInfos).message("查询成功").code(0).build();
+        return CommonResponse.builder().result(paperInfos).message("查询成功").code(0).build();
     }
 
     //试卷病类搜索
@@ -247,7 +247,7 @@ public class ExamManage {
             PaperInfo info = new PaperInfo(paper,d_name);
             paperInfos.add(info);
         }
-        return CommonResponse.builder().data(paperInfos).message("查询成功").code(0).build();
+        return CommonResponse.builder().result(paperInfos).message("查询成功").code(0).build();
     }*/
 
     //添加单场考试
@@ -281,7 +281,7 @@ public class ExamManage {
             ExamInfo info = new ExamInfo(e);
             examInfos.add(info);
         }
-        return CommonResponse.builder().data(examInfos).message("获取成功").code(0).build();
+        return CommonResponse.builder().result(examInfos).message("获取成功").code(0).build();
     }
 
     //获取单场考试详情
@@ -308,7 +308,7 @@ public class ExamManage {
         paper.put("score",score);
         examInfo.put("paper_info",paper);
 
-        return CommonResponse.builder().data(examInfo).message("获取成功").code(0).build();
+        return CommonResponse.builder().result(examInfo).message("获取成功").code(0).build();
     }
 
     //修改单场考试
@@ -326,7 +326,7 @@ public class ExamManage {
             ExamInfo info = new ExamInfo(e);
             examInfos.add(info);
         }
-        return CommonResponse.builder().data(examInfos).message("查询成功").code(0).build();
+        return CommonResponse.builder().result(examInfos).message("查询成功").code(0).build();
     }
 
 }
