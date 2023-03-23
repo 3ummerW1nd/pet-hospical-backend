@@ -41,7 +41,7 @@ public class PersonnelService {
         }
         personnelRepository.save(personnel);
         return CommonResponse.builder()
-                .code(40000)
+                .code(0)
                 .message("success")
                 .result(personnel)
                 .build();
@@ -52,31 +52,25 @@ public class PersonnelService {
         Optional<Personnel> optionalPersonnel = personnelRepository.findById(id);
         if (!optionalPersonnel.isPresent()) {
             return CommonResponse.builder()
-                    .code(40001)
+                    .code(1)
                     .message("工作人员不存在，请检查id")
                     .build();
         }
         Personnel personnel = optionalPersonnel.get();
         personnelRepository.deleteById(id);
         return CommonResponse.builder()
-                .code(40000)
+                .code(0)
                 .message("success")
                 .result(personnel)
                 .build();
     }
 
     public CommonResponse getAllPersonnels(Integer offset, String content) {
-        if (offset <= 0) {
-            return CommonResponse.builder()
-                    .code(40001)
-                    .message("页号非法，从1开始")
-                    .build();
-        }
         Integer count = personnelRepository.getPageCount(10);
-        if (offset > count) {
+        if (offset <= 0 || offset > count) {
             return CommonResponse.builder()
                     .code(40002)
-                    .message("offset过大")
+                    .message("合法页号范围：(" + 1 + ", " + count + ").")
                     .build();
         }
         offset -= 1;

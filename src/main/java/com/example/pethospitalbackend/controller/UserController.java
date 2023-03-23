@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @NoLoginMethod
-    @ApiOperation(value = "后台用户登陆")
+    @ApiOperation(value = "后台用户登录")
     @RequestMapping(value = "/loginBackManage", method = RequestMethod.POST)
     public CommonResponse loginBack(@RequestParam("phoneNumber") String phoneNumber,
                                 @RequestParam("password") String password) {
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @NoLoginMethod
-    @ApiOperation(value = "前台用户登陆")
+    @ApiOperation(value = "前台用户登录")
     @RequestMapping(value = "/loginFrontLearn", method = RequestMethod.POST)
     public CommonResponse loginFront(@RequestParam("phoneNumber") String phoneNumber,
                                 @RequestParam("password") String password) {
@@ -65,5 +65,12 @@ public class UserController {
     public CommonResponse updateOneUser(@RequestHeader("Authorization") String token, Integer id, String name, Boolean role, Integer level) {
         UserRole userRole = TokenUtil.getUserRoleFromToken(token);
         return userService.updateUserById(id, name, role, level, userRole);
+    }
+
+    @ApiOperation(value = "修改密码")
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    public CommonResponse changePassword(@RequestHeader("Authorization") String token, Integer id, String originalPassword, Boolean newPassword) {
+        UserRole userRole = TokenUtil.getUserRoleFromToken(token);
+        return userService.changePassword(id, originalPassword, newPassword, userRole);
     }
 }

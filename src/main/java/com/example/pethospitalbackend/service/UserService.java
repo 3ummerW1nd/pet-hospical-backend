@@ -20,17 +20,11 @@ public class UserService {
     private UserRepository userRepository;
 
     public CommonResponse getAllUsers(Integer offset, String content) {
-        if (offset <= 0) {
-            return CommonResponse.builder()
-                    .code(40001)
-                    .message("页号非法，从1开始")
-                    .build();
-        }
         Integer count = userRepository.getPageCount(10);
-        if (offset > count) {
+        if (offset <= 0 || offset > count) {
             return CommonResponse.builder()
-                    .code(40002)
-                    .message("offset过大")
+                    .code(1)
+                    .message("合法页号范围：(" + 1 + ", " + count + ").")
                     .build();
         }
         offset -= 1;
@@ -47,8 +41,8 @@ public class UserService {
                 .data(allUsers)
                 .build();
         return CommonResponse.builder()
-                .code(10000)
-                .message("成功获取用户列表")
+                .code(0)
+                .message("success")
                 .result(pageInfo)
                 .build();
     }
@@ -57,8 +51,8 @@ public class UserService {
     public CommonResponse register(String name, String phoneNumber, String password) {
         if (userRepository.findUserByPhoneNumber(phoneNumber) != null) {
             return CommonResponse.builder()
-                    .message("该手机已经注册过，请直接登录")
-                    .code(20001)
+                    .message("一个手机号只能注册一个账号")
+                    .code(1)
                     .build();
         }
 
@@ -76,8 +70,8 @@ public class UserService {
         userRepository.save(user);
         return CommonResponse.builder()
                 .result(user)
-                .message("注册成功")
-                .code(10000)
+                .message("success")
+                .code(0)
                 .build();
     }
 
@@ -85,20 +79,20 @@ public class UserService {
         User user = userRepository.findUserByPhoneNumber(phoneNumber);
         if (user == null || !user.getPassword().equals(TokenUtil.inputPassToFormPass(password))) {
             return CommonResponse.builder()
-                    .code(20002)
-                    .message("用户不存在或密码错误")
+                    .code(1)
+                    .message("用户不存在或密码错误.")
                     .build();
         }
         if (backend && !user.getRole()) {
             return CommonResponse.builder()
-                    .code(20003)
-                    .message("权限不足，只有管理员可以登陆后台系统")
+                    .code(2)
+                    .message("权限不足，只有管理员可以登录后台系统")
                     .build();
         }
         String token = TokenUtil.getToken(user.getId(), user.getRole());
         return CommonResponse.builder()
-                .code(10000)
-                .message("登陆成功")
+                .code(0)
+                .message("success")
                 .result(token)
                 .build();
     }
@@ -107,8 +101,8 @@ public class UserService {
     public CommonResponse deleteUserById(Integer id) {
         userRepository.deleteById(id);
         return CommonResponse.builder()
-                .code(10000)
-                .message("删除成功")
+                .code(0)
+                .message("success")
                 .build();
     }
 
@@ -117,7 +111,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(id);
         if (!optionalUser.isPresent()) {
             return CommonResponse.builder()
-                    .code(20004)
+                    .code(1)
                     .message("找不到用户，请确认ID是否正确")
                     .build();
         }
@@ -127,7 +121,7 @@ public class UserService {
                 user.setName(name);
             else
                 return CommonResponse.builder()
-                        .code(20005)
+                        .code(1)
                         .message("只有用户自己可以改自己的名字")
                         .build();
         }
@@ -136,14 +130,14 @@ public class UserService {
                 user.setRole(role);
             else
                 return CommonResponse.builder()
-                        .code(20006)
+                        .code(2)
                         .message("只有管理员可以改权限")
                         .build();
         }
         if (level != null) {
             if (level < 1 || level > 5) {
                 return CommonResponse.builder()
-                        .code(20007)
+                        .code(1)
                         .message("等级只有1到5")
                         .build();
             }
@@ -151,14 +145,41 @@ public class UserService {
                 user.setRole(role);
             else
                 return CommonResponse.builder()
-                        .code(20008)
+                        .code(1)
                         .message("只有管理员可以改等级")
                         .build();
         }
         userRepository.save(user);
         return CommonResponse.builder()
-                .code(10000)
+                .code(0)
                 .message("更新成功")
                 .build();
+    }
+
+    public CommonResponse changePassword(Integer id, String originalPassword, String newPassword, UserRole userRole) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("用户不存在")
+                    .build();
+        }
+        String md5OriginalPassword = TokenUtil.inputPassToFormPass(originalPassword);
+        User user = optionalUser.get();
+        if (user.getId().equals(id) && user.getPassword().equals(md5OriginalPassword)) {
+            String md5NewPassword = TokenUtil.inputPassToFormPass(newPassword);
+            user.setPassword(md5NewPassword);
+            userRepository.save(user);
+            return CommonResponse.builder()
+                    .code(0)
+                    .message("更新成功")
+                    .build();
+        } else {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("密码错误")
+                    .build();
+        }
+
     }
 }
