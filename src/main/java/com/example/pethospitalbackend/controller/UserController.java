@@ -69,7 +69,7 @@ public class UserController {
 
     @ApiOperation(value = "修改密码")
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
-    public CommonResponse changePassword(@RequestHeader("Authorization") String token, Integer id, String originalPassword, Boolean newPassword) {
+    public CommonResponse changePassword(@RequestHeader("Authorization") String token, Integer id, String originalPassword, String newPassword) {
         UserRole userRole = TokenUtil.getUserRoleFromToken(token);
         return userService.changePassword(id, originalPassword, newPassword, userRole);
     }
