@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/personnel")
 //说明接口文件
-@Api(value = "用户管理", tags = "users")
+@Api(value = "人员管理", tags = "personnels")
 public class PersonnelController {
     @Autowired
     private PersonnelService personnelService;
