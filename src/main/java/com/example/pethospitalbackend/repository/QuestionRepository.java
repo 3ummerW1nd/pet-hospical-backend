@@ -1,7 +1,7 @@
 package com.example.pethospitalbackend.repository;
 
 import com.example.pethospitalbackend.domain.Question;
-import org.json.JSONObject;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

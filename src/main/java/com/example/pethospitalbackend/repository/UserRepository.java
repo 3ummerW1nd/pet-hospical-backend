@@ -13,6 +13,9 @@ import java.util.List;
 public interface UserRepository extends CrudRepository<User, Integer> {
     User findUserByPhoneNumber(String phoneNumber);
 
+    @Query(nativeQuery = true, value = "SELECT level from users where id = :id")
+    Integer getLevelById(@Param("id") int id);
+
     @Query(nativeQuery = true, value = "select id, name, phoneNumber, role, level from users Limit :limit OFFSET :offset")
     List<UserInfo> findUsers(@Param("limit") int limit, @Param("offset") int offset);
 

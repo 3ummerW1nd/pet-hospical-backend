@@ -1,8 +1,10 @@
 package com.example.pethospitalbackend;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.pethospitalbackend.domain.Question;
+import com.example.pethospitalbackend.output.PaperInfo;
 import com.example.pethospitalbackend.repository.DiseaseTypeRepository;
 import com.example.pethospitalbackend.repository.QuestionRepository;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -20,6 +22,10 @@ public class Test {
     private DiseaseTypeRepository diseaseTypeRepository;
     @org.junit.jupiter.api.Test
     void testDao(){
+        PaperInfo info = new PaperInfo(1,2,"name0",3,"name5");
+        String s = JSON.toJSONString(info);
+        JSONObject o = JSON.parseObject(s);
+        System.out.println(o);
         /*Question question = new Question(null,2,"test2","a2","b2","c2","d2","B");
         questionRepository.save(question);*/
         /*List<Map<String,Object>> os = questionRepository.getAllQuestions();

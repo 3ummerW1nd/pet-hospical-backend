@@ -36,37 +36,38 @@ public class ExamManageController {
     @AdminMethod
     @ApiOperation(value = "删除单个试题")
     @RequestMapping(value = "/deleteOneQuestion", method = RequestMethod.GET)
-    public CommonResponse deleteOneQuestion(@RequestParam("questionId") Integer questionId) {
-        return examManage.deleteOneQuestion(questionId);
+    public CommonResponse deleteOneQuestion(@RequestParam("question_id") Integer question_id) {
+        return examManage.deleteOneQuestion(question_id);
     }
 
-    @AdminMethod
-    @ApiOperation(value = "批量删除试题")
-    @RequestMapping(value = "/deleteMultiQuestions", method = RequestMethod.POST)
-    public CommonResponse deleteMultiQuestions(@RequestParam("questionIds") String questionIds) {
-        return examManage.deleteMultiQuestions(questionIds);
-    }
+//    @AdminMethod
+//    @ApiOperation(value = "批量删除试题")
+//    @RequestMapping(value = "/deleteMultiQuestions", method = RequestMethod.POST)
+//    public CommonResponse deleteMultiQuestions(@RequestParam("question_ids") String question_ids) {
+//        return examManage.deleteMultiQuestions(question_ids);
+//    }
 
-    @AdminMethod
-    @ApiOperation(value = "获取所有试题")
-    @RequestMapping(value = "/getAllQuestions", method = RequestMethod.GET)
-    public CommonResponse getAllQuestions() {
-        return examManage.getAllQuestions();
-    }
+//    @AdminMethod
+//    @ApiOperation(value = "获取所有试题")
+//    @RequestMapping(value = "/getAllQuestions", method = RequestMethod.GET)
+//    public CommonResponse getAllQuestions() {
+//        return examManage.getAllQuestions();
+//    }
 
     @AdminMethod
     @ApiOperation(value = "试题搜索")
     @RequestMapping(value = "/searchQuestion", method = RequestMethod.GET)
     public CommonResponse searchQuestion(@RequestParam("disease_type_id") Integer disease_type_id,
-                                         @RequestParam("search_text") String search_text) {
-        return examManage.searchQuestion(disease_type_id,search_text);
+                                         @RequestParam("search_text") String search_text,
+                                         @RequestParam("currentPage") Integer cur) {
+        return examManage.searchQuestion(disease_type_id,search_text,cur);
     }
 
     @AdminMethod
     @ApiOperation(value = "获取单个试题详情")
     @RequestMapping(value = "/getOneQuestion", method = RequestMethod.GET)
-    public CommonResponse getOneQuestion(@RequestParam("questionId") Integer questionId) {
-        return examManage.getOneQuestion(questionId);
+    public CommonResponse getOneQuestion(@RequestParam("question_id") Integer question_id) {
+        return examManage.getOneQuestion(question_id);
     }
 
     @AdminMethod
@@ -87,70 +88,70 @@ public class ExamManageController {
     @ApiOperation(value = "添加单张试卷")
     @RequestMapping(value = "/addOnePaper", method = RequestMethod.POST)
     public CommonResponse addOnePaper(@RequestParam("diseaseTypeId") Integer disease_id,
-                                         @RequestParam("questionIds") String questionIds,
+                                         @RequestParam("question_ids") String question_ids,
                                          @RequestParam("questionNum") Integer questionNum,
                                          @RequestParam("questionPoints") String questionPoints,
                                          @RequestParam("name") String name) {
-        return examManage.addOnePaper(disease_id,name,questionIds,questionNum,questionPoints);
+        return examManage.addOnePaper(disease_id,name,question_ids,questionNum,questionPoints);
     }
 
     @AdminMethod
     @ApiOperation(value = "删除单张试卷")
     @RequestMapping(value = "/deleteOnePaper", method = RequestMethod.GET)
-    public CommonResponse deleteOnePaper(@RequestParam("paperId") Integer paperId) {
-        return examManage.deleteOnePaper(paperId);
+    public CommonResponse deleteOnePaper(@RequestParam("paper_id") Integer paper_id) {
+        return examManage.deleteOnePaper(paper_id);
     }
 
-    @AdminMethod
-    @ApiOperation(value = "批量删除试卷")
-    @RequestMapping(value = "/deleteMultiPapers", method = RequestMethod.POST)
-    public CommonResponse deleteMultiPapers(@RequestParam("paperIds") String paperIds) {
-        return examManage.deleteMultiPapers(paperIds);
-    }
+//    @AdminMethod
+//    @ApiOperation(value = "批量删除试卷")
+//    @RequestMapping(value = "/deleteMultiPapers", method = RequestMethod.POST)
+//    public CommonResponse deleteMultiPapers(@RequestParam("paper_ids") String paper_ids) {
+//        return examManage.deleteMultiPapers(paper_ids);
+//    }
 
-    @AdminMethod
-    @ApiOperation(value = "获取所有试卷")
-    @RequestMapping(value = "/getAllPapers", method = RequestMethod.GET)
-    public CommonResponse getAllPapers() {
-        return examManage.getAllPapers();
-    }
+//    @AdminMethod
+//    @ApiOperation(value = "获取所有试卷")
+//    @RequestMapping(value = "/getAllPapers", method = RequestMethod.GET)
+//    public CommonResponse getAllPapers() {
+//        return examManage.getAllPapers();
+//    }
 
     @AdminMethod
     @ApiOperation(value = "获取单张试卷详情")
     @RequestMapping(value = "/getOnePaper", method = RequestMethod.GET)
-    public CommonResponse getOnePaper(@RequestParam("paperId") Integer paperId) {
-        return examManage.getOnePaper(paperId);
+    public CommonResponse getOnePaper(@RequestParam("paper_id") Integer paper_id) {
+        return examManage.getOnePaper(paper_id);
     }
 
     @AdminMethod
     @ApiOperation(value = "试卷搜索")
     @RequestMapping(value = "/searchPaper", method = RequestMethod.GET)
     public CommonResponse searchPaper(@RequestParam("disease_type_id") Integer disease_type_id,
-                                      @RequestParam("search_text") String search_text) {
-        return examManage.searchPaper(disease_type_id,search_text);
+                                      @RequestParam("search_text") String search_text,
+                                      @RequestParam("currentPage") Integer cur) {
+        return examManage.searchPaper(disease_type_id,search_text,cur);
     }
 
     @AdminMethod
     @ApiOperation(value = "修改单张试卷")
     @RequestMapping(value = "/modifyOnePaper", method = RequestMethod.POST)
-    public CommonResponse modifyOnePaper(@RequestParam("paperId") Integer paperId,
-                                         @RequestParam("diseaseTypeId") Integer disease_id,
-                                         @RequestParam("questionIds") String questionIds,
+    public CommonResponse modifyOnePaper(@RequestParam("paper_id") Integer paper_id,
+                                         @RequestParam("question_ids") String question_ids,
                                          @RequestParam("questionNum") Integer questionNum,
-                                         @RequestParam("questionPoints") String questionPoints,
+                                         @RequestParam("question_point") String questionPoints,
                                          @RequestParam("name") String name) {
-        return examManage.modifyOnePaper(paperId,disease_id,name,questionIds,questionNum,questionPoints);
+        return examManage.modifyOnePaper(paper_id,name,question_ids,questionNum,questionPoints);
     }
 
     @AdminMethod
     @ApiOperation(value = "添加单场考试")
     @RequestMapping(value = "/addOneExam", method = RequestMethod.POST)
-    public CommonResponse addOneExam(@RequestParam("paperId") Integer paperId,
-                                      @RequestParam("startTime") String startTime,
-                                      @RequestParam("endTime") String endTime,
+    public CommonResponse addOneExam(@RequestParam("paper_id") Integer paper_id,
+                                      @RequestParam("start_time") String start_time,
+                                      @RequestParam("end_time") String end_time,
                                       @RequestParam("authority") Integer authority,
                                       @RequestParam("name") String name) {
-        return examManage.addOneExam(paperId,name,startTime,endTime,authority);
+        return examManage.addOneExam(paper_id,name,start_time,end_time,authority);
     }
 
     @AdminMethod
@@ -160,19 +161,19 @@ public class ExamManageController {
         return examManage.deleteOneExam(ExamId);
     }
 
-    @AdminMethod
-    @ApiOperation(value = "批量删除考试")
-    @RequestMapping(value = "/deleteMultiExams", method = RequestMethod.POST)
-    public CommonResponse deleteMultiExams(@RequestParam("examIds") String ExamIds) {
-        return examManage.deleteMultiExams(ExamIds);
-    }
+//    @AdminMethod
+//    @ApiOperation(value = "批量删除考试")
+//    @RequestMapping(value = "/deleteMultiExams", method = RequestMethod.POST)
+//    public CommonResponse deleteMultiExams(@RequestParam("examIds") String ExamIds) {
+//        return examManage.deleteMultiExams(ExamIds);
+//    }
 
-    @AdminMethod
-    @ApiOperation(value = "获取所有考试")
-    @RequestMapping(value = "/getAllExams", method = RequestMethod.GET)
-    public CommonResponse getAllExams() {
-        return examManage.getAllExams();
-    }
+//    @AdminMethod
+//    @ApiOperation(value = "获取所有考试")
+//    @RequestMapping(value = "/getAllExams", method = RequestMethod.GET)
+//    public CommonResponse getAllExams() {
+//        return examManage.getAllExams();
+//    }
 
     @AdminMethod
     @ApiOperation(value = "获取单场考试详情")
@@ -186,17 +187,18 @@ public class ExamManageController {
     @RequestMapping(value = "/modifyOneExam", method = RequestMethod.POST)
     public CommonResponse modifyOneExam(@RequestParam("exam_id") Integer ExamId,
                                         @RequestParam("paper_id") Integer paper_id,
-                                        @RequestParam("startTime") String startTime,
-                                        @RequestParam("endTime") String endTime,
+                                        @RequestParam("start_time") String start_time,
+                                        @RequestParam("end_time") String end_time,
                                         @RequestParam("authority") Integer authority,
                                          @RequestParam("exam_name") String name) {
-        return examManage.modifyOneExam(ExamId,paper_id,name,startTime,endTime,authority);
+        return examManage.modifyOneExam(ExamId,paper_id,name,start_time,end_time,authority);
     }
 
     @AdminMethod
     @ApiOperation(value = "考试搜索")
     @RequestMapping(value = "/searchExam", method = RequestMethod.GET)
-    public CommonResponse searchExam(@RequestParam("searchText") String searchText) {
-        return examManage.searchExam(searchText);
+    public CommonResponse searchExam(@RequestParam("search_text") String search_text,
+                                     @RequestParam("currentPage") Integer cur) {
+        return examManage.searchExam(search_text,cur);
     }
 }

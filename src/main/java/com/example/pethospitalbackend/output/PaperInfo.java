@@ -20,10 +20,10 @@ public class PaperInfo {
         this.paper_id = p.getId();
         this.question_num = p.getQuestion_num();
         this.disease_type_name = disease_type_name;
-        this.score = 0;
-        String[] pionts = p.getQuestion_points().trim().split(",");
-        for(String piont : pionts)
-            this.score += Integer.valueOf(piont);
+        this.score = p.getPoint() * p.getQuestion_num();
+//        String[] pionts = p.getQuestion_points().trim().split(",");
+//        for(String piont : pionts)
+//            this.score += Integer.valueOf(piont);
         this.name = p.getName();
     }
 }

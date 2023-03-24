@@ -13,8 +13,6 @@ import javax.persistence.*;
 @Table(name = "disease")
 public class Disease {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     private Integer disease_type_id;
     @Column(length = 500)
     private String symptom;     //症状
@@ -24,10 +22,7 @@ public class Disease {
     private String diagnosis;   //诊断
     @Column(length = 500)
     private String treatment;   //治疗
-    private String media_ids;
+    private String image_ids;
+    private String video_ids;
 
-    public interface DiseaseInfo{
-        Integer getId();
-        Integer getDisease_Type_Id();
-    }
 }

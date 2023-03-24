@@ -10,16 +10,18 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "paper")
-public class Paper {
+@Table(name = "character")
+public class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer disease_type_id;
-    @Column(length = 100)
-    private String name;
-    private String question_ids;
-    private Integer question_num;
-    private int point;
+    private String role;
+    private String action;
+    private Integer procedure_id;
+    private Integer step_num;
 
+    public interface CharacterInfo{
+        String getAction();
+        Integer getProcedure_id();
+    }
 }
