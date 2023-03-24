@@ -1,8 +1,11 @@
 package com.example.pethospitalbackend.controller;
 
+import com.example.pethospitalbackend.annotation.AdminMethod;
 import com.example.pethospitalbackend.annotation.NoLoginMethod;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
+import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.service.UserService;
+import com.example.pethospitalbackend.util.TokenUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +30,47 @@ public class UserController {
     }
 
     @NoLoginMethod
-    @ApiOperation(value = "用户登陆")
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public CommonResponse login(@RequestParam("phoneNumber") String phoneNumber,
+    @ApiOperation(value = "后台用户登录")
+    @RequestMapping(value = "/loginBackManage", method = RequestMethod.POST)
+    public CommonResponse loginBack(@RequestParam("phoneNumber") String phoneNumber,
                                 @RequestParam("password") String password) {
-        return userService.login(phoneNumber, password);
+        return userService.login(phoneNumber, password, true);
     }
 
     @NoLoginMethod
+    @ApiOperation(value = "前台用户登录")
+    @RequestMapping(value = "/loginFrontLearn", method = RequestMethod.POST)
+    public CommonResponse loginFront(@RequestParam("phoneNumber") String phoneNumber,
+                                @RequestParam("password") String password) {
+        return userService.login(phoneNumber, password, false);
+    }
+
+    @AdminMethod
     @ApiOperation(value = "用户列表")
     @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
     public CommonResponse getAllUsers(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
         return userService.getAllUsers(currentPage, content);
     }
 
+    @AdminMethod
+    @ApiOperation(value = "删除指定用户")
+    @RequestMapping(value = "/deleteOneUser", method = RequestMethod.POST)
+    public CommonResponse deleteOneUser(Integer id) {
+        return userService.deleteUserById(id);
+    }
+
+
+    @ApiOperation(value = "更新指定用户")
+    @RequestMapping(value = "/updateOneUser", method = RequestMethod.POST)
+    public CommonResponse updateOneUser(@RequestHeader("Authorization") String token, Integer id, String name, Boolean role, Integer level) {
+        UserRole userRole = TokenUtil.getUserRoleFromToken(token);
+        return userService.updateUserById(id, name, role, level, userRole);
+    }
+
+    @ApiOperation(value = "修改密码")
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    public CommonResponse changePassword(@RequestHeader("Authorization") String token, Integer id, String originalPassword, String newPassword) {
+        UserRole userRole = TokenUtil.getUserRoleFromToken(token);
+        return userService.changePassword(id, originalPassword, newPassword, userRole);
+    }
 }

@@ -21,4 +21,8 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT CEIL(COUNT(*) / :limit) AS pageCount FROM users")
     Integer getPageCount(@Param("limit") int limit);
+
+    @Query(nativeQuery = true, value = "select id, name, phoneNumber, role, level from users Limit :limit OFFSET :offset where name like '%:name%'")
+    List<UserInfo> findUsersByName(@Param("limit") int limit, @Param("offset") int offset, @Param("name") String name);
+
 }

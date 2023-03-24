@@ -20,13 +20,13 @@ public class PetProfileService {
         if(name.length() > 20 || type.length() > 10 || medicalHistory.length() > 2000 ||
                 allerfyHistory.length() > 2000 || bloodType.length() > 10) {
             return CommonResponse.builder()
-                    .code(30001)
+                    .code(1)
                     .message("输入文字过长，请检查")
                     .build();
         }
         if (images.size() > 9) {
             return CommonResponse.builder()
-                    .code(30002)
+                    .code(1)
                     .message("每份宠物档案最多可以附9张图片，请检查")
                     .build();
         }
@@ -47,7 +47,7 @@ public class PetProfileService {
                 .build();
         petProfileRepository.save(petProfile);
         return CommonResponse.builder()
-                .code(00000)
+                .code(0)
                 .message("创建宠物档案成功")
                 .result(petProfile)
                 .build();
