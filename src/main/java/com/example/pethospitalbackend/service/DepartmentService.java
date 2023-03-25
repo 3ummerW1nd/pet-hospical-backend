@@ -29,12 +29,12 @@ public class DepartmentService {
 
     @Transactional(rollbackFor = Exception.class)
     public CommonResponse createEquipment(String name, String functions, MultipartFile video, String process) {
-        if (!FileUtil.isVideo(video)) {
-            return CommonResponse.builder()
-                    .code(1)
-                    .message("请上传视频文件")
-                    .build();
-        }
+//        if (!FileUtil.isVideo(video)) {
+//            return CommonResponse.builder()
+//                    .code(1)
+//                    .message("请上传视频文件")
+//                    .build();
+//        }
 
         String videoPath = FileUtil.upload(video);
         Equipment equipment = Equipment.builder()
