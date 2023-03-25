@@ -22,7 +22,7 @@ public class MedicineController {
     @AdminMethod
     @ApiOperation(value = "创建药品")
     @RequestMapping(value = "/addOneMedicine", method = RequestMethod.POST)
-    public CommonResponse addOnePersonnel(@RequestParam("name") String name,
+    public CommonResponse addOneMedicine(@RequestParam("name") String name,
                                           @RequestParam("introduction") String introduction,
                                           @RequestParam("price") Double price,
                                           @RequestParam("quantity") Integer quantity) {
@@ -32,7 +32,7 @@ public class MedicineController {
     @AdminMethod
     @ApiOperation(value = "更新药品")
     @RequestMapping(value = "/updateOneMedicine", method = RequestMethod.POST)
-    public CommonResponse updateOnePersonnel(@RequestParam("id") Integer id,
+    public CommonResponse updateOneMedicine(@RequestParam("id") Integer id,
                                              @RequestParam("name") String name,
                                              @RequestParam("introduction") String introduction,
                                              @RequestParam("price") Double price,
@@ -49,7 +49,7 @@ public class MedicineController {
     @AdminMethod
     @ApiOperation(value = "根据id删除药品")
     @RequestMapping(value = "/deleteOneMedicine", method = RequestMethod.POST)
-    public CommonResponse deleteOnePersonnel(@RequestParam("id") Integer id) {
+    public CommonResponse deleteOneMedicine(@RequestParam("id") Integer id) {
         return medicineService.deleteMedicineById(id);
     }
 }
