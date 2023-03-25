@@ -14,9 +14,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicUpdate
-@Table(name = "departments",
-        indexes = {@Index(name = "my_index_name",  columnList="name", unique = true)})
-public class Department {
+@Table(name = "medicines")
+public class Medicine {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,12 +24,12 @@ public class Department {
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(64)")
     private String name;
 
-    @Column(name = "phoneNumber", nullable = false, columnDefinition = "VARCHAR(64)")
-    private String phoneNumber;
+    @Column(name = "introduction", nullable = false, columnDefinition = "VARCHAR(2048)")
+    private String introduction;
 
-    @Column(name = "directorId", nullable = false)
-    private Integer directorId;
+    @Column(name = "price", nullable = false, columnDefinition = "Decimal(8, 2)")
+    private Double price;
 
-    @Column(name = "functions", nullable = false, columnDefinition = "VARCHAR(2048)")
-    private String functions;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 }

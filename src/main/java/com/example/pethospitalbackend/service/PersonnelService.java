@@ -20,6 +20,13 @@ public class PersonnelService {
     public CommonResponse createOrUpdatePersonnel(Integer id, String name, Boolean gender, String phoneNumber, String duty, String department) {
         Personnel personnel = null;
         if (id != null) {
+            Boolean exist = personnelRepository.existsById(id);
+            if (!exist) {
+                return CommonResponse.builder()
+                        .code(1)
+                        .message("id不存在，请检查")
+                        .build();
+            }
             personnel = Personnel.builder()
                     .id(id)
                     .department(department)

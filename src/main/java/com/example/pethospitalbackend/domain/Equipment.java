@@ -1,5 +1,7 @@
 package com.example.pethospitalbackend.domain;
 
+import com.example.pethospitalbackend.domain.converter.JsonNodeConverter;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +16,9 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicUpdate
-@Table(name = "departments",
+@Table(name = "equipments",
         indexes = {@Index(name = "my_index_name",  columnList="name", unique = true)})
-public class Department {
+public class Equipment {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,12 +27,13 @@ public class Department {
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(64)")
     private String name;
 
-    @Column(name = "phoneNumber", nullable = false, columnDefinition = "VARCHAR(64)")
-    private String phoneNumber;
-
-    @Column(name = "directorId", nullable = false)
-    private Integer directorId;
-
     @Column(name = "functions", nullable = false, columnDefinition = "VARCHAR(2048)")
     private String functions;
+
+    @Column(name = "video", nullable = false)
+    private String video;
+
+    @Column(name = "process", columnDefinition = "JSON")
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode process;
 }
