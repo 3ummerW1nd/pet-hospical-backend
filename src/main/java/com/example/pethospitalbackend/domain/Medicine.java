@@ -22,7 +22,7 @@ import java.util.Set;
 @NoArgsConstructor
 @DynamicUpdate
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(value = { "petProfiles" })
+//@JsonIgnoreProperties(value = { "petProfiles" })
 @Table(name = "medicines")
 public class Medicine {
     @Id
@@ -48,6 +48,6 @@ public class Medicine {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @ManyToMany(mappedBy = "pet_profiles")
-    private Set<Pet> petProfiles;
+//    @ManyToMany(mappedBy = "pet_profiles")
+//    private Set<Pet> petProfiles;
 }

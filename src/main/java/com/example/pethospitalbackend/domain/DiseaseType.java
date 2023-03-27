@@ -22,8 +22,8 @@ public class DiseaseType {
     private String type;
     @Column(length = 20)
     private String name;
-    @ManyToMany(mappedBy = "pet_profiles")
-    private Set<Pet> petProfiles;
+//    @ManyToMany(mappedBy = "pet_profiles")
+//    private Set<Pet> petProfiles;
 
     public interface DiseaseTypeInfo{
         Integer getId();

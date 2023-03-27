@@ -23,7 +23,7 @@ import java.util.Set;
 @DynamicUpdate
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "checkups")
-@JsonIgnoreProperties(value = { "petProfiles" })
+//@JsonIgnoreProperties(value = { "petProfiles" })
 @NamedEntityGraph(name = "checkupBasic", attributeNodes = {
         @NamedAttributeNode("id"),
         @NamedAttributeNode("name")
@@ -49,6 +49,6 @@ public class Checkup {
     @Column(name = "price", nullable = false, columnDefinition = "Decimal(8, 2)")
     private Double price;
 
-    @ManyToMany(mappedBy = "pet_profiles")
-    private Set<Pet> petProfiles;
+//    @ManyToMany(mappedBy = "pet_profiles")
+//    private Set<Pet> petProfiles;
 }
