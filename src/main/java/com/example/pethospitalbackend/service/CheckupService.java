@@ -80,7 +80,6 @@ public class CheckupService {
     }
 
     private CommonResponse getCheckups(Integer offset) {
-        Integer count = checkupRepository.getPageCount(10);
         if (offset == 0) {
             List<Checkup> allCheckups = (List<Checkup>) checkupRepository.findAll();
             return CommonResponse.builder()
@@ -89,6 +88,7 @@ public class CheckupService {
                     .result(allCheckups)
                     .build();
         }
+        Integer count = checkupRepository.getPageCount(10);
         if (offset < 0 || offset > count) {
             return CommonResponse.builder()
                     .code(1)

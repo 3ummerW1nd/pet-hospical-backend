@@ -17,6 +17,10 @@ public interface PetProfileRepository extends JpaRepository<Pet,Integer> {
     Pet getPetById(Integer id);
 
     @EntityGraph(value = "PetProfile")
+    @Query(nativeQuery = true, value = "select * from pet_profiles")
+    List<Pet> getAllPets();
+
+    @EntityGraph(value = "PetProfile")
     @Query(nativeQuery = true, value = "select * from pet_profiles Limit :limit OFFSET :offset")
     List<Pet> findPetProfiles(@Param("limit") int limit, @Param("offset") int offset);
 

@@ -1,5 +1,6 @@
 package com.example.pethospitalbackend.service;
 
+import com.example.pethospitalbackend.domain.Checkup;
 import com.example.pethospitalbackend.domain.Medicine;
 import com.example.pethospitalbackend.domain.PageInfo;
 import com.example.pethospitalbackend.domain.Personnel;
@@ -82,6 +83,14 @@ public class MedicineService {
     }
 
     private CommonResponse getMedicines(Integer offset) {
+        if (offset == 0) {
+            List<Medicine> allMedicines = (List<Medicine>) medicineRepository.findAll();
+            return CommonResponse.builder()
+                    .code(0)
+                    .message("success")
+                    .result(allMedicines)
+                    .build();
+        }
         Integer count = medicineRepository.getPageCount(10);
         if (offset <= 0 || offset > count) {
             return CommonResponse.builder()

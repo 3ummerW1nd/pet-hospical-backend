@@ -131,6 +131,14 @@ public class PetProfileService {
     }
 
     private CommonResponse getPetProfiles(Integer offset) {
+        if (offset == 0) {
+            List<Pet> allPetProfiles = petProfileRepository.getAllPets();
+            return CommonResponse.builder()
+                    .code(0)
+                    .message("success")
+                    .result(allPetProfiles)
+                    .build();
+        }
         Integer count = petProfileRepository.getPageCount(10);
         if (offset <= 0 || offset > count) {
             return CommonResponse.builder()
