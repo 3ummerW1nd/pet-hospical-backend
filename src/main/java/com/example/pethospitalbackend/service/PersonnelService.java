@@ -71,6 +71,17 @@ public class PersonnelService {
     }
 
     public CommonResponse getAllPersonnels(Integer offset, String content) {
+        if (content.isEmpty()) {
+            return getPersonnels(offset);
+        }
+        return searchPersonnels(offset, content);
+    }
+
+    private CommonResponse searchPersonnels(Integer offset, String content) {
+        return null;
+    }
+
+    private CommonResponse getPersonnels(Integer offset) {
         Integer count = personnelRepository.getPageCount(10);
         if (offset <= 0 || offset > count) {
             return CommonResponse.builder()
@@ -79,13 +90,7 @@ public class PersonnelService {
                     .build();
         }
         offset -= 1;
-        List<Personnel> allPersonnels = null;
-        if (content == null || content.isEmpty()) {
-            allPersonnels = personnelRepository.findPersonnels(10, offset * 10);
-        } else {
-            allPersonnels = personnelRepository.findPersonnels(10, offset * 10);
-            //todo:搜索
-        }
+        List<Personnel> allPersonnels = personnelRepository.findPersonnels(10, offset * 10);
         PageInfo pageInfo = null;
         pageInfo = PageInfo.builder()
                 .currentPage(offset + 1)

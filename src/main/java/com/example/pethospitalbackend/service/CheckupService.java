@@ -69,21 +69,34 @@ public class CheckupService {
     }
 
     public CommonResponse getAllCheckups(Integer offset, String content) {
+        if (content.isEmpty()) {
+            return getCheckups(offset);
+        }
+        return searchCheckups(offset, content);
+    }
+
+    private CommonResponse searchCheckups(Integer offset, String content) {
+        return null;
+    }
+
+    private CommonResponse getCheckups(Integer offset) {
         Integer count = checkupRepository.getPageCount(10);
-        if (offset <= 0 || offset > count) {
+        if (offset == 0) {
+            List<Checkup> allCheckups = (List<Checkup>) checkupRepository.findAll();
+            return CommonResponse.builder()
+                    .code(0)
+                    .message("success")
+                    .result(allCheckups)
+                    .build();
+        }
+        if (offset < 0 || offset > count) {
             return CommonResponse.builder()
                     .code(1)
                     .message("合法页号范围：(" + 1 + ", " + count + ").")
                     .build();
         }
         offset -= 1;
-        List<Checkup> checkups = null;
-        if (content == null || content.isEmpty()) {
-            checkups = checkupRepository.findCheckups(10, offset * 10);
-        } else {
-            checkups = checkupRepository.findCheckups(10, offset * 10);
-            //todo:搜索
-        }
+        List<Checkup> checkups = checkupRepository.findCheckups(10, offset * 10);
         PageInfo pageInfo = null;
         pageInfo = PageInfo.builder()
                 .currentPage(offset + 1)

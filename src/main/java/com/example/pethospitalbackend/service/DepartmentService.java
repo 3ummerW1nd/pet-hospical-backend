@@ -128,21 +128,34 @@ public class DepartmentService {
     }
 
     public CommonResponse getAllDepartments(Integer offset, String content) {
+        if (content.isEmpty()) {
+            return getDepartments(offset);
+        }
+        return searchDepartments(offset, content);
+    }
+
+    private CommonResponse searchDepartments(Integer offset, String content) {
+        return null;
+    }
+
+    private CommonResponse getDepartments(Integer offset) {
+        if (offset == 0) {
+            List<Department> allDepartments = (List<Department>) departmentRepository.findAll();
+            return CommonResponse.builder()
+                    .code(0)
+                    .message("success")
+                    .result(allDepartments)
+                    .build();
+        }
         Integer count = departmentRepository.getPageCount(10);
-        if (offset <= 0 || offset > count) {
+        if (offset < 0 || offset > count) {
             return CommonResponse.builder()
                     .code(1)
                     .message("合法页号范围：(" + 1 + ", " + count + ").")
                     .build();
         }
         offset -= 1;
-        List<Department> departments = null;
-        if (content == null || content.isEmpty()) {
-            departments = departmentRepository.findDepartments(10, offset * 10);
-        } else {
-            departments = departmentRepository.findDepartments(10, offset * 10);
-            //todo:搜索
-        }
+        List<Department> departments = departmentRepository.findDepartments(10, offset * 10);
         PageInfo pageInfo = null;
         pageInfo = PageInfo.builder()
                 .currentPage(offset + 1)

@@ -71,6 +71,17 @@ public class MedicineService {
     }
 
     public CommonResponse getAllMedicines(Integer offset, String content) {
+        if (content.isEmpty()) {
+            return getMedicines(offset);
+        }
+        return searchMedicines(offset, content);
+    }
+
+    private CommonResponse searchMedicines(Integer offset, String content) {
+        return null;
+    }
+
+    private CommonResponse getMedicines(Integer offset) {
         Integer count = medicineRepository.getPageCount(10);
         if (offset <= 0 || offset > count) {
             return CommonResponse.builder()
@@ -79,13 +90,7 @@ public class MedicineService {
                     .build();
         }
         offset -= 1;
-        List<Medicine> medicines = null;
-        if (content == null || content.isEmpty()) {
-            medicines = medicineRepository.findMedicines(10, offset * 10);
-        } else {
-            medicines = medicineRepository.findMedicines(10, offset * 10);
-            //todo:搜索
-        }
+        List<Medicine> medicines = medicineRepository.findMedicines(10, offset * 10);
         PageInfo pageInfo = null;
         pageInfo = PageInfo.builder()
                 .currentPage(offset + 1)

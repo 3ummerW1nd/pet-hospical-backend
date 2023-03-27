@@ -120,6 +120,17 @@ public class PetProfileService {
     }
 
     public CommonResponse getAllPetProfiles(Integer offset, String content) {
+        if (content.isEmpty()) {
+            return getPetProfiles(offset);
+        }
+        return searchPetProfiles(offset, content);
+    }
+
+    private CommonResponse searchPetProfiles(Integer offset, String content) {
+        return null;
+    }
+
+    private CommonResponse getPetProfiles(Integer offset) {
         Integer count = petProfileRepository.getPageCount(10);
         if (offset <= 0 || offset > count) {
             return CommonResponse.builder()
@@ -128,13 +139,7 @@ public class PetProfileService {
                     .build();
         }
         offset -= 1;
-        List<Pet> petProfiles = null;
-        if (content == null || content.isEmpty()) {
-            petProfiles = petProfileRepository.findPetProfiles(10, offset * 10);
-        } else {
-            petProfiles = petProfileRepository.findPetProfiles(10, offset * 10);
-            //todo:搜索
-        }
+        List<Pet> petProfiles = petProfileRepository.findPetProfiles(10, offset * 10);
         PageInfo pageInfo = null;
         pageInfo = PageInfo.builder()
                 .currentPage(offset + 1)
