@@ -77,7 +77,7 @@ public class Pet {
     private String description;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "pet_profile_checkup", joinColumns = {
+    @JoinTable(name = "pet_profile_checkups", joinColumns = {
             @JoinColumn(name = "petId", referencedColumnName = "id")}, inverseJoinColumns = {
             @JoinColumn(name = "checkupId", referencedColumnName = "id")})
     private Set<Checkup> checkups;
