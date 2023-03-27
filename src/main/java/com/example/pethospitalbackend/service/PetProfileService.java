@@ -26,7 +26,7 @@ public class PetProfileService {
     private EntityManager entityManager;
 
     @Transactional
-    public CommonResponse createPetProfile(String name, String type, Boolean gender, String birthday, Double weight, String description, List<Integer> medicines, List<Integer> checkups, List<Integer> diseases, List<MultipartFile> images) {
+    public CommonResponse createOrUpdatePetProfile(Integer id, String name, String type, Boolean gender, String birthday, Double weight, String description, List<Integer> medicines, List<Integer> checkups, List<Integer> diseases, List<MultipartFile> images) {
         if(name.length() > 20 || type.length() > 10 || description.length() > 2000) {
             return CommonResponse.builder()
                     .code(1)
@@ -37,6 +37,12 @@ public class PetProfileService {
             return CommonResponse.builder()
                     .code(1)
                     .message("每份宠物档案最多可以附9张图片，请检查")
+                    .build();
+        }
+        if (id != null && !petProfileRepository.existsById(id)) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("宠物档案不存在，请检查")
                     .build();
         }
         // 上传图片
@@ -72,6 +78,9 @@ public class PetProfileService {
                 .checkups(checkupSet)
                 .medicines(medicineSet)
                 .build();
+        if (id != null) {
+            pet.setId(id);
+        }
         petProfileRepository.save(pet);
         return CommonResponse.builder()
                 .code(0)
@@ -107,6 +116,35 @@ public class PetProfileService {
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
+                .build();
+    }
+
+    public CommonResponse getAllPetProfiles(Integer offset, String content) {
+        Integer count = petProfileRepository.getPageCount(10);
+        if (offset <= 0 || offset > count) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("合法页号范围：(" + 1 + ", " + count + ").")
+                    .build();
+        }
+        offset -= 1;
+        List<Pet> petProfiles = null;
+        if (content == null || content.isEmpty()) {
+            petProfiles = petProfileRepository.findPetProfiles(10, offset * 10);
+        } else {
+            petProfiles = petProfileRepository.findPetProfiles(10, offset * 10);
+            //todo:搜索
+        }
+        PageInfo pageInfo = null;
+        pageInfo = PageInfo.builder()
+                .currentPage(offset + 1)
+                .totalPages(count)
+                .data(petProfiles)
+                .build();
+        return CommonResponse.builder()
+                .code(0)
+                .message("success")
+                .result(pageInfo)
                 .build();
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -37,13 +36,43 @@ public class PetProfileController {
                                            @RequestParam("checkups") List<Integer> checkups,
                                            @RequestParam("diseases") List<Integer> diseases,
                                            @RequestParam("images") List<MultipartFile> images) {
-        return petProfileService.createPetProfile(name, type, gender, birthday, weight, description, medicines, checkups, diseases, images);
+        return petProfileService.createOrUpdatePetProfile(null, name, type, gender, birthday, weight, description, medicines, checkups, diseases, images);
+    }
+
+    @AdminMethod
+    @ApiOperation(value = "更新宠物病例")
+    @RequestMapping(value = "/updateOnePetProfile", method = RequestMethod.POST)
+    public CommonResponse updateOnePetProfile(@RequestParam("id") Integer id,
+                                           @RequestParam("name") String name,
+                                           @RequestParam("type") String type,
+                                           @RequestParam("gender") Boolean gender,
+                                           @RequestParam("birthday") String birthday,
+                                           @RequestParam("weight") Double weight,
+                                           @RequestParam("description") String description,
+                                           @RequestParam("medicines") List<Integer> medicines,
+                                           @RequestParam("checkups") List<Integer> checkups,
+                                           @RequestParam("diseases") List<Integer> diseases,
+                                           @RequestParam("images") List<MultipartFile> images) {
+        return petProfileService.createOrUpdatePetProfile(id, name, type, gender, birthday, weight, description, medicines, checkups, diseases, images);
     }
 
     @ApiOperation(value = "根据id获取宠物病例")
     @RequestMapping(value = "/getOnePetProfile", method = RequestMethod.GET)
     public CommonResponse getOnePetProfile(@RequestParam("id") Integer id) {
         return petProfileService.getPetProfileByPetId(id);
+    }
+
+    @AdminMethod
+    @ApiOperation(value = "根据id删除宠物病例")
+    @RequestMapping(value = "/deleteOnePetProfile", method = RequestMethod.GET)
+    public CommonResponse deleteOnePetProfile(@RequestParam("id") Integer id) {
+        return petProfileService.deletePetProfileByPetId(id);
+    }
+
+    @ApiOperation(value = "获取宠物病例列表")
+    @RequestMapping(value = "/getAllPetProfiles", method = RequestMethod.GET)
+    public CommonResponse getAllPetProfiles( @RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+        return petProfileService.getAllPetProfiles(currentPage, content);
     }
 
 }
