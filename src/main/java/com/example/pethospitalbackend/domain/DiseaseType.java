@@ -1,13 +1,9 @@
 package com.example.pethospitalbackend.domain;
 
-import com.example.pethospitalbackend.domain.profile.Pet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -22,8 +18,6 @@ public class DiseaseType {
     private String type;
     @Column(length = 20)
     private String name;
-//    @ManyToMany(mappedBy = "pet_profiles")
-//    private Set<Pet> petProfiles;
 
     public interface DiseaseTypeInfo{
         Integer getId();
