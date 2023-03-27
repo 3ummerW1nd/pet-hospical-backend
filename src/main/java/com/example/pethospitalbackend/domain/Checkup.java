@@ -2,6 +2,8 @@ package com.example.pethospitalbackend.domain;
 
 import com.azure.search.documents.indexes.SearchableField;
 import com.azure.search.documents.indexes.SimpleField;
+import com.example.pethospitalbackend.domain.profile.Pet;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,6 +23,11 @@ import javax.persistence.*;
 @DynamicUpdate
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "checkups")
+@JsonIgnoreProperties(value = { "petProfiles" })
+@NamedEntityGraph(name = "checkupBasic", attributeNodes = {
+        @NamedAttributeNode("id"),
+        @NamedAttributeNode("name")
+})
 public class Checkup {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
@@ -40,4 +48,7 @@ public class Checkup {
 
     @Column(name = "price", nullable = false, columnDefinition = "Decimal(8, 2)")
     private Double price;
+
+    @ManyToMany(mappedBy = "pet_profiles")
+    private Set<Pet> petProfiles;
 }

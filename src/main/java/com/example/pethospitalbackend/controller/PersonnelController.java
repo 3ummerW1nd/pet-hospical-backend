@@ -1,7 +1,6 @@
 package com.example.pethospitalbackend.controller;
 
 import com.example.pethospitalbackend.annotation.AdminMethod;
-import com.example.pethospitalbackend.annotation.NoLoginMethod;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.service.PersonnelService;
 import io.swagger.annotations.Api;
