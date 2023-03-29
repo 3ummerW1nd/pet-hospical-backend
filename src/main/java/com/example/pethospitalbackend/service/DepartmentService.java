@@ -53,6 +53,12 @@ public class DepartmentService {
 
     public CommonResponse getEquipmentByName(String name) {
         Equipment equipment = equipmentRepository.findEquipmentByName(name);
+        if (equipment == null) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("该器材不存在")
+                    .build();
+        }
         return CommonResponse.builder()
                 .result(equipment)
                 .code(0)
