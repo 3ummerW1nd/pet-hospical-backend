@@ -177,6 +177,12 @@ public class DepartmentService {
 
     public CommonResponse getDepartmentByName(String name) {
         Department department = departmentRepository.findDepartmentByName(name);
+        if (department == null) {
+            return CommonResponse.builder()
+                    .message("该科室不存在")
+                    .code(1)
+                    .build();
+        }
         return CommonResponse.builder()
                 .message("success")
                 .code(0)
