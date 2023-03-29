@@ -32,9 +32,9 @@ public class CheckupController {
     @ApiOperation(value = "更新检查")
     @RequestMapping(value = "/updateOneCheckup", method = RequestMethod.POST)
     public CommonResponse updateOneCheckup(@RequestParam("id") Integer id,
-                                             @RequestParam("name") String name,
-                                             @RequestParam("introduction") String introduction,
-                                             @RequestParam("price") Double price) {
+                                             String name,
+                                             String introduction,
+                                             Double price) {
         return checkupService.createOrUpdateCheckup(id, name, introduction, price);
     }
 

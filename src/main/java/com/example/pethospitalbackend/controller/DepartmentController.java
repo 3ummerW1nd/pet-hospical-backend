@@ -50,10 +50,10 @@ public class DepartmentController {
     @ApiOperation(value = "更新科室")
     @RequestMapping(value = "/updateOneDepartment", method = RequestMethod.POST)
     public CommonResponse updateOneDepartment(@RequestParam("id") Integer id,
-                                             @RequestParam("name") String name,
-                                             @RequestParam("phoneNumber") String phoneNumber,
-                                             @RequestParam("directorId") Integer directorId,
-                                             @RequestParam("functions") String functions) {
+                                             String name,
+                                             String phoneNumber,
+                                             Integer directorId,
+                                             String functions) {
         return departmentService.createOrUpdateDepartment(id, directorId, name, phoneNumber, functions);
     }
 

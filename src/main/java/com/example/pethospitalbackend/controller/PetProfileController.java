@@ -43,16 +43,16 @@ public class PetProfileController {
     @ApiOperation(value = "更新宠物病例")
     @RequestMapping(value = "/updateOnePetProfile", method = RequestMethod.POST)
     public CommonResponse updateOnePetProfile(@RequestParam("id") Integer id,
-                                           @RequestParam("name") String name,
-                                           @RequestParam("type") String type,
-                                           @RequestParam("gender") String gender,
-                                           @RequestParam("birthday") String birthday,
-                                           @RequestParam("weight") Double weight,
-                                           @RequestParam("description") String description,
-                                           @RequestParam("medicines") List<Integer> medicines,
-                                           @RequestParam("checkups") List<Integer> checkups,
-                                           @RequestParam("diseases") List<Integer> diseases,
-                                           @RequestParam("images") List<MultipartFile> images) {
+                                           String name,
+                                           String type,
+                                           String gender,
+                                           String birthday,
+                                           Double weight,
+                                           String description,
+                                           List<Integer> medicines,
+                                           List<Integer> checkups,
+                                           List<Integer> diseases,
+                                           List<MultipartFile> images) {
         return petProfileService.createOrUpdatePetProfile(id, name, type, gender, birthday, weight, description, medicines, checkups, diseases, images);
     }
 

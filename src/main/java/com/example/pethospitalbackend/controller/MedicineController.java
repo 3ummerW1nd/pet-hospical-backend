@@ -33,10 +33,10 @@ public class MedicineController {
     @ApiOperation(value = "更新药品")
     @RequestMapping(value = "/updateOneMedicine", method = RequestMethod.POST)
     public CommonResponse updateOneMedicine(@RequestParam("id") Integer id,
-                                             @RequestParam("name") String name,
-                                             @RequestParam("introduction") String introduction,
-                                             @RequestParam("price") Double price,
-                                             @RequestParam("quantity") Integer quantity) {
+                                             String name,
+                                             String introduction,
+                                             Double price,
+                                             Integer quantity) {
         return medicineService.createOrUpdateMedicine(id, name, introduction, price, quantity);
     }
 

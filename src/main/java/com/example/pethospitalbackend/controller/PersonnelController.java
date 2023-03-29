@@ -34,11 +34,11 @@ public class PersonnelController {
     @ApiOperation(value = "更新工作人员")
     @RequestMapping(value = "/updateOnePersonnel", method = RequestMethod.POST)
     public CommonResponse updateOnePersonnel(@RequestParam("id") Integer id,
-                                             @RequestParam("name") String name,
-                                             @RequestParam("gender") String gender,
-                                             @RequestParam("phoneNumber") String phoneNumber,
-                                             @RequestParam("duty") String duty,
-                                             @RequestParam("department") String department) {
+                                             String name,
+                                             String gender,
+                                             String phoneNumber,
+                                             String duty,
+                                             String department) {
         return personnelService.createOrUpdatePersonnel(id, name, gender, phoneNumber, duty, department);
     }
 
