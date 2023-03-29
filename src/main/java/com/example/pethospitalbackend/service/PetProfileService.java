@@ -44,12 +44,12 @@ public class PetProfileService {
                     .message("输入文字过长，请检查")
                     .build();
         }
-        if (images.size() > 9) {
-            return CommonResponse.builder()
-                    .code(1)
-                    .message("每份宠物档案最多可以附9张图片，请检查")
-                    .build();
-        }
+//        if (images.size() > 9) {
+//            return CommonResponse.builder()
+//                    .code(1)
+//                    .message("每份宠物档案最多可以附9张图片，请检查")
+//                    .build();
+//        }
         if (id != null && !petProfileRepository.existsById(id)) {
             return CommonResponse.builder()
                     .code(1)
@@ -57,9 +57,9 @@ public class PetProfileService {
                     .build();
         }
         // 上传图片
-        StringBuilder imageStringBuilder = new StringBuilder();
-        images.forEach(image -> imageStringBuilder.append(FileUtil.upload(image) + ","));
-        imageStringBuilder.deleteCharAt(imageStringBuilder.length() - 1);
+//        StringBuilder imageStringBuilder = new StringBuilder();
+//        images.forEach(image -> imageStringBuilder.append(FileUtil.upload(image) + ","));
+//        imageStringBuilder.deleteCharAt(imageStringBuilder.length() - 1);
 
         // 获取疾病集合
         Set<DiseaseType> diseaseSet = entityManager.createQuery("SELECT d FROM DiseaseType d WHERE d.id IN (:ids)", DiseaseType.class)
@@ -81,7 +81,7 @@ public class PetProfileService {
                 .name(name)
                 .type(type)
                 .gender(gender)
-                .images(imageStringBuilder.toString())
+//                .images(imageStringBuilder.toString())
                 .birthday(DateUtil.getDate(birthday))
                 .description(description)
                 .weight(weight)

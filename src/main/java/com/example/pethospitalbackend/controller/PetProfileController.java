@@ -34,9 +34,8 @@ public class PetProfileController {
                                            @RequestParam("description") String description,
                                            @RequestParam("medicines") List<Integer> medicines,
                                            @RequestParam("checkups") List<Integer> checkups,
-                                           @RequestParam("diseases") List<Integer> diseases,
-                                           @RequestParam("images") List<MultipartFile> images) {
-        return petProfileService.createOrUpdatePetProfile(null, name, type, gender, birthday, weight, description, medicines, checkups, diseases, images);
+                                           @RequestParam("diseases") List<Integer> diseases) {
+        return petProfileService.createOrUpdatePetProfile(null, name, type, gender, birthday, weight, description, medicines, checkups, diseases, null);
     }
 
     @AdminMethod
@@ -51,9 +50,8 @@ public class PetProfileController {
                                            String description,
                                            List<Integer> medicines,
                                            List<Integer> checkups,
-                                           List<Integer> diseases,
-                                           List<MultipartFile> images) {
-        return petProfileService.createOrUpdatePetProfile(id, name, type, gender, birthday, weight, description, medicines, checkups, diseases, images);
+                                           List<Integer> diseases) {
+        return petProfileService.createOrUpdatePetProfile(id, name, type, gender, birthday, weight, description, medicines, checkups, diseases, null);
     }
 
     @ApiOperation(value = "根据id获取宠物病例")
