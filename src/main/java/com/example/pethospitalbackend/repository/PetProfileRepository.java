@@ -1,4 +1,4 @@
-package com.example.pethospitalbackend.repository.profile;
+package com.example.pethospitalbackend.repository;
 
 import com.example.pethospitalbackend.domain.Checkup;
 import com.example.pethospitalbackend.domain.profile.Pet;

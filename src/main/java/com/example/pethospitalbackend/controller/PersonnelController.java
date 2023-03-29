@@ -23,7 +23,7 @@ public class PersonnelController {
     @ApiOperation(value = "创建工作人员")
     @RequestMapping(value = "/addOnePersonnel", method = RequestMethod.POST)
     public CommonResponse addOnePersonnel(@RequestParam("name") String name,
-                                          @RequestParam("gender") Boolean gender,
+                                          @RequestParam("gender") String gender,
                                           @RequestParam("phoneNumber") String phoneNumber,
                                           @RequestParam("duty") String duty,
                                           @RequestParam("department") String department) {
@@ -35,7 +35,7 @@ public class PersonnelController {
     @RequestMapping(value = "/updateOnePersonnel", method = RequestMethod.POST)
     public CommonResponse updateOnePersonnel(@RequestParam("id") Integer id,
                                              @RequestParam("name") String name,
-                                             @RequestParam("gender") Boolean gender,
+                                             @RequestParam("gender") String gender,
                                              @RequestParam("phoneNumber") String phoneNumber,
                                              @RequestParam("duty") String duty,
                                              @RequestParam("department") String department) {

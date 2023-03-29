@@ -3,7 +3,7 @@ package com.example.pethospitalbackend.service;
 import com.example.pethospitalbackend.domain.*;
 import com.example.pethospitalbackend.domain.profile.Pet;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
-import com.example.pethospitalbackend.repository.profile.PetProfileRepository;
+import com.example.pethospitalbackend.repository.PetProfileRepository;
 import com.example.pethospitalbackend.util.DateUtil;
 import com.example.pethospitalbackend.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,18 @@ public class PetProfileService {
     private EntityManager entityManager;
 
     @Transactional
-    public CommonResponse createOrUpdatePetProfile(Integer id, String name, String type, Boolean gender, String birthday, Double weight, String description, List<Integer> medicines, List<Integer> checkups, List<Integer> diseases, List<MultipartFile> images) {
+    public CommonResponse createOrUpdatePetProfile(Integer id, String name, String type, String genderString, String birthday, Double weight, String description, List<Integer> medicines, List<Integer> checkups, List<Integer> diseases, List<MultipartFile> images) {
+        Boolean gender = null;
+        if (genderString.equals("公")) {
+            gender = true;
+        } else if (genderString.equals("母")) {
+            gender = false;
+        } else {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("性别请填写\"公\"或\"母\"")
+                    .build();
+        }
         if(name.length() > 20 || type.length() > 10 || description.length() > 2000) {
             return CommonResponse.builder()
                     .code(1)

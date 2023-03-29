@@ -18,7 +18,18 @@ public class PersonnelService {
     private PersonnelRepository personnelRepository;
 
 
-    public CommonResponse createOrUpdatePersonnel(Integer id, String name, Boolean gender, String phoneNumber, String duty, String department) {
+    public CommonResponse createOrUpdatePersonnel(Integer id, String name, String genderString, String phoneNumber, String duty, String department) {
+        Boolean gender = null;
+        if (genderString.equals("男")) {
+            gender = true;
+        } else if (genderString.equals("女")) {
+            gender = false;
+        } else {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("性别请填写\"男\"或\"女\"")
+                    .build();
+        }
         Personnel personnel = null;
         if (id != null) {
             Boolean exist = personnelRepository.existsById(id);

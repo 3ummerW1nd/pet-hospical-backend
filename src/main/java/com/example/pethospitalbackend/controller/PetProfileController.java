@@ -28,7 +28,7 @@ public class PetProfileController {
     @RequestMapping(value = "/addOnePetProfile", method = RequestMethod.POST)
     public CommonResponse addOnePetProfile(@RequestParam("name") String name,
                                            @RequestParam("type") String type,
-                                           @RequestParam("gender") Boolean gender,
+                                           @RequestParam("gender") String gender,
                                            @RequestParam("birthday") String birthday,
                                            @RequestParam("weight") Double weight,
                                            @RequestParam("description") String description,
@@ -45,7 +45,7 @@ public class PetProfileController {
     public CommonResponse updateOnePetProfile(@RequestParam("id") Integer id,
                                            @RequestParam("name") String name,
                                            @RequestParam("type") String type,
-                                           @RequestParam("gender") Boolean gender,
+                                           @RequestParam("gender") String gender,
                                            @RequestParam("birthday") String birthday,
                                            @RequestParam("weight") Double weight,
                                            @RequestParam("description") String description,
