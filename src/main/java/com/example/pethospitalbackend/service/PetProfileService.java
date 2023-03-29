@@ -5,12 +5,13 @@ import com.example.pethospitalbackend.domain.profile.Pet;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.PetProfileRepository;
 import com.example.pethospitalbackend.util.DateUtil;
-import com.example.pethospitalbackend.util.FileUtil;
+import org.hibernate.graph.EntityGraphs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -101,7 +102,7 @@ public class PetProfileService {
 
 
     public CommonResponse getPetProfileByPetId(Integer id) {
-        Pet pet = petProfileRepository.getPetById(id);
+        Pet pet = petProfileRepository.findById(id).get();
         if (pet == null) {
             return CommonResponse.builder()
                     .message("宠物档案不存在")

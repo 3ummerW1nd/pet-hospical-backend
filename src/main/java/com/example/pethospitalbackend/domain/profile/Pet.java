@@ -22,7 +22,7 @@ import java.util.Set;
 @DynamicUpdate
 @Table(name = "pet_profiles")
 @NamedEntityGraph(
-        name = "PetProfile",
+        name = "pet.withDependencies",
         attributeNodes = {
                 @NamedAttributeNode(value = "diseases", subgraph = "diseaseBasic"),
                 @NamedAttributeNode(value = "checkups", subgraph = "checkupBasic"),

@@ -14,10 +14,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @DynamicUpdate
 @Table(name = "checkups")
-@NamedEntityGraph(name = "checkupBasic", attributeNodes = {
-        @NamedAttributeNode("id"),
-        @NamedAttributeNode("name")
-})
 public class Checkup {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
