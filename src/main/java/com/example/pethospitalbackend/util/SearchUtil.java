@@ -11,14 +11,20 @@ import com.azure.search.documents.indexes.models.SearchIndex;
 import com.azure.search.documents.indexes.models.SearchSuggester;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
 import com.example.pethospitalbackend.search.entity.SearchableEntityWithFK;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SearchUtil {
-    private static String searchServiceEndpoint = "https://pet-hospital-search.search.windows.net";
-    private static AzureKeyCredential adminKey = new AzureKeyCredential("MY86O28zbA4Ks7amUBwgzg1mKPtLoT7UidTSlyUmkxAzSeDV0Upo");
+    @Value("azure.search.endpoint")
+    private static String searchServiceEndpoint;
+
+    @Value("azure.search.key")
+    private static String searchServiceKey;
+
+    private static AzureKeyCredential adminKey = new AzureKeyCredential(searchServiceKey);
     private static SearchIndexAsyncClient searchIndexClient = new SearchIndexClientBuilder()
             .endpoint(searchServiceEndpoint)
             .credential(adminKey)

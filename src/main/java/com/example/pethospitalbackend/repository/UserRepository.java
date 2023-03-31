@@ -22,4 +22,13 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query(nativeQuery = true, value = "select id, name, phoneNumber, role, level from users Limit :limit OFFSET :offset where name like '%:name%'")
     List<UserInfo> findUsersByName(@Param("limit") int limit, @Param("offset") int offset, @Param("name") String name);
 
+    @Query(nativeQuery = true, value = "select id, name, phoneNumber, role, level from users")
+    List<UserInfo> findAllUsers();
+
+    @Query(nativeQuery = true, value = "select id, name, phoneNumber, role, level from users")
+    List<UserInfo> searchAllUsers(@Param("keywords") String keywords);
+
+    @Query(nativeQuery = true, value = "select id, name, phoneNumber, role, level from users where Limit :limit OFFSET :offset")
+    List<UserInfo> searchUsers(@Param("limit") int limit, @Param("offset") int offset, @Param("keywords") String keywords);
+
 }

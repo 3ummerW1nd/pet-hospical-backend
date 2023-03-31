@@ -18,4 +18,6 @@ public interface DepartmentRepository extends CrudRepository<Department, Integer
     Integer getPageCount(@Param("limit") int limit);
 
     Department findDepartmentByName(String name);
+
+    List<Department> findDepartmentsByDirectorId(Integer directorId);
 }

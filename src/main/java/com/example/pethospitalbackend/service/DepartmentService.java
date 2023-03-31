@@ -6,6 +6,7 @@ import com.example.pethospitalbackend.domain.page.DepartmentPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.DepartmentRepository;
 import com.example.pethospitalbackend.repository.EquipmentRepository;
+import com.example.pethospitalbackend.repository.PersonnelRepository;
 import com.example.pethospitalbackend.util.FileUtil;
 import com.example.pethospitalbackend.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,14 +115,14 @@ public class DepartmentService {
 
     @Transactional(rollbackFor = Exception.class)
     public CommonResponse deleteDepartmentById(Integer id) {
-        Optional<Department> optionalPersonnel = departmentRepository.findById(id);
-        if (!optionalPersonnel.isPresent()) {
+        Optional<Department> optionalDepartment = departmentRepository.findById(id);
+        if (!optionalDepartment.isPresent()) {
             return CommonResponse.builder()
                     .code(1)
                     .message("部门不存在，请检查id")
                     .build();
         }
-        Department department = optionalPersonnel.get();
+        Department department = optionalDepartment.get();
         departmentRepository.deleteById(id);
         return CommonResponse.builder()
                 .code(0)

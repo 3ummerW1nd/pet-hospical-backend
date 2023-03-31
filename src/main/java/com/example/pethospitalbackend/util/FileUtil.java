@@ -5,6 +5,7 @@ import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,12 +18,14 @@ import java.util.Set;
 import java.util.UUID;
 
 public class FileUtil {
-    private static final String ACCOUNT_NAME = "pethospitalresources";
-    private static final String ACCOUNT_KEY = "lipM7B7z2eRwa4x8I1WVjAA6vsthMm/Mz1oDyC+BSOYugJ+2gy0FRIyy86C/8TmEG6SYIev1uT/m+AStXwcPnA==";
-    private static final String END_POINT = "core.windows.net";
-    private static final String CONTAINER_NAME = "pethospicalfiles";
-
-    private static final String AZURE_STORAGE_ENDPOINT = "https://pethospitalresources.blob.core.windows.net/pethospicalfiles/";
+    @Value("azure.storage.account-name")
+    private static String ACCOUNT_NAME;
+    @Value("azure.storage.account-key")
+    private static String ACCOUNT_KEY;
+    @Value("azure.storage.endpoint")
+    private static String END_POINT;
+    @Value("azure.storage.container-name")
+    private static String CONTAINER_NAME;
 
     private static final Set<String> allowImageType = new HashSet<String>(){{
         add("jpg");
@@ -70,7 +73,6 @@ public class FileUtil {
 
 
     public static String upload(MultipartFile file) {
-        System.out.println(file == null);
         try {
             String fileName = UUID.randomUUID().toString();
             CloudBlockBlob blob = container.getBlockBlobReference(fileName);

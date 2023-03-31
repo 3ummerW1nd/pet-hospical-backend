@@ -20,8 +20,22 @@ public class UserService {
     private UserRepository userRepository;
 
     public CommonResponse getAllUsers(Integer offset, String content) {
+        if (offset == 0) {
+            if (content == null || content.isEmpty())
+                return CommonResponse.builder()
+                        .code(0)
+                        .message("success")
+                        .result(userRepository.findAllUsers())
+                        .build();
+            else
+                return CommonResponse.builder()
+                        .code(0)
+                        .message("success")
+                        .result(userRepository.searchAllUsers(content))
+                        .build();
+        }
         Integer count = userRepository.getPageCount(10);
-        if (offset <= 0 || offset > count) {
+        if (offset < 0 || offset > count) {
             return CommonResponse.builder()
                     .code(1)
                     .message("合法页号范围：(" + 1 + ", " + count + ").")

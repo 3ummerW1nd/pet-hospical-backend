@@ -1,8 +1,10 @@
 package com.example.pethospitalbackend.service;
 
+import com.example.pethospitalbackend.domain.Department;
 import com.example.pethospitalbackend.domain.Personnel;
 import com.example.pethospitalbackend.domain.page.PersonnelPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
+import com.example.pethospitalbackend.repository.DepartmentRepository;
 import com.example.pethospitalbackend.repository.PersonnelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ public class PersonnelService {
     @Autowired
     private PersonnelRepository personnelRepository;
 
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
     public CommonResponse createOrUpdatePersonnel(Integer id, String name, String genderString, String phoneNumber, String duty, String department) {
         Boolean gender = null;
@@ -73,6 +77,17 @@ public class PersonnelService {
                     .build();
         }
         Personnel personnel = optionalPersonnel.get();
+        List<Department> departments = departmentRepository.findDepartmentsByDirectorId(id);
+        StringBuilder stringBuilder = new StringBuilder();
+        departments.forEach(department -> {
+            stringBuilder.append(department.getName() + "，");
+        });
+        if (!departments.isEmpty()) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("工作人员：" + personnel.getName() + "目前正在" + stringBuilder + "担任主管，不可删除")
+                    .build();
+        }
         personnelRepository.deleteById(id);
         return CommonResponse.builder()
                 .code(0)
