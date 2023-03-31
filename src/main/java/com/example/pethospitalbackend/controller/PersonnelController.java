@@ -1,7 +1,6 @@
 package com.example.pethospitalbackend.controller;
 
 import com.example.pethospitalbackend.annotation.AdminMethod;
-import com.example.pethospitalbackend.annotation.NoLoginMethod;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.service.PersonnelService;
 import io.swagger.annotations.Api;
@@ -24,7 +23,7 @@ public class PersonnelController {
     @ApiOperation(value = "创建工作人员")
     @RequestMapping(value = "/addOnePersonnel", method = RequestMethod.POST)
     public CommonResponse addOnePersonnel(@RequestParam("name") String name,
-                                          @RequestParam("gender") Boolean gender,
+                                          @RequestParam("gender") String gender,
                                           @RequestParam("phoneNumber") String phoneNumber,
                                           @RequestParam("duty") String duty,
                                           @RequestParam("department") String department) {
@@ -35,17 +34,17 @@ public class PersonnelController {
     @ApiOperation(value = "更新工作人员")
     @RequestMapping(value = "/updateOnePersonnel", method = RequestMethod.POST)
     public CommonResponse updateOnePersonnel(@RequestParam("id") Integer id,
-                                             @RequestParam("name") String name,
-                                             @RequestParam("gender") Boolean gender,
-                                             @RequestParam("phoneNumber") String phoneNumber,
-                                             @RequestParam("duty") String duty,
-                                             @RequestParam("department") String department) {
+                                             String name,
+                                             String gender,
+                                             String phoneNumber,
+                                             String duty,
+                                             String department) {
         return personnelService.createOrUpdatePersonnel(id, name, gender, phoneNumber, duty, department);
     }
 
     @ApiOperation(value = "获取工作人员列表")
     @RequestMapping(value = "/getAllPersonnels", method = RequestMethod.GET)
-    public CommonResponse getAllPersonnels(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+    public CommonResponse getAllPersonnels(@RequestParam("currentPage") Integer currentPage, String content) {
         return personnelService.getAllPersonnels(currentPage, content);
     }
 

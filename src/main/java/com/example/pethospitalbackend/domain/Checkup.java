@@ -1,4 +1,4 @@
-package com.example.pethospitalbackend.domain.user;
+package com.example.pethospitalbackend.domain;
 
 import com.example.pethospitalbackend.search.entity.Searchable;
 import lombok.AllArgsConstructor;
@@ -14,8 +14,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicUpdate
-@Table(name = "users")
-public class User implements Searchable {
+@Table(name = "checkups")
+public class Checkup implements Searchable {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,16 +24,9 @@ public class User implements Searchable {
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(64)")
     private String name;
 
-    @Column(name = "password", columnDefinition = "VARCHAR(64)")
-    private String password;
+    @Column(name = "introduction", nullable = false, columnDefinition = "VARCHAR(2048)")
+    private String introduction;
 
-    @Column(name = "phoneNumber")
-    private String phoneNumber;
-
-    @Column(name = "role")
-    private Boolean role;
-
-    @Column(name = "level")
-    private Integer level;
+    @Column(name = "price", nullable = false, columnDefinition = "Decimal(8, 2)")
+    private Double price;
 }
-

@@ -1,8 +1,8 @@
 package com.example.pethospitalbackend.service;
 
+import com.example.pethospitalbackend.domain.page.UserPageInfo;
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.domain.user.UserInfo;
-import com.example.pethospitalbackend.domain.PageInfo;
 import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.repository.UserRepository;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
@@ -20,8 +20,22 @@ public class UserService {
     private UserRepository userRepository;
 
     public CommonResponse getAllUsers(Integer offset, String content) {
+        if (offset == 0) {
+            if (content == null || content.isEmpty())
+                return CommonResponse.builder()
+                        .code(0)
+                        .message("success")
+                        .result(userRepository.findAllUsers())
+                        .build();
+            else
+                return CommonResponse.builder()
+                        .code(0)
+                        .message("success")
+                        .result(userRepository.searchAllUsers(content))
+                        .build();
+        }
         Integer count = userRepository.getPageCount(10);
-        if (offset <= 0 || offset > count) {
+        if (offset < 0 || offset > count) {
             return CommonResponse.builder()
                     .code(1)
                     .message("合法页号范围：(" + 1 + ", " + count + ").")
@@ -34,11 +48,11 @@ public class UserService {
         } else {
             allUsers = userRepository.findUsersByName(10, offset * 10, content);
         }
-        PageInfo pageInfo = null;
-        pageInfo = PageInfo.builder()
+        UserPageInfo pageInfo = null;
+        pageInfo = UserPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .data(allUsers)
+                .users(allUsers)
                 .build();
         return CommonResponse.builder()
                 .code(0)

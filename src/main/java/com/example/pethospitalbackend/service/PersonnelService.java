@@ -1,8 +1,10 @@
 package com.example.pethospitalbackend.service;
 
-import com.example.pethospitalbackend.domain.PageInfo;
+import com.example.pethospitalbackend.domain.Department;
 import com.example.pethospitalbackend.domain.Personnel;
+import com.example.pethospitalbackend.domain.page.PersonnelPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
+import com.example.pethospitalbackend.repository.DepartmentRepository;
 import com.example.pethospitalbackend.repository.PersonnelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,30 @@ public class PersonnelService {
     @Autowired
     private PersonnelRepository personnelRepository;
 
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
-    public CommonResponse createOrUpdatePersonnel(Integer id, String name, Boolean gender, String phoneNumber, String duty, String department) {
+    public CommonResponse createOrUpdatePersonnel(Integer id, String name, String genderString, String phoneNumber, String duty, String department) {
+        Boolean gender = null;
+        if (genderString.equals("男")) {
+            gender = true;
+        } else if (genderString.equals("女")) {
+            gender = false;
+        } else {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("性别请填写\"男\"或\"女\"")
+                    .build();
+        }
         Personnel personnel = null;
         if (id != null) {
+            Boolean exist = personnelRepository.existsById(id);
+            if (!exist) {
+                return CommonResponse.builder()
+                        .code(1)
+                        .message("id不存在，请检查")
+                        .build();
+            }
             personnel = Personnel.builder()
                     .id(id)
                     .department(department)
@@ -55,6 +77,17 @@ public class PersonnelService {
                     .build();
         }
         Personnel personnel = optionalPersonnel.get();
+        List<Department> departments = departmentRepository.findDepartmentsByDirectorId(id);
+        StringBuilder stringBuilder = new StringBuilder();
+        departments.forEach(department -> {
+            stringBuilder.append(department.getName() + "，");
+        });
+        if (!departments.isEmpty()) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("工作人员：" + personnel.getName() + "目前正在" + stringBuilder + "担任主管，不可删除")
+                    .build();
+        }
         personnelRepository.deleteById(id);
         return CommonResponse.builder()
                 .code(0)
@@ -64,6 +97,25 @@ public class PersonnelService {
     }
 
     public CommonResponse getAllPersonnels(Integer offset, String content) {
+        if (content.isEmpty()) {
+            return getPersonnels(offset);
+        }
+        return searchPersonnels(offset, content);
+    }
+
+    private CommonResponse searchPersonnels(Integer offset, String content) {
+        return null;
+    }
+
+    private CommonResponse getPersonnels(Integer offset) {
+        if (offset == 0) {
+            List<Personnel> allPersonnels = (List<Personnel>) personnelRepository.findAll();
+            return CommonResponse.builder()
+                    .code(0)
+                    .message("success")
+                    .result(allPersonnels)
+                    .build();
+        }
         Integer count = personnelRepository.getPageCount(10);
         if (offset <= 0 || offset > count) {
             return CommonResponse.builder()
@@ -72,18 +124,12 @@ public class PersonnelService {
                     .build();
         }
         offset -= 1;
-        List<Personnel> allPersonnels = null;
-        if (content == null || content.isEmpty()) {
-            allPersonnels = personnelRepository.findPersonnels(10, offset * 10);
-        } else {
-            allPersonnels = personnelRepository.findPersonnels(10, offset * 10);
-            //todo:搜索
-        }
-        PageInfo pageInfo = null;
-        pageInfo = PageInfo.builder()
+        List<Personnel> allPersonnels = personnelRepository.findPersonnels(10, offset * 10);
+        PersonnelPageInfo pageInfo = null;
+        pageInfo = PersonnelPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .data(allPersonnels)
+                .personnels(allPersonnels)
                 .build();
         return CommonResponse.builder()
                 .code(0)
