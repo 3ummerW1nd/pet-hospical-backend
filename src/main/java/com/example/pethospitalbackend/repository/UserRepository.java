@@ -31,7 +31,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query(nativeQuery = true, value = "select id, name, phoneNumber, role, level from users")
     List<UserInfo> searchAllUsers(@Param("keywords") String keywords);
 
-    @Query(nativeQuery = true, value = "select id, name, phoneNumber, role, level from users where Limit :limit OFFSET :offset")
+    @Query(nativeQuery = true, value = "select id, name, phoneNumber, role, level from users where name like :keywords Limit :limit OFFSET :offset")
     List<UserInfo> searchUsers(@Param("limit") int limit, @Param("offset") int offset, @Param("keywords") String keywords);
 
 }
