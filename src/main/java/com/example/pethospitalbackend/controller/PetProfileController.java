@@ -69,7 +69,7 @@ public class PetProfileController {
 
     @ApiOperation(value = "获取宠物病例列表")
     @RequestMapping(value = "/getAllPetProfiles", method = RequestMethod.GET)
-    public CommonResponse getAllPetProfiles( @RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+    public CommonResponse getAllPetProfiles( @RequestParam("currentPage") Integer currentPage, String content) {
         return petProfileService.getAllPetProfiles(currentPage, content);
     }
 

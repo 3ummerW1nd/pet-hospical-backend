@@ -1,5 +1,6 @@
 package com.example.pethospitalbackend.domain;
 
+import com.example.pethospitalbackend.search.entity.Searchable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @DynamicUpdate
 @Table(name = "personnels")
-public class Personnel {
+public class Personnel implements Searchable {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)

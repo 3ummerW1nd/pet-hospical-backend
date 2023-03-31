@@ -1,11 +1,9 @@
 package com.example.pethospitalbackend.service;
 
 import com.example.pethospitalbackend.domain.Checkup;
-import com.example.pethospitalbackend.domain.Medicine;
-import com.example.pethospitalbackend.domain.PageInfo;
+import com.example.pethospitalbackend.domain.page.CheckupPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.CheckupRepository;
-import com.example.pethospitalbackend.repository.MedicineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,11 +95,11 @@ public class CheckupService {
         }
         offset -= 1;
         List<Checkup> checkups = checkupRepository.findCheckups(10, offset * 10);
-        PageInfo pageInfo = null;
-        pageInfo = PageInfo.builder()
+        CheckupPageInfo pageInfo = null;
+        pageInfo = CheckupPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .data(checkups)
+                .checkups(checkups)
                 .build();
         return CommonResponse.builder()
                 .code(0)

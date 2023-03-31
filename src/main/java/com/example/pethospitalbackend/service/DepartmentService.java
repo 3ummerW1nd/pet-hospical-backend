@@ -2,15 +2,12 @@ package com.example.pethospitalbackend.service;
 
 import com.example.pethospitalbackend.domain.Department;
 import com.example.pethospitalbackend.domain.Equipment;
-import com.example.pethospitalbackend.domain.PageInfo;
-import com.example.pethospitalbackend.domain.Personnel;
+import com.example.pethospitalbackend.domain.page.DepartmentPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.DepartmentRepository;
 import com.example.pethospitalbackend.repository.EquipmentRepository;
-import com.example.pethospitalbackend.repository.PersonnelRepository;
 import com.example.pethospitalbackend.util.FileUtil;
 import com.example.pethospitalbackend.util.JsonUtil;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -162,11 +159,11 @@ public class DepartmentService {
         }
         offset -= 1;
         List<Department> departments = departmentRepository.findDepartments(10, offset * 10);
-        PageInfo pageInfo = null;
-        pageInfo = PageInfo.builder()
+        DepartmentPageInfo pageInfo = null;
+        pageInfo = DepartmentPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .data(departments)
+                .departments(departments)
                 .build();
         return CommonResponse.builder()
                 .code(0)

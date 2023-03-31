@@ -1,17 +1,16 @@
 package com.example.pethospitalbackend.service;
 
 import com.example.pethospitalbackend.domain.*;
+import com.example.pethospitalbackend.domain.page.PetProfileInfo;
 import com.example.pethospitalbackend.domain.profile.Pet;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.PetProfileRepository;
 import com.example.pethospitalbackend.util.DateUtil;
-import org.hibernate.graph.EntityGraphs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -160,11 +159,11 @@ public class PetProfileService {
         }
         offset -= 1;
         List<Pet> petProfiles = petProfileRepository.findPetProfiles(10, offset * 10);
-        PageInfo pageInfo = null;
-        pageInfo = PageInfo.builder()
+        PetProfileInfo pageInfo = null;
+        pageInfo = PetProfileInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .data(petProfiles)
+                .petProfiles(petProfiles)
                 .build();
         return CommonResponse.builder()
                 .code(0)

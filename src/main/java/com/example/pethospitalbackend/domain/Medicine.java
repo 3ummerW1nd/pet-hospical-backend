@@ -2,6 +2,7 @@ package com.example.pethospitalbackend.domain;
 
 import com.azure.search.documents.indexes.SearchableField;
 import com.azure.search.documents.indexes.SimpleField;
+import com.example.pethospitalbackend.search.entity.Searchable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @DynamicUpdate
 @Table(name = "medicines")
-public class Medicine {
+public class Medicine implements Searchable {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)

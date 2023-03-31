@@ -42,7 +42,7 @@ public class MedicineController {
 
     @ApiOperation(value = "获取药品列表")
     @RequestMapping(value = "/getAllMedicines", method = RequestMethod.GET)
-    public CommonResponse getAllMedicines(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+    public CommonResponse getAllMedicines(@RequestParam("currentPage") Integer currentPage, String content) {
         return medicineService.getAllMedicines(currentPage, content);
     }
 

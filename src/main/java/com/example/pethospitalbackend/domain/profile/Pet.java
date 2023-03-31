@@ -4,6 +4,7 @@ import com.example.pethospitalbackend.domain.Checkup;
 import com.example.pethospitalbackend.domain.Disease;
 import com.example.pethospitalbackend.domain.DiseaseType;
 import com.example.pethospitalbackend.domain.Medicine;
+import com.example.pethospitalbackend.search.entity.Searchable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -49,7 +50,7 @@ import java.util.Set;
                         }),
         }
 )
-public class Pet {
+public class Pet implements Searchable {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,12 +1,12 @@
-package com.example.pethospitalbackend.domain;
+package com.example.pethospitalbackend.domain.page;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class PageInfo {
+public class CheckupPageInfo {
     private Integer currentPage;
     private Integer totalPages;
-    private Object data;
+    private Object checkups;
 }

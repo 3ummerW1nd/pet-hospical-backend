@@ -59,7 +59,7 @@ public class DepartmentController {
 
     @ApiOperation(value = "获取科室列表")
     @RequestMapping(value = "/getAllDepartments", method = RequestMethod.GET)
-    public CommonResponse getAllDepartments(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+    public CommonResponse getAllDepartments(@RequestParam("currentPage") Integer currentPage, String content) {
         return departmentService.getAllDepartments(currentPage, content);
     }
 

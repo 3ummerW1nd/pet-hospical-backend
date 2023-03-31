@@ -48,7 +48,7 @@ public class UserController {
     @AdminMethod
     @ApiOperation(value = "用户列表")
     @RequestMapping(value = "/getAllUsers", method = RequestMethod.GET)
-    public CommonResponse getAllUsers(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+    public CommonResponse getAllUsers(@RequestParam("currentPage") Integer currentPage, String content) {
         return userService.getAllUsers(currentPage, content);
     }
 

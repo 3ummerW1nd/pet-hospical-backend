@@ -44,7 +44,7 @@ public class PersonnelController {
 
     @ApiOperation(value = "获取工作人员列表")
     @RequestMapping(value = "/getAllPersonnels", method = RequestMethod.GET)
-    public CommonResponse getAllPersonnels(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+    public CommonResponse getAllPersonnels(@RequestParam("currentPage") Integer currentPage, String content) {
         return personnelService.getAllPersonnels(currentPage, content);
     }
 

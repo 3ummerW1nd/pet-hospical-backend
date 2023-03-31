@@ -40,7 +40,7 @@ public class CheckupController {
 
     @ApiOperation(value = "获取检查项目列表")
     @RequestMapping(value = "/getAllCheckups", method = RequestMethod.GET)
-    public CommonResponse getAllCheckups(@RequestParam("currentPage") Integer currentPage, @RequestParam("content") String content) {
+    public CommonResponse getAllCheckups(@RequestParam("currentPage") Integer currentPage, String content) {
         return checkupService.getAllCheckups(currentPage, content);
     }
 

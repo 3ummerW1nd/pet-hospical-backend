@@ -1,8 +1,7 @@
 package com.example.pethospitalbackend.service;
 
-import com.example.pethospitalbackend.domain.Medicine;
-import com.example.pethospitalbackend.domain.PageInfo;
 import com.example.pethospitalbackend.domain.Personnel;
+import com.example.pethospitalbackend.domain.page.PersonnelPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.PersonnelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,11 +110,11 @@ public class PersonnelService {
         }
         offset -= 1;
         List<Personnel> allPersonnels = personnelRepository.findPersonnels(10, offset * 10);
-        PageInfo pageInfo = null;
-        pageInfo = PageInfo.builder()
+        PersonnelPageInfo pageInfo = null;
+        pageInfo = PersonnelPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .data(allPersonnels)
+                .personnels(allPersonnels)
                 .build();
         return CommonResponse.builder()
                 .code(0)
