@@ -18,10 +18,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SearchUtil {
-    @Value("azure.search.endpoint")
+    @Value("${azure.search.endpoint}")
     private static String searchServiceEndpoint;
 
-    @Value("azure.search.key")
+    @Value("${azure.search.key}")
     private static String searchServiceKey;
 
     private static AzureKeyCredential adminKey = new AzureKeyCredential(searchServiceKey);

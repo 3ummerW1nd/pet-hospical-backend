@@ -18,13 +18,13 @@ import java.util.Set;
 import java.util.UUID;
 
 public class FileUtil {
-    @Value("azure.storage.account-name")
+    @Value("${azure.storage.account-name}")
     private static String ACCOUNT_NAME;
-    @Value("azure.storage.account-key")
+    @Value("${azure.storage.account-key}")
     private static String ACCOUNT_KEY;
-    @Value("azure.storage.endpoint")
+    @Value("${azure.storage.endpoint}")
     private static String END_POINT;
-    @Value("azure.storage.container-name")
+    @Value("${azure.storage.container-name}")
     private static String CONTAINER_NAME;
 
     private static final Set<String> allowImageType = new HashSet<String>(){{
