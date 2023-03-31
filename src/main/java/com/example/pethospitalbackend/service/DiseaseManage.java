@@ -110,26 +110,43 @@ public class DiseaseManage {
         disease_info.put("disease_type_name",typeRepository.findTypeById(disease_id));
         disease_info.put("disease_name",typeRepository.findNameById(disease_id));
         disease_info.put("symptom",disease.getSymptom());
-        disease_info.put("examination",disease.getExamination());
+        List<String> examination = new ArrayList<>();
+        String[] es = disease.getExamination().split(",");
+        for(String e : es)
+            examination.add(e);
+        disease_info.put("examination",examination);
         disease_info.put("diagnosis",disease.getDiagnosis());
-        disease_info.put("treatment",disease.getTreatment());
+        List<String> treatment = new ArrayList<>();
+        String[] ts = disease.getTreatment().split(",");
+        for(String t : ts)
+            treatment.add(t);
+        disease_info.put("treatment",treatment);
 
         String image_ids = disease.getImage_ids();
         String[] images = image_ids.split(",");
         String video_ids = disease.getVideo_ids();
         String[] videos = video_ids.split(",");
-        List<String> file_descriptions = new ArrayList<>();
-        List<String> file_urls = new ArrayList<>();
+        List<JSONObject> file_info = new ArrayList<>();
         for(String image : images){
-            file_urls.add(image);
-            file_descriptions.add(mediaRepository.getDescription(image));
+            JSONObject f = new JSONObject();
+            Media media = mediaRepository.getOne(image);
+            f.put("name",media.getDescription());
+            f.put("type","image");
+            f.put("description",media.getDescription());
+            f.put("url",image);
+            file_info.add(f);
         }
         for(String video : videos){
-            file_urls.add(video);
-            file_descriptions.add(mediaRepository.getDescription(video));
+            JSONObject f = new JSONObject();
+            Media media = mediaRepository.getOne(video);
+            f.put("name",video);
+            f.put("type","video");
+            f.put("description",media.getDescription());
+            f.put("url",video);
+            file_info.add(f);
         }
-        disease_info.put("file_descriptions",file_descriptions);
-        disease_info.put("file_urls",file_urls);
+        disease_info.put("file_info",file_info);
+
 
         return CommonResponse.builder().result(disease_info).message("获取成功").code(0).build();
     }
