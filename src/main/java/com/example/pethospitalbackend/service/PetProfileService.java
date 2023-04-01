@@ -3,6 +3,7 @@ package com.example.pethospitalbackend.service;
 import com.example.pethospitalbackend.domain.*;
 import com.example.pethospitalbackend.domain.page.PetProfileInfo;
 import com.example.pethospitalbackend.domain.profile.Pet;
+import com.example.pethospitalbackend.domain.profile.PetProfileVO;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.PetProfileRepository;
 import com.example.pethospitalbackend.util.DateUtil;
@@ -13,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -111,7 +114,7 @@ public class PetProfileService {
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
-                .result(pet)
+                .result(getPetProfileVO(pet))
                 .build();
     }
 
@@ -159,11 +162,15 @@ public class PetProfileService {
         }
         offset -= 1;
         List<Pet> petProfiles = petProfileRepository.findPetProfiles(10, offset * 10);
+        List<PetProfileVO> result = new ArrayList<>();
+        petProfiles.forEach(pet -> {
+            result.add(getPetProfileVO(pet));
+        });
         PetProfileInfo pageInfo = null;
         pageInfo = PetProfileInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .petProfiles(petProfiles)
+                .petProfiles(result)
                 .build();
         return CommonResponse.builder()
                 .code(0)
@@ -171,4 +178,32 @@ public class PetProfileService {
                 .result(pageInfo)
                 .build();
     }
+
+    private PetProfileVO getPetProfileVO(Pet pet) {
+        Set<BasicInfo> checkupBasic = new HashSet<>();
+        Set<BasicInfo> diseaseBasic = new HashSet<>();
+        Set<BasicInfo> medicineBasic = new HashSet<>();
+        pet.getCheckups().forEach(checkup -> {
+            checkupBasic.add(new BasicInfo(checkup.getId(), checkup.getName()));
+        });
+        pet.getMedicines().forEach(medicine -> {
+            medicineBasic.add(new BasicInfo(medicine.getId(), medicine.getName()));
+        });
+        pet.getDiseases().forEach(diseaseType -> {
+            diseaseBasic.add(new BasicInfo(diseaseType.getId(), diseaseType.getName()));
+        });
+        return PetProfileVO.builder()
+                .id(pet.getId())
+                .name(pet.getName())
+                .birthday(pet.getBirthday())
+                .gender(pet.getGender() ? "公" : "母")
+                .weight(pet.getWeight())
+                .description(pet.getDescription())
+                .type(pet.getType())
+                .checkups(checkupBasic)
+                .diseases(diseaseBasic)
+                .medicines(medicineBasic)
+                .build();
+    }
+
 }

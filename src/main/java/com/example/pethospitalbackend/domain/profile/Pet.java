@@ -1,7 +1,6 @@
 package com.example.pethospitalbackend.domain.profile;
 
 import com.example.pethospitalbackend.domain.Checkup;
-import com.example.pethospitalbackend.domain.Disease;
 import com.example.pethospitalbackend.domain.DiseaseType;
 import com.example.pethospitalbackend.domain.Medicine;
 import com.example.pethospitalbackend.search.entity.Searchable;
