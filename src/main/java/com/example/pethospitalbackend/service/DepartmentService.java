@@ -1,7 +1,8 @@
 package com.example.pethospitalbackend.service;
 
-import com.example.pethospitalbackend.domain.Department;
 import com.example.pethospitalbackend.domain.Equipment;
+import com.example.pethospitalbackend.domain.department.Department;
+import com.example.pethospitalbackend.domain.department.DepartmentVO;
 import com.example.pethospitalbackend.domain.page.DepartmentPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.DepartmentRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,9 @@ public class DepartmentService {
 
     @Autowired
     private EquipmentRepository equipmentRepository;
+
+    @Autowired
+    private PersonnelRepository personnelRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public CommonResponse createEquipment(String name, String functions, MultipartFile video, String process) {
@@ -80,7 +85,7 @@ public class DepartmentService {
             if (oldDepartment == null || oldDepartment.getId().equals(id)) {
                 department = Department.builder()
                         .id(id)
-                        .directorId(directorId)
+                        .director(personnelRepository.findById(directorId).get())
                         .name(name)
                         .functions(functions)
                         .phoneNumber(phoneNumber)
@@ -99,7 +104,7 @@ public class DepartmentService {
                         .build();
             }
             department = Department.builder()
-                    .directorId(directorId)
+                    .director(personnelRepository.findById(directorId).get())
                     .name(name)
                     .functions(functions)
                     .phoneNumber(phoneNumber)
@@ -109,7 +114,7 @@ public class DepartmentService {
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
-                .result(department)
+//                .result(department)
                 .build();
     }
 
@@ -159,9 +164,9 @@ public class DepartmentService {
                     .build();
         }
         offset -= 1;
-        List<Department> departments = departmentRepository.findDepartments(10, offset * 10);
-        DepartmentPageInfo pageInfo = null;
-        pageInfo = DepartmentPageInfo.builder()
+        List<Department> departmentList = departmentRepository.findDepartments(10, offset * 10);
+        List<DepartmentVO> departments = getDepartmentVOS(departmentList);
+        DepartmentPageInfo pageInfo = DepartmentPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
                 .departments(departments)
@@ -184,7 +189,28 @@ public class DepartmentService {
         return CommonResponse.builder()
                 .message("success")
                 .code(0)
-                .result(department)
+                .result(DepartmentVO.builder().id(department.getId())
+                        .name(department.getName())
+                        .phoneNumber(department.getPhoneNumber())
+                        .functions(department.getFunctions())
+                        .directorId(department.getDirector().getId())
+                        .directorName(department.getDirector().getName())
+                        .build())
                 .build();
+    }
+
+    private List<DepartmentVO> getDepartmentVOS(List<Department> departmentList) {
+        List<DepartmentVO> departments = new ArrayList<>();
+        departmentList.forEach(department -> {
+            departments.add(DepartmentVO.builder()
+                    .id(department.getId())
+                    .name(department.getName())
+                    .phoneNumber(department.getPhoneNumber())
+                    .functions(department.getFunctions())
+                    .directorId(department.getDirector().getId())
+                    .directorName(department.getDirector().getName())
+                    .build());
+        });
+        return departments;
     }
 }

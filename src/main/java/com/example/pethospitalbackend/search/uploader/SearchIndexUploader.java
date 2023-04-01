@@ -2,7 +2,7 @@ package com.example.pethospitalbackend.search.uploader;
 
 import com.azure.search.documents.SearchAsyncClient;
 import com.example.pethospitalbackend.domain.Checkup;
-import com.example.pethospitalbackend.domain.Department;
+import com.example.pethospitalbackend.domain.department.Department;
 import com.example.pethospitalbackend.domain.Medicine;
 import com.example.pethospitalbackend.domain.Personnel;
 import com.example.pethospitalbackend.domain.profile.Pet;

@@ -1,6 +1,6 @@
 package com.example.pethospitalbackend.service;
 
-import com.example.pethospitalbackend.domain.Department;
+import com.example.pethospitalbackend.domain.department.Department;
 import com.example.pethospitalbackend.domain.Personnel;
 import com.example.pethospitalbackend.domain.page.PersonnelPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;

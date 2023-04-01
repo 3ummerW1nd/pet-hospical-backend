@@ -1,7 +1,8 @@
-package com.example.pethospitalbackend.domain;
+package com.example.pethospitalbackend.domain.department;
 
 import com.azure.search.documents.indexes.SearchableField;
 import com.azure.search.documents.indexes.SimpleField;
+import com.example.pethospitalbackend.domain.Personnel;
 import com.example.pethospitalbackend.search.entity.Searchable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,32 +20,24 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicUpdate
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "departments",
         indexes = {@Index(name = "my_index_name",  columnList="name", unique = true)})
-public class Department  implements Searchable {
+public class Department implements Searchable {
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonProperty("id")
-    @SimpleField(isKey = true)
     private Integer id;
 
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(64)")
-    @SearchableField(analyzerName = "zh-Hans.microsoft")
-    @JsonProperty("name")
     private String name;
 
     @Column(name = "phoneNumber", nullable = false, columnDefinition = "VARCHAR(64)")
-    @SearchableField()
-    @JsonProperty("phoneNumber")
     private String phoneNumber;
 
-    @Column(name = "directorId", nullable = false)
-    private Integer directorId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "directorId")
+    private Personnel director;
 
     @Column(name = "functions", nullable = false, columnDefinition = "VARCHAR(2048)")
-    @SearchableField(analyzerName = "zh-Hans.microsoft")
-    @JsonProperty("functions")
     private String functions;
 }

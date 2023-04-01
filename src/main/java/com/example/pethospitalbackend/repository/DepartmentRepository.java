@@ -1,7 +1,6 @@
 package com.example.pethospitalbackend.repository;
 
-import com.example.pethospitalbackend.domain.Department;
-import com.example.pethospitalbackend.domain.Personnel;
+import com.example.pethospitalbackend.domain.department.Department;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

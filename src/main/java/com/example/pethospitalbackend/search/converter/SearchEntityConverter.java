@@ -1,6 +1,7 @@
 package com.example.pethospitalbackend.search.converter;
 
 import com.example.pethospitalbackend.domain.*;
+import com.example.pethospitalbackend.domain.department.Department;
 import com.example.pethospitalbackend.domain.profile.Pet;
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.search.entity.Searchable;
