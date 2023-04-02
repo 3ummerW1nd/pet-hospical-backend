@@ -1,19 +1,23 @@
 package com.example.pethospitalbackend.domain.profile;
 
-import com.example.pethospitalbackend.domain.BasicInfo;
+import com.example.pethospitalbackend.domain.Checkup;
+import com.example.pethospitalbackend.domain.DiseaseType;
+import com.example.pethospitalbackend.domain.Medicine;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import javax.persistence.*;
+import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PetProfileVO {
+public class PetProfileListVO {
     private Integer id;
 
     private String name;
@@ -24,17 +28,5 @@ public class PetProfileVO {
 
     private Long age;
 
-    private Date birthday;
-
-    private String images;
-
-    private String description;
-
-    private Double weight;
-
-    private List<BasicInfo> checkups;
-
-    private List<BasicInfo> medicines;
-
-    private List<BasicInfo> diseases;
+    private List<String> diseases;
 }

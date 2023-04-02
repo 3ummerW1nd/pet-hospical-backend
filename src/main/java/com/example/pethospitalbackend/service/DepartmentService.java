@@ -11,13 +11,15 @@ import com.example.pethospitalbackend.repository.PersonnelRepository;
 import com.example.pethospitalbackend.util.FileUtil;
 import com.example.pethospitalbackend.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartmentService {
@@ -149,7 +151,7 @@ public class DepartmentService {
 
     private CommonResponse getDepartments(Integer offset) {
         if (offset == 0) {
-            List<Department> allDepartments = (List<Department>) departmentRepository.findAll();
+            List<DepartmentVO> allDepartments = departmentRepository.findDepartments();
             return CommonResponse.builder()
                     .code(0)
                     .message("success")
@@ -164,12 +166,13 @@ public class DepartmentService {
                     .build();
         }
         offset -= 1;
-        List<Department> departmentList = departmentRepository.findDepartments(10, offset * 10);
-        List<DepartmentVO> departments = getDepartmentVOS(departmentList);
+        Pageable pageable = PageRequest.of(offset, 10);
+        List<DepartmentVO> departmentList = departmentRepository.findDepartments(pageable).get().collect(Collectors.toList());
+        // 10, offset * 10
         DepartmentPageInfo pageInfo = DepartmentPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .departments(departments)
+                .departments(departmentList)
                 .build();
         return CommonResponse.builder()
                 .code(0)
@@ -179,7 +182,7 @@ public class DepartmentService {
     }
 
     public CommonResponse getDepartmentByName(String name) {
-        Department department = departmentRepository.findDepartmentByName(name);
+        DepartmentVO department = departmentRepository.findDepartmentVOByName(name);
         if (department == null) {
             return CommonResponse.builder()
                     .message("该科室不存在")
@@ -189,28 +192,7 @@ public class DepartmentService {
         return CommonResponse.builder()
                 .message("success")
                 .code(0)
-                .result(DepartmentVO.builder().id(department.getId())
-                        .name(department.getName())
-                        .phoneNumber(department.getPhoneNumber())
-                        .functions(department.getFunctions())
-                        .directorId(department.getDirector().getId())
-                        .directorName(department.getDirector().getName())
-                        .build())
+                .result(department)
                 .build();
-    }
-
-    private List<DepartmentVO> getDepartmentVOS(List<Department> departmentList) {
-        List<DepartmentVO> departments = new ArrayList<>();
-        departmentList.forEach(department -> {
-            departments.add(DepartmentVO.builder()
-                    .id(department.getId())
-                    .name(department.getName())
-                    .phoneNumber(department.getPhoneNumber())
-                    .functions(department.getFunctions())
-                    .directorId(department.getDirector().getId())
-                    .directorName(department.getDirector().getName())
-                    .build());
-        });
-        return departments;
     }
 }

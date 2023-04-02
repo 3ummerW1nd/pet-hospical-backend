@@ -2,22 +2,20 @@ package com.example.pethospitalbackend.service;
 
 import com.example.pethospitalbackend.domain.*;
 import com.example.pethospitalbackend.domain.page.PetProfileInfo;
-import com.example.pethospitalbackend.domain.profile.Pet;
-import com.example.pethospitalbackend.domain.profile.PetProfileVO;
+import com.example.pethospitalbackend.domain.profile.*;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.PetProfileRepository;
 import com.example.pethospitalbackend.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,7 +102,7 @@ public class PetProfileService {
 
 
     public CommonResponse getPetProfileByPetId(Integer id) {
-        Pet pet = petProfileRepository.findById(id).get();
+        PetProfileDTO pet = petProfileRepository.getProfileById(id);
         if (pet == null) {
             return CommonResponse.builder()
                     .message("宠物档案不存在")
@@ -146,11 +144,11 @@ public class PetProfileService {
 
     private CommonResponse getPetProfiles(Integer offset) {
         if (offset == 0) {
-            List<Pet> allPetProfiles = petProfileRepository.getAllPets();
+            List<PetProfileListDTO> allPetProfiles = petProfileRepository.getAllPetProfiles();
             return CommonResponse.builder()
                     .code(0)
                     .message("success")
-                    .result(allPetProfiles)
+                    .result(getPetProfileListVO(allPetProfiles))
                     .build();
         }
         Integer count = petProfileRepository.getPageCount(10);
@@ -161,16 +159,13 @@ public class PetProfileService {
                     .build();
         }
         offset -= 1;
-        List<Pet> petProfiles = petProfileRepository.findPetProfiles(10, offset * 10);
-        List<PetProfileVO> result = new ArrayList<>();
-        petProfiles.forEach(pet -> {
-            result.add(getPetProfileVO(pet));
-        });
+        Pageable pageable = PageRequest.of(offset, 10);
+        List<PetProfileListDTO> petProfiles = petProfileRepository.findPetProfiles(pageable).get().collect(Collectors.toList());
         PetProfileInfo pageInfo = null;
         pageInfo = PetProfileInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .petProfiles(result)
+                .petProfiles(getPetProfileListVO(petProfiles))
                 .build();
         return CommonResponse.builder()
                 .code(0)
@@ -179,27 +174,54 @@ public class PetProfileService {
                 .build();
     }
 
-    private PetProfileVO getPetProfileVO(Pet pet) {
-        Set<BasicInfo> checkupBasic = new HashSet<>();
-        Set<BasicInfo> diseaseBasic = new HashSet<>();
-        Set<BasicInfo> medicineBasic = new HashSet<>();
-        pet.getCheckups().forEach(checkup -> {
-            checkupBasic.add(new BasicInfo(checkup.getId(), checkup.getName()));
+    private long getPetAge(Date birthday) {
+        long birthdayTime = birthday.getTime();
+        long now = System.currentTimeMillis();
+        long ageInMillis = (long) (365.25 * 24 * 60 * 60 * 1000);
+        return (now - birthdayTime) / ageInMillis;
+    }
+
+    private List<PetProfileListVO> getPetProfileListVO(List<PetProfileListDTO> dtoList) {
+        List<PetProfileListVO> result = new ArrayList<>();
+        dtoList.forEach(dto -> {
+            result.add(PetProfileListVO.builder()
+                    .id(dto.getId())
+                    .name(dto.getName())
+                    .type(dto.getType())
+                    .gender(dto.getGender() ? "公" : "母")
+                    .age(getPetAge(dto.getBirthday()))
+                    .diseases(dto.getDiseases())
+                    .build());
         });
-        pet.getMedicines().forEach(medicine -> {
-            medicineBasic.add(new BasicInfo(medicine.getId(), medicine.getName()));
-        });
-        pet.getDiseases().forEach(diseaseType -> {
-            diseaseBasic.add(new BasicInfo(diseaseType.getId(), diseaseType.getName()));
-        });
+        return result;
+
+    }
+
+
+    private PetProfileVO getPetProfileVO(PetProfileDTO pet) {
+        List<BasicInfo> checkupBasic = new ArrayList<>();
+        List<BasicInfo> diseaseBasic = new ArrayList<>();
+        List<BasicInfo> medicineBasic = new ArrayList<>();
+
+        for (int i = 0; i < pet.getCheckupIds().size(); i ++) {
+            checkupBasic.add(new BasicInfo(pet.getCheckupIds().get(i), pet.getCheckupNames().get(i)));
+        }
+        for (int i = 0; i < pet.getCheckupIds().size(); i ++) {
+            diseaseBasic.add(new BasicInfo(pet.getDiseaseIds().get(i), pet.getDiseaseNames().get(i)));
+        }
+        for (int i = 0; i < pet.getCheckupIds().size(); i ++) {
+            medicineBasic.add(new BasicInfo(pet.getMedicineIds().get(i), pet.getMedicineNames().get(i)));
+        }
         return PetProfileVO.builder()
                 .id(pet.getId())
                 .name(pet.getName())
                 .birthday(pet.getBirthday())
                 .gender(pet.getGender() ? "公" : "母")
+                .images(pet.getImages())
                 .weight(pet.getWeight())
                 .description(pet.getDescription())
                 .type(pet.getType())
+                .age(getPetAge(pet.getBirthday()))
                 .checkups(checkupBasic)
                 .diseases(diseaseBasic)
                 .medicines(medicineBasic)

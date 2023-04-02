@@ -1,19 +1,15 @@
 package com.example.pethospitalbackend.domain.department;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public interface DepartmentVO {
+  Integer getId();
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class DepartmentVO {
-    private Integer id;
-    private String name;
-    private String phoneNumber;
-    private String functions;
-    private Integer directorId;
-    private String directorName;
+  String getName();
+
+  String getPhoneNumber();
+
+  String getFunctions();
+
+  Integer getDirectorId();
+
+  String getDirectorName();
 }
