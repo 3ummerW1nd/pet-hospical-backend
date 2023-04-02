@@ -4,7 +4,7 @@ import com.azure.search.documents.SearchAsyncClient;
 import com.example.pethospitalbackend.domain.Checkup;
 import com.example.pethospitalbackend.domain.department.Department;
 import com.example.pethospitalbackend.domain.Medicine;
-import com.example.pethospitalbackend.domain.Personnel;
+import com.example.pethospitalbackend.domain.personnel.Personnel;
 import com.example.pethospitalbackend.domain.profile.Pet;
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.util.SearchUtil;

@@ -10,7 +10,6 @@ import com.azure.search.documents.indexes.models.IndexDocumentsBatch;
 import com.azure.search.documents.indexes.models.SearchIndex;
 import com.azure.search.documents.indexes.models.SearchSuggester;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
-import com.example.pethospitalbackend.search.entity.SearchableEntityWithFK;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;

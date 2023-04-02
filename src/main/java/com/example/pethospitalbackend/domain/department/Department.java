@@ -2,7 +2,7 @@ package com.example.pethospitalbackend.domain.department;
 
 import com.azure.search.documents.indexes.SearchableField;
 import com.azure.search.documents.indexes.SimpleField;
-import com.example.pethospitalbackend.domain.Personnel;
+import com.example.pethospitalbackend.domain.personnel.Personnel;
 import com.example.pethospitalbackend.search.entity.Searchable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
