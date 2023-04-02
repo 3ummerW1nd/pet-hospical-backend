@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.pethospitalbackend.domain.*;
 import com.example.pethospitalbackend.domain.department.Department;
 import com.example.pethospitalbackend.domain.department.DepartmentVO;
+import com.example.pethospitalbackend.domain.personnel.Personnel;
+import com.example.pethospitalbackend.domain.personnel.PersonnelVO;
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.domain.user.UserInfo;
 import com.example.pethospitalbackend.domain.user.UserInfoEntity;
@@ -79,18 +81,17 @@ public class SearchEntityConverter {
         return result;
     }
 
-    public static List<Personnel> getPersonnelFromSearchableEntity(List<SearchableEntity> searchableEntity) {
-        List<Personnel> result = new ArrayList<>();
+    public static List<PersonnelVO> getPersonnelFromSearchableEntity(List<SearchableEntity> searchableEntity) {
+        List<PersonnelVO> result = new ArrayList<>();
         searchableEntity.forEach(searchable -> {
-            JSONObject jsonObject = JSON.parseObject(searchable.getOther());
             Integer id = Integer.valueOf(searchable.getId().split(":")[1]);
             String[] nameAndDuty = searchable.getName().split(":");
-            result.add(Personnel.builder()
+            result.add(PersonnelVO.builder()
             .id(id)
             .phoneNumber(searchable.getPhoneNumber())
             .duty(nameAndDuty[1])
             .name(nameAndDuty[0])
-            .gender()
+            .gender(searchable.getOther())
             .build());
         });
         return result;
