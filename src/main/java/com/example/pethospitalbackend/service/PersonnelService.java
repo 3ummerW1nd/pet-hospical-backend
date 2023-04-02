@@ -1,8 +1,9 @@
 package com.example.pethospitalbackend.service;
 
 import com.example.pethospitalbackend.domain.department.Department;
-import com.example.pethospitalbackend.domain.Personnel;
+import com.example.pethospitalbackend.domain.personnel.Personnel;
 import com.example.pethospitalbackend.domain.page.PersonnelPageInfo;
+import com.example.pethospitalbackend.domain.personnel.PersonnelVO;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.DepartmentRepository;
 import com.example.pethospitalbackend.repository.PersonnelRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,10 +112,12 @@ public class PersonnelService {
     private CommonResponse getPersonnels(Integer offset) {
         if (offset == 0) {
             List<Personnel> allPersonnels = (List<Personnel>) personnelRepository.findAll();
+            List<PersonnelVO> result = new ArrayList<>();
+            allPersonnels.forEach(personnel -> result.add(getPersonnelVO(personnel)));
             return CommonResponse.builder()
                     .code(0)
                     .message("success")
-                    .result(allPersonnels)
+                    .result(result)
                     .build();
         }
         Integer count = personnelRepository.getPageCount(10);
@@ -125,11 +129,12 @@ public class PersonnelService {
         }
         offset -= 1;
         List<Personnel> allPersonnels = personnelRepository.findPersonnels(10, offset * 10);
-        PersonnelPageInfo pageInfo = null;
-        pageInfo = PersonnelPageInfo.builder()
+        List<PersonnelVO> result = new ArrayList<>();
+        allPersonnels.forEach(personnel -> result.add(getPersonnelVO(personnel)));
+        PersonnelPageInfo pageInfo = PersonnelPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
-                .personnels(allPersonnels)
+                .personnels(result)
                 .build();
         return CommonResponse.builder()
                 .code(0)
@@ -137,4 +142,16 @@ public class PersonnelService {
                 .result(pageInfo)
                 .build();
     }
+
+    private PersonnelVO getPersonnelVO(Personnel personnel) {
+        return PersonnelVO.builder()
+        .id(personnel.getId())
+        .name(personnel.getName())
+        .department(personnel.getDepartment())
+        .duty(personnel.getDuty())
+        .phoneNumber(personnel.getPhoneNumber())
+        .gender(personnel.getGender() ? "男" : "女")
+        .build();
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.example.pethospitalbackend.domain;
+package com.example.pethospitalbackend.domain.personnel;
 
 import com.example.pethospitalbackend.search.entity.Searchable;
 import lombok.AllArgsConstructor;
