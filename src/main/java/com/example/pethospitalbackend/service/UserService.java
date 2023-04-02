@@ -6,6 +6,8 @@ import com.example.pethospitalbackend.domain.user.UserInfo;
 import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.repository.UserRepository;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
+import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
+import com.example.pethospitalbackend.util.SearchUtil;
 import com.example.pethospitalbackend.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SearchUtil searchUtil;
 
     public CommonResponse getAllUsers(Integer offset, String content) {
         if (offset == 0) {
@@ -82,6 +87,7 @@ public class UserService {
                 .level(1)
                 .build();
         userRepository.save(user);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(user));
         return CommonResponse.builder()
                 .result(user)
                 .message("success")
