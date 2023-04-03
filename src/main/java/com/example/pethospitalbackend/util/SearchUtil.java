@@ -1,14 +1,18 @@
 package com.example.pethospitalbackend.util;
 
 import com.azure.core.credential.AzureKeyCredential;
+import com.azure.core.http.rest.PagedFlux;
 import com.azure.search.documents.SearchAsyncClient;
 import com.azure.search.documents.SearchClient;
+import com.azure.search.documents.implementation.models.SearchResult;
 import com.azure.search.documents.indexes.SearchIndexAsyncClient;
 import com.azure.search.documents.indexes.SearchIndexClient;
 import com.azure.search.documents.indexes.SearchIndexClientBuilder;
 import com.azure.search.documents.indexes.models.IndexDocumentsBatch;
 import com.azure.search.documents.indexes.models.SearchIndex;
 import com.azure.search.documents.indexes.models.SearchSuggester;
+import com.azure.search.documents.models.SearchOptions;
+import com.azure.search.documents.util.SearchPagedFlux;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class SearchUtil {
@@ -97,4 +102,22 @@ public class SearchUtil {
         }
     }
 
+    public CompletableFuture<List<SearchableEntity>> search(String keywords, String type, Integer offset) {
+        List<SearchableEntity> searchableEntityList = new ArrayList<>();
+        CompletableFuture<List<SearchableEntity>> future = new CompletableFuture<>();
+        SearchOptions options = new SearchOptions();
+        options.setIncludeTotalCount(true);
+        options.setFilter("type eq '" + type + "'");
+        options.setSkip(offset * 10);
+        options.setTop(10);
+        SearchPagedFlux searchPagedFlux = client.search(keywords, options);
+        searchPagedFlux.byPage().subscribe(searchPagedResponse -> {
+            searchPagedResponse.getValue().forEach(searchResult -> {
+                System.out.println(searchResult.getDocument(SearchableEntity.class));
+                searchableEntityList.add(searchResult.getDocument(SearchableEntity.class));
+                future.complete(searchableEntityList);
+            });
+        });
+        return future;
+    }
 }

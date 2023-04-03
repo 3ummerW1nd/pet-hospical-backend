@@ -3,6 +3,7 @@ package com.example.pethospitalbackend.service;
 import com.example.pethospitalbackend.domain.page.UserPageInfo;
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.domain.user.UserInfo;
+import com.example.pethospitalbackend.domain.user.UserInfoEntity;
 import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.repository.UserRepository;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
@@ -13,8 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class UserService {
@@ -48,17 +52,27 @@ public class UserService {
         }
         offset -= 1;
         List<UserInfo> allUsers = null;
+        UserPageInfo pageInfo = null;
         if (content == null || content.isEmpty()) {
             allUsers = userRepository.findUsers(10, offset * 10);
-        } else {
-            allUsers = userRepository.findUsersByName(10, offset * 10, content);
-        }
-        UserPageInfo pageInfo = null;
-        pageInfo = UserPageInfo.builder()
+            pageInfo = UserPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
                 .users(allUsers)
                 .build();
+        } else {
+            List<UserInfoEntity> searchResult = null;
+            try {
+                searchResult = new ArrayList<>(SearchEntityConverter.getUserFromSearchableEntity(searchUtil.search(content, "user", offset).get()));
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            pageInfo = UserPageInfo.builder()
+                .currentPage(offset + 1)
+                .totalPages(count)
+                .users(searchResult)
+                .build();
+        }
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
@@ -119,7 +133,15 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public CommonResponse deleteUserById(Integer id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            return CommonResponse.builder()
+                .code(1)
+                .message("该用户不存在")
+                .build();
+        }
         userRepository.deleteById(id);
+        searchUtil.delete(SearchEntityConverter.getSearchableEntity(optionalUser.get()));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
@@ -170,6 +192,7 @@ public class UserService {
                         .build();
         }
         userRepository.save(user);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(user));
         return CommonResponse.builder()
                 .code(0)
                 .message("更新成功")
@@ -190,6 +213,7 @@ public class UserService {
             String md5NewPassword = TokenUtil.inputPassToFormPass(newPassword);
             user.setPassword(md5NewPassword);
             userRepository.save(user);
+            searchUtil.upload(SearchEntityConverter.getSearchableEntity(user));
             return CommonResponse.builder()
                     .code(0)
                     .message("更新成功")

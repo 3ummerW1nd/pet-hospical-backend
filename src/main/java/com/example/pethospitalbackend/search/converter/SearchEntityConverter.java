@@ -73,6 +73,8 @@ public class SearchEntityConverter {
             .id(id)
             .level(Integer.valueOf(String.valueOf(jsonObject.get("level").toString().charAt(0))))
             .role("管理员".equals(jsonObject.get("role").toString()))
+            .name(searchable.getName())
+            .phoneNumber(searchable.getPhoneNumber())
             .build());
         });
         return result;
