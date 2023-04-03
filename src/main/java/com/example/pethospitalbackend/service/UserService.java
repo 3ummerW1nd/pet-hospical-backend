@@ -8,6 +8,7 @@ import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.repository.UserRepository;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
+import com.example.pethospitalbackend.search.entity.SearchableEntity;
 import com.example.pethospitalbackend.util.SearchUtil;
 import com.example.pethospitalbackend.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,9 @@ public class UserService {
         } else {
             List<UserInfoEntity> searchResult = null;
             try {
-                searchResult = new ArrayList<>(SearchEntityConverter.getUserFromSearchableEntity(searchUtil.search(content, "user", offset).get()));
+                List<SearchableEntity> list = searchUtil.search(content, "user", offset).get();
+                list.forEach(System.out::println);
+                searchResult = new ArrayList<>(SearchEntityConverter.getUserFromSearchableEntity(list));
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }

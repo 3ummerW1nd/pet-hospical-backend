@@ -13,10 +13,12 @@ import com.azure.search.documents.indexes.models.SearchIndex;
 import com.azure.search.documents.indexes.models.SearchSuggester;
 import com.azure.search.documents.models.SearchOptions;
 import com.azure.search.documents.util.SearchPagedFlux;
+import com.azure.search.documents.util.SearchPagedResponse;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -25,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @Component
 public class SearchUtil {
@@ -102,7 +105,7 @@ public class SearchUtil {
         }
     }
 
-    public CompletableFuture<List<SearchableEntity>> search(String keywords, String type, Integer offset) {
+    public Future<List<SearchableEntity>> search(String keywords, String type, Integer offset) {
         List<SearchableEntity> searchableEntityList = new ArrayList<>();
         CompletableFuture<List<SearchableEntity>> future = new CompletableFuture<>();
         SearchOptions options = new SearchOptions();
@@ -111,13 +114,12 @@ public class SearchUtil {
         options.setSkip(offset * 10);
         options.setTop(10);
         SearchPagedFlux searchPagedFlux = client.search(keywords, options);
-        searchPagedFlux.byPage().subscribe(searchPagedResponse -> {
-            searchPagedResponse.getValue().forEach(searchResult -> {
-                System.out.println(searchResult.getDocument(SearchableEntity.class));
-                searchableEntityList.add(searchResult.getDocument(SearchableEntity.class));
-                future.complete(searchableEntityList);
-            });
+        SearchPagedResponse searchPagedResponse = searchPagedFlux.byPage().blockLast();
+        searchPagedResponse.getValue().forEach(searchResult -> {
+            System.out.println(searchResult.getDocument(SearchableEntity.class));
+            searchableEntityList.add(searchResult.getDocument(SearchableEntity.class));
         });
+        future.complete(searchableEntityList);
         return future;
     }
 }
