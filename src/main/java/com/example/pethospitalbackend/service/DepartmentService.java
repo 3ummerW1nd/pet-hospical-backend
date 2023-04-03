@@ -32,6 +32,9 @@ public class DepartmentService {
     @Autowired
     private PersonnelRepository personnelRepository;
 
+    @Autowired
+    private FileUtil fileUtil;
+
     @Transactional(rollbackFor = Exception.class)
     public CommonResponse createEquipment(String name, String functions, MultipartFile video, String process) {
 //        if (!FileUtil.isVideo(video)) {
@@ -41,7 +44,7 @@ public class DepartmentService {
 //                    .build();
 //        }
 
-        String videoPath = FileUtil.upload(video);
+        String videoPath = fileUtil.upload(video);
         Equipment equipment = Equipment.builder()
                 .functions(functions)
                 .name(name)

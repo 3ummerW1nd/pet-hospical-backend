@@ -6,54 +6,50 @@ import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
+@Component
 public class FileUtil {
     @Value("${STORAGE_ACCOUNT_NAME}")
-    private static String ACCOUNT_NAME;
+    private String ACCOUNT_NAME;
+
     @Value("${STORAGE_ACCOUNT_KEY}")
-    private static String ACCOUNT_KEY;
+    private String ACCOUNT_KEY;
+
     @Value("${STORAGE_ENDPOINT}")
-    private static String END_POINT;
+    private String END_POINT;
+
     @Value("${STORAGE_CONTAINER_NAME}")
-    private static String CONTAINER_NAME;
+    private String CONTAINER_NAME;
 
-    private static final Set<String> allowImageType = new HashSet<String>(){{
-        add("jpg");
-        add("png");
-        add("jpeg");
-        add("bmp");
-        add("JPG");
-        add("PNG");
-        add("BMP");
-        add("JPEG");
-    }};
+    private static volatile FileUtil fileUtil;
 
-    private static final Set<String> allowVideoType = new HashSet<String>(){{
-        add("avi");
-        add("mp4");
-        add("wmv");
-        add("mpeg");
-        add("m4v");
-        add("AVI");
-        add("MP4");
-        add("WMV");
-        add("MPEG");
-        add("M4V");
-    }};
+    private CloudBlobContainer container;
 
-    private static CloudBlobContainer container = null;
+    private FileUtil() { }
 
-    static {
+    public static FileUtil getFileUtil() {
+        if (fileUtil == null) {
+            synchronized (FileUtil.class) {
+                if (fileUtil == null) {
+                    fileUtil = new FileUtil();
+                }
+            }
+        }
+        return fileUtil;
+    }
+
+    @PostConstruct
+    public void init() {
         String PROTOCOL = "https";
         String format = "DefaultEndpointsProtocol={0};AccountName={1};AccountKey={2};EndpointSuffix={3}";
         CloudStorageAccount storageAccount = null;
@@ -71,8 +67,31 @@ public class FileUtil {
         }
     }
 
+    //    private static final Set<String> allowImageType = new HashSet<String>(){{
+//        add("jpg");
+//        add("png");
+//        add("jpeg");
+//        add("bmp");
+//        add("JPG");
+//        add("PNG");
+//        add("BMP");
+//        add("JPEG");
+//    }};
 
-    public static String upload(MultipartFile file) {
+//    private static final Set<String> allowVideoType = new HashSet<String>(){{
+//        add("avi");
+//        add("mp4");
+//        add("wmv");
+//        add("mpeg");
+//        add("m4v");
+//        add("AVI");
+//        add("MP4");
+//        add("WMV");
+//        add("MPEG");
+//        add("M4V");
+//    }};
+
+    public String upload(MultipartFile file) {
         try {
             String fileName = UUID.randomUUID().toString();
             CloudBlockBlob blob = container.getBlockBlobReference(fileName);
@@ -89,14 +108,14 @@ public class FileUtil {
         }
     }
 
-    public static boolean isImage(MultipartFile multipartFile) {
-        String fileSuffix = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
-        return allowImageType.contains(fileSuffix);
-    }
-
-    public static boolean isVideo(MultipartFile multipartFile) {
-        String fileSuffix = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
-        return allowVideoType.contains(fileSuffix);
-    }
+//    public boolean isImage(MultipartFile multipartFile) {
+//        String fileSuffix = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
+//        return allowImageType.contains(fileSuffix);
+//    }
+//
+//    public static boolean isVideo(MultipartFile multipartFile) {
+//        String fileSuffix = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf("."));
+//        return allowVideoType.contains(fileSuffix);
+//    }
 
 }
