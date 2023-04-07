@@ -7,6 +7,11 @@ import com.example.pethospitalbackend.domain.personnel.PersonnelVO;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.DepartmentRepository;
 import com.example.pethospitalbackend.repository.PersonnelRepository;
+import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
+import com.example.pethospitalbackend.search.entity.Result;
+import com.example.pethospitalbackend.search.entity.SearchableEntity;
+import com.example.pethospitalbackend.search.entity.SearchableEntity;
+import com.example.pethospitalbackend.util.SearchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class PersonnelService {
@@ -23,6 +29,10 @@ public class PersonnelService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    @Autowired
+    private SearchUtil searchUtil;
+
+    @Transactional
     public CommonResponse createOrUpdatePersonnel(Integer id, String name, String genderString, String phoneNumber, String duty, String department) {
         Boolean gender = null;
         if (genderString.equals("男")) {
@@ -61,6 +71,7 @@ public class PersonnelService {
                     .phoneNumber(phoneNumber)
                     .build();
         }
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(personnel));
         personnelRepository.save(personnel);
         return CommonResponse.builder()
                 .code(0)
@@ -90,6 +101,7 @@ public class PersonnelService {
                     .message("工作人员：" + personnel.getName() + "目前正在" + stringBuilder + "担任主管，不可删除")
                     .build();
         }
+        searchUtil.delete(SearchEntityConverter.getSearchableEntity(personnel));
         personnelRepository.deleteById(id);
         return CommonResponse.builder()
                 .code(0)
@@ -106,7 +118,24 @@ public class PersonnelService {
     }
 
     private CommonResponse searchPersonnels(Integer offset, String content) {
-        return null;
+        List<PersonnelVO> searchResult = null;
+        try {
+            Result result = searchUtil.search(content, "user", offset - 1).get();
+            List<SearchableEntity> list = result.getSearchableEntityList();
+            searchResult = new ArrayList<>(SearchEntityConverter.getPersonnelFromSearchableEntity(list));
+            PersonnelPageInfo pageInfo = PersonnelPageInfo.builder()
+                .currentPage(offset)
+                .totalPages((int) Math.ceil(result.getTotalCount().doubleValue() / 10.0))
+                .personnels(searchResult)
+                .build();
+            return CommonResponse.builder()
+                .code(0)
+                .message("success")
+                .result(pageInfo)
+                .build();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private CommonResponse getPersonnels(Integer offset) {

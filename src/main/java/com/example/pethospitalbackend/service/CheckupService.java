@@ -5,6 +5,7 @@ import com.example.pethospitalbackend.domain.page.CheckupPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.CheckupRepository;
 import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
+import com.example.pethospitalbackend.search.entity.Result;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
 import com.example.pethospitalbackend.util.SearchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class CheckupService {
     @Autowired
     private SearchUtil searchUtil;
 
+    @Transactional
     public CommonResponse createOrUpdateCheckup(Integer id, String name, String introduction, Double price) {
         Checkup checkup = null;
         if (id != null) {
@@ -62,7 +64,7 @@ public class CheckupService {
         if (!optionalPersonnel.isPresent()) {
             return CommonResponse.builder()
                     .code(1)
-                    .message("药品不存在，请检查id")
+                    .message("检查不存在，请检查id")
                     .build();
         }
         Checkup checkup = optionalPersonnel.get();
@@ -83,15 +85,24 @@ public class CheckupService {
     }
 
     private CommonResponse searchCheckups(Integer offset, String content) {
-        return null;
-//        try {
-//            List<Checkup> searchResult = null;
-//            List<SearchableEntity> list = searchUtil.search(content, "user", offset).get();
-////            list.forEach(System.out::println);
-//            searchResult = new ArrayList<>(SearchEntityConverter.getCheckupFromSearchableEntity(list));
-//        } catch (InterruptedException | ExecutionException e) {
-//            throw new RuntimeException(e);
-//        }
+        List<Checkup> searchResult = null;
+        try {
+            Result result = searchUtil.search(content, "user", offset - 1).get();
+            List<SearchableEntity> list = result.getSearchableEntityList();
+            searchResult = new ArrayList<>(SearchEntityConverter.getCheckupFromSearchableEntity(list));
+            CheckupPageInfo pageInfo = CheckupPageInfo.builder()
+                .currentPage(offset)
+                .totalPages((int) Math.ceil(result.getTotalCount().doubleValue() / 10.0))
+                .checkups(searchResult)
+                .build();
+            return CommonResponse.builder()
+                .code(0)
+                .message("success")
+                .result(pageInfo)
+                .build();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private CommonResponse getCheckups(Integer offset) {
