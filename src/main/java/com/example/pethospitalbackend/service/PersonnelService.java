@@ -120,7 +120,7 @@ public class PersonnelService {
     private CommonResponse searchPersonnels(Integer offset, String content) {
         List<PersonnelVO> searchResult = null;
         try {
-            Result result = searchUtil.search(content, "user", offset - 1).get();
+            Result result = searchUtil.search(content, "personnel", offset - 1).get();
             List<SearchableEntity> list = result.getSearchableEntityList();
             searchResult = new ArrayList<>(SearchEntityConverter.getPersonnelFromSearchableEntity(list));
             PersonnelPageInfo pageInfo = PersonnelPageInfo.builder()

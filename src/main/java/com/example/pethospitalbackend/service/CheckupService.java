@@ -87,7 +87,7 @@ public class CheckupService {
     private CommonResponse searchCheckups(Integer offset, String content) {
         List<Checkup> searchResult = null;
         try {
-            Result result = searchUtil.search(content, "user", offset - 1).get();
+            Result result = searchUtil.search(content, "checkup", offset - 1).get();
             List<SearchableEntity> list = result.getSearchableEntityList();
             searchResult = new ArrayList<>(SearchEntityConverter.getCheckupFromSearchableEntity(list));
             CheckupPageInfo pageInfo = CheckupPageInfo.builder()

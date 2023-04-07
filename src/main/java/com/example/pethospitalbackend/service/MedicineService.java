@@ -89,7 +89,7 @@ public class MedicineService {
     private CommonResponse searchMedicines(Integer offset, String content) {
         List<Medicine> searchResult = null;
         try {
-            Result result = searchUtil.search(content, "user", offset - 1).get();
+            Result result = searchUtil.search(content, "medicine", offset - 1).get();
             List<SearchableEntity> list = result.getSearchableEntityList();
             searchResult = new ArrayList<>(SearchEntityConverter.getMedicineFromSearchableEntity(list));
             MedicinePageInfo pageInfo = MedicinePageInfo.builder()
