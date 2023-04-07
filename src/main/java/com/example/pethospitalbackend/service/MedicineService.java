@@ -51,8 +51,8 @@ public class MedicineService {
                     .quantity(quantity)
                     .build();
         }
-        searchUtil.upload(SearchEntityConverter.getSearchableEntity(medicine));
         medicineRepository.save(medicine);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(medicine));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")

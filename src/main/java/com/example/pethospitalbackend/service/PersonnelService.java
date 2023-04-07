@@ -71,8 +71,8 @@ public class PersonnelService {
                     .phoneNumber(phoneNumber)
                     .build();
         }
-        searchUtil.upload(SearchEntityConverter.getSearchableEntity(personnel));
         personnelRepository.save(personnel);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(personnel));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
