@@ -4,21 +4,28 @@ import com.example.pethospitalbackend.domain.Checkup;
 import com.example.pethospitalbackend.domain.page.CheckupPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.CheckupRepository;
+import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
+import com.example.pethospitalbackend.search.entity.SearchableEntity;
+import com.example.pethospitalbackend.util.SearchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class CheckupService {
     @Autowired
     private CheckupRepository checkupRepository;
 
+    @Autowired
+    private SearchUtil searchUtil;
 
     public CommonResponse createOrUpdateCheckup(Integer id, String name, String introduction, Double price) {
-        Checkup medicine = null;
+        Checkup checkup = null;
         if (id != null) {
             Boolean exist = checkupRepository.existsById(id);
             if (!exist) {
@@ -27,24 +34,25 @@ public class CheckupService {
                         .message("id不存在，请检查")
                         .build();
             }
-            medicine = Checkup.builder()
+            checkup = Checkup.builder()
                     .id(id)
                     .name(name)
                     .introduction(introduction)
                     .price(price)
                     .build();
         } else {
-            medicine = Checkup.builder()
+            checkup = Checkup.builder()
                     .name(name)
                     .introduction(introduction)
                     .price(price)
                     .build();
         }
-        checkupRepository.save(medicine);
+        checkupRepository.save(checkup);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(checkup));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
-                .result(medicine)
+                .result(checkup)
                 .build();
     }
 
@@ -59,6 +67,7 @@ public class CheckupService {
         }
         Checkup checkup = optionalPersonnel.get();
         checkupRepository.deleteById(id);
+        searchUtil.delete(SearchEntityConverter.getSearchableEntity(checkup));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
@@ -75,6 +84,14 @@ public class CheckupService {
 
     private CommonResponse searchCheckups(Integer offset, String content) {
         return null;
+//        try {
+//            List<Checkup> searchResult = null;
+//            List<SearchableEntity> list = searchUtil.search(content, "user", offset).get();
+////            list.forEach(System.out::println);
+//            searchResult = new ArrayList<>(SearchEntityConverter.getCheckupFromSearchableEntity(list));
+//        } catch (InterruptedException | ExecutionException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     private CommonResponse getCheckups(Integer offset) {

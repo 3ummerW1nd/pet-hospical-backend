@@ -8,6 +8,7 @@ import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.repository.UserRepository;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
+import com.example.pethospitalbackend.search.entity.Result;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
 import com.example.pethospitalbackend.util.SearchUtil;
 import com.example.pethospitalbackend.util.TokenUtil;
@@ -30,18 +31,40 @@ public class UserService {
     private SearchUtil searchUtil;
 
     public CommonResponse getAllUsers(Integer offset, String content) {
+        if (content == null || content.isEmpty()) {
+            return getUsers(offset);
+        }
+        return searchAllUsers(offset, content);
+    }
+
+    public CommonResponse searchAllUsers(Integer offset, String content) {
+        List<UserInfoEntity> searchResult = null;
+        try {
+            Result result = searchUtil.search(content, "user", offset - 1).get();
+            List<SearchableEntity> list = result.getSearchableEntityList();
+            list.forEach(System.out::println);
+            searchResult = new ArrayList<>(SearchEntityConverter.getUserFromSearchableEntity(list));
+            UserPageInfo pageInfo = UserPageInfo.builder()
+                .currentPage(offset)
+                .totalPages((int) Math.ceil(result.getTotalCount().doubleValue() / 10.0))
+                .users(searchResult)
+                .build();
+            return CommonResponse.builder()
+                .code(0)
+                .message("success")
+                .result(pageInfo)
+                .build();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public CommonResponse getUsers(Integer offset) {
         if (offset == 0) {
-            if (content == null || content.isEmpty())
-                return CommonResponse.builder()
+            return CommonResponse.builder()
                         .code(0)
                         .message("success")
                         .result(userRepository.findAllUsers())
-                        .build();
-            else
-                return CommonResponse.builder()
-                        .code(0)
-                        .message("success")
-                        .result(userRepository.searchAllUsers(content))
                         .build();
         }
         Integer count = userRepository.getPageCount(10);
@@ -52,30 +75,12 @@ public class UserService {
                     .build();
         }
         offset -= 1;
-        List<UserInfo> allUsers = null;
-        UserPageInfo pageInfo = null;
-        if (content == null || content.isEmpty()) {
-            allUsers = userRepository.findUsers(10, offset * 10);
-            pageInfo = UserPageInfo.builder()
+        List<UserInfo> allUsers = userRepository.findUsers(10, offset * 10);
+        UserPageInfo pageInfo = UserPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
                 .users(allUsers)
                 .build();
-        } else {
-            List<UserInfoEntity> searchResult = null;
-            try {
-                List<SearchableEntity> list = searchUtil.search(content, "user", offset).get();
-                list.forEach(System.out::println);
-                searchResult = new ArrayList<>(SearchEntityConverter.getUserFromSearchableEntity(list));
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
-            pageInfo = UserPageInfo.builder()
-                .currentPage(offset + 1)
-                .totalPages(count)
-                .users(searchResult)
-                .build();
-        }
         return CommonResponse.builder()
                 .code(0)
                 .message("success")

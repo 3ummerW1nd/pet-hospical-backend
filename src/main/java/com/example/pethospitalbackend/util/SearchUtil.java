@@ -1,29 +1,20 @@
 package com.example.pethospitalbackend.util;
 
 import com.azure.core.credential.AzureKeyCredential;
-import com.azure.core.http.rest.PagedFlux;
 import com.azure.search.documents.SearchAsyncClient;
-import com.azure.search.documents.SearchClient;
-import com.azure.search.documents.implementation.models.SearchResult;
 import com.azure.search.documents.indexes.SearchIndexAsyncClient;
-import com.azure.search.documents.indexes.SearchIndexClient;
 import com.azure.search.documents.indexes.SearchIndexClientBuilder;
 import com.azure.search.documents.indexes.models.IndexDocumentsBatch;
-import com.azure.search.documents.indexes.models.SearchIndex;
-import com.azure.search.documents.indexes.models.SearchSuggester;
 import com.azure.search.documents.models.SearchOptions;
 import com.azure.search.documents.util.SearchPagedFlux;
 import com.azure.search.documents.util.SearchPagedResponse;
+import com.example.pethospitalbackend.search.entity.Result;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -105,9 +96,10 @@ public class SearchUtil {
         }
     }
 
-    public Future<List<SearchableEntity>> search(String keywords, String type, Integer offset) {
+    public Future<Result> search(String keywords, String type, Integer offset) {
         List<SearchableEntity> searchableEntityList = new ArrayList<>();
-        CompletableFuture<List<SearchableEntity>> future = new CompletableFuture<>();
+        CompletableFuture<Result> future = new CompletableFuture<>();
+        Result result = new Result();
         SearchOptions options = new SearchOptions();
         options.setIncludeTotalCount(true);
         options.setFilter("type eq '" + type + "'");
@@ -116,10 +108,12 @@ public class SearchUtil {
         SearchPagedFlux searchPagedFlux = client.search(keywords, options);
         SearchPagedResponse searchPagedResponse = searchPagedFlux.byPage().blockLast();
         searchPagedResponse.getValue().forEach(searchResult -> {
-            System.out.println(searchResult.getDocument(SearchableEntity.class));
+//            System.out.println(searchResult.getDocument(SearchableEntity.class));
             searchableEntityList.add(searchResult.getDocument(SearchableEntity.class));
         });
-        future.complete(searchableEntityList);
+        result.setTotalCount(searchPagedFlux.getTotalCount().block().intValue());
+        result.setSearchableEntityList(searchableEntityList);
+        future.complete(result);
         return future;
     }
 }
