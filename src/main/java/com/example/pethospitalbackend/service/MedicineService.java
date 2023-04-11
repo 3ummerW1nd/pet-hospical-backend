@@ -4,19 +4,28 @@ import com.example.pethospitalbackend.domain.Medicine;
 import com.example.pethospitalbackend.domain.page.MedicinePageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.MedicineRepository;
+import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
+import com.example.pethospitalbackend.search.entity.Result;
+import com.example.pethospitalbackend.search.entity.SearchableEntity;
+import com.example.pethospitalbackend.util.SearchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class MedicineService {
     @Autowired
     private MedicineRepository medicineRepository;
 
+    @Autowired
+    private SearchUtil searchUtil;
 
+    @Transactional
     public CommonResponse createOrUpdateMedicine(Integer id, String name, String introduction, Double price, Integer quantity) {
         Medicine medicine = null;
         if (id != null) {
@@ -43,6 +52,7 @@ public class MedicineService {
                     .build();
         }
         medicineRepository.save(medicine);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(medicine));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
@@ -60,6 +70,7 @@ public class MedicineService {
                     .build();
         }
         Medicine medicine = optionalPersonnel.get();
+        searchUtil.delete(SearchEntityConverter.getSearchableEntity(medicine));
         medicineRepository.deleteById(id);
         return CommonResponse.builder()
                 .code(0)
@@ -76,7 +87,24 @@ public class MedicineService {
     }
 
     private CommonResponse searchMedicines(Integer offset, String content) {
-        return null;
+        List<Medicine> searchResult = null;
+        try {
+            Result result = searchUtil.search(content, "medicine", offset - 1).get();
+            List<SearchableEntity> list = result.getSearchableEntityList();
+            searchResult = new ArrayList<>(SearchEntityConverter.getMedicineFromSearchableEntity(list));
+            MedicinePageInfo pageInfo = MedicinePageInfo.builder()
+                .currentPage(offset)
+                .totalPages((int) Math.ceil(result.getTotalCount().doubleValue() / 10.0))
+                .medicines(searchResult)
+                .build();
+            return CommonResponse.builder()
+                .code(0)
+                .message("success")
+                .result(pageInfo)
+                .build();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private CommonResponse getMedicines(Integer offset) {

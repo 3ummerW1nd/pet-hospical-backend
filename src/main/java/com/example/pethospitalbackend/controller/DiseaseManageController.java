@@ -25,6 +25,9 @@ public class DiseaseManageController {
     @Autowired
     private MediaRepository mediaRepository;
 
+    @Autowired
+    private FileUtil fileUtil;
+
     @AdminMethod
     @ApiOperation(value = "获取所有大病")
     @RequestMapping(value = "/getBigDisease", method = RequestMethod.GET)
@@ -55,7 +58,7 @@ public class DiseaseManageController {
         String image_ids = "";
         for (int i = 0; i < image.length; i++) {
             MultipartFile image_i = image[i];
-            String image_id = FileUtil.upload(image_i);
+            String image_id = fileUtil.upload(image_i);
             Media media1 = new Media(image_id,image_description[i]);
             mediaRepository.save(media1);
             image_ids += image_id + ",";
@@ -63,7 +66,7 @@ public class DiseaseManageController {
         String video_ids = "";
         for (int i = 0; i < video.length; i++) {
             MultipartFile vidoe_i = video[i];
-            String video_id = FileUtil.upload(vidoe_i);
+            String video_id = fileUtil.upload(vidoe_i);
             Media media2 = new Media(video_id,video_description[i]);
             mediaRepository.save(media2);
             video_ids += video_id + ",";
@@ -93,7 +96,7 @@ public class DiseaseManageController {
         String image_ids = "";
         for (int i = 0; i < image.length; i++) {
             MultipartFile image_i = image[i];
-            String image_id = FileUtil.upload(image_i);
+            String image_id = fileUtil.upload(image_i);
             Media media1 = new Media(image_id,image_description[i]);
             mediaRepository.save(media1);
             image_ids += image_id + ",";
@@ -101,7 +104,7 @@ public class DiseaseManageController {
         String video_ids = "";
         for (int i = 0; i < video.length; i++) {
             MultipartFile vidoe_i = video[i];
-            String video_id = FileUtil.upload(vidoe_i);
+            String video_id = fileUtil.upload(vidoe_i);
             Media media2 = new Media(video_id,video_description[i]);
             mediaRepository.save(media2);
             video_ids += video_id + ",";

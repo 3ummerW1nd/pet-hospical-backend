@@ -3,35 +3,68 @@ package com.example.pethospitalbackend.service;
 import com.example.pethospitalbackend.domain.page.UserPageInfo;
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.domain.user.UserInfo;
+import com.example.pethospitalbackend.domain.user.UserInfoEntity;
 import com.example.pethospitalbackend.domain.user.UserRole;
 import com.example.pethospitalbackend.repository.UserRepository;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
+import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
+import com.example.pethospitalbackend.search.entity.Result;
+import com.example.pethospitalbackend.search.entity.SearchableEntity;
+import com.example.pethospitalbackend.util.SearchUtil;
 import com.example.pethospitalbackend.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SearchUtil searchUtil;
+
     public CommonResponse getAllUsers(Integer offset, String content) {
+        if (content == null || content.isEmpty()) {
+            return getUsers(offset);
+        }
+        return searchAllUsers(offset, content);
+    }
+
+    public CommonResponse searchAllUsers(Integer offset, String content) {
+        List<UserInfoEntity> searchResult = null;
+        try {
+            Result result = searchUtil.search(content, "user", offset - 1).get();
+            List<SearchableEntity> list = result.getSearchableEntityList();
+            list.forEach(System.out::println);
+            searchResult = new ArrayList<>(SearchEntityConverter.getUserFromSearchableEntity(list));
+            UserPageInfo pageInfo = UserPageInfo.builder()
+                .currentPage(offset)
+                .totalPages((int) Math.ceil(result.getTotalCount().doubleValue() / 10.0))
+                .users(searchResult)
+                .build();
+            return CommonResponse.builder()
+                .code(0)
+                .message("success")
+                .result(pageInfo)
+                .build();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public CommonResponse getUsers(Integer offset) {
         if (offset == 0) {
-            if (content == null || content.isEmpty())
-                return CommonResponse.builder()
+            return CommonResponse.builder()
                         .code(0)
                         .message("success")
                         .result(userRepository.findAllUsers())
-                        .build();
-            else
-                return CommonResponse.builder()
-                        .code(0)
-                        .message("success")
-                        .result(userRepository.searchAllUsers(content))
                         .build();
         }
         Integer count = userRepository.getPageCount(10);
@@ -42,14 +75,8 @@ public class UserService {
                     .build();
         }
         offset -= 1;
-        List<UserInfo> allUsers = null;
-        if (content == null || content.isEmpty()) {
-            allUsers = userRepository.findUsers(10, offset * 10);
-        } else {
-            allUsers = userRepository.findUsersByName(10, offset * 10, content);
-        }
-        UserPageInfo pageInfo = null;
-        pageInfo = UserPageInfo.builder()
+        List<UserInfo> allUsers = userRepository.findUsers(10, offset * 10);
+        UserPageInfo pageInfo = UserPageInfo.builder()
                 .currentPage(offset + 1)
                 .totalPages(count)
                 .users(allUsers)
@@ -82,6 +109,7 @@ public class UserService {
                 .level(1)
                 .build();
         userRepository.save(user);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(user));
         return CommonResponse.builder()
                 .result(user)
                 .message("success")
@@ -113,7 +141,15 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public CommonResponse deleteUserById(Integer id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            return CommonResponse.builder()
+                .code(1)
+                .message("该用户不存在")
+                .build();
+        }
         userRepository.deleteById(id);
+        searchUtil.delete(SearchEntityConverter.getSearchableEntity(optionalUser.get()));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
@@ -164,6 +200,7 @@ public class UserService {
                         .build();
         }
         userRepository.save(user);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(user));
         return CommonResponse.builder()
                 .code(0)
                 .message("更新成功")
@@ -184,6 +221,7 @@ public class UserService {
             String md5NewPassword = TokenUtil.inputPassToFormPass(newPassword);
             user.setPassword(md5NewPassword);
             userRepository.save(user);
+            searchUtil.upload(SearchEntityConverter.getSearchableEntity(user));
             return CommonResponse.builder()
                     .code(0)
                     .message("更新成功")

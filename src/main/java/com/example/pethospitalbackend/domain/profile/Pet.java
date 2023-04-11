@@ -1,7 +1,6 @@
 package com.example.pethospitalbackend.domain.profile;
 
 import com.example.pethospitalbackend.domain.Checkup;
-import com.example.pethospitalbackend.domain.Disease;
 import com.example.pethospitalbackend.domain.DiseaseType;
 import com.example.pethospitalbackend.domain.Medicine;
 import com.example.pethospitalbackend.search.entity.Searchable;
@@ -22,34 +21,6 @@ import java.util.Set;
 @NoArgsConstructor
 @DynamicUpdate
 @Table(name = "pet_profiles")
-@NamedEntityGraph(
-        name = "pet.withDependencies",
-        attributeNodes = {
-                @NamedAttributeNode(value = "diseases", subgraph = "diseaseBasic"),
-                @NamedAttributeNode(value = "checkups", subgraph = "checkupBasic"),
-                @NamedAttributeNode(value = "medicines", subgraph = "medicineBasic"),
-        },
-        subgraphs = {
-                @NamedSubgraph(
-                        name = "diseaseBasic",
-                        attributeNodes = {
-                                @NamedAttributeNode("name"),
-                                @NamedAttributeNode("id")
-                        }),
-                @NamedSubgraph(
-                        name = "checkupBasic",
-                        attributeNodes = {
-                                @NamedAttributeNode("name"),
-                                @NamedAttributeNode("id")
-                        }),
-                @NamedSubgraph(
-                        name = "medicineBasic",
-                        attributeNodes = {
-                                @NamedAttributeNode("name"),
-                                @NamedAttributeNode("id")
-                        }),
-        }
-)
 public class Pet implements Searchable {
     @Id
     @Column(name = "id", nullable = false, updatable = false)

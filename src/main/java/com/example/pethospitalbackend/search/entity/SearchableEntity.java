@@ -28,4 +28,7 @@ public class SearchableEntity implements Searchable{
     @JsonProperty("type")
     @SimpleField(isFilterable = true)
     private String type;
+    @JsonProperty("other")
+    @SearchableField()
+    private String other;
 }
