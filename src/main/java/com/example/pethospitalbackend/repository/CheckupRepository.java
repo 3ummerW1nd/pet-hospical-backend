@@ -16,4 +16,7 @@ public interface CheckupRepository extends CrudRepository<Checkup, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT CEIL(COUNT(*) / :limit) AS pageCount FROM checkups")
     Integer getPageCount(@Param("limit") int limit);
+
+    @Query(nativeQuery = true, value = "select price from checkups where id = ?1")
+    Double findCheckPrice(int id);
 }

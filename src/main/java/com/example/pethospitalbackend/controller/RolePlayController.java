@@ -20,7 +20,7 @@ public class RolePlayController {
     @Autowired
     private RolePlay rolePlay;
 
-    @ApiOperation(value = "获取所有考试")
+    @ApiOperation(value = "获取所有角色")
     @RequestMapping(value = "/getAllRoles", method = RequestMethod.GET)
     public CommonResponse getAllRoles() {
         return rolePlay.getAllRoles();

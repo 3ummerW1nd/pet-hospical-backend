@@ -15,4 +15,7 @@ public interface MedicineRepository extends CrudRepository<Medicine, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT CEIL(COUNT(*) / :limit) AS pageCount FROM medicines")
     Integer getPageCount(@Param("limit") int limit);
+
+    @Query(nativeQuery = true, value = "select price from medicines where id = ?1")
+    Double findMedicinePrice(int id);
 }
