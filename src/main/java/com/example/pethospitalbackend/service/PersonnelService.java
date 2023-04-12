@@ -10,7 +10,6 @@ import com.example.pethospitalbackend.repository.PersonnelRepository;
 import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
 import com.example.pethospitalbackend.search.entity.Result;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
-import com.example.pethospitalbackend.search.entity.SearchableEntity;
 import com.example.pethospitalbackend.util.SearchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
