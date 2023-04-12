@@ -32,8 +32,8 @@ public class RolePlayController {
         return rolePlay.getAllActions(role_type);
     }
 
-    @ApiOperation(value = "获取角色的Action")
-    @RequestMapping(value = "/getNextStep", method = RequestMethod.GET)
+    @ApiOperation(value = "获取下一步")
+    @RequestMapping(value = "/getNextStep", method = RequestMethod.POST)
     public CommonResponse getNextStep(@RequestParam("procedure_id") Integer procedure_id,
                                       @RequestParam("curr_step") Integer curr_step) {
         return rolePlay.getNextStep(procedure_id,curr_step);

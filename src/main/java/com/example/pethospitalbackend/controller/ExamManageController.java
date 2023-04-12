@@ -56,7 +56,7 @@ public class ExamManageController {
 
     @AdminMethod
     @ApiOperation(value = "试题搜索")
-    @RequestMapping(value = "/searchQuestion", method = RequestMethod.GET)
+    @RequestMapping(value = "/searchQuestion", method = RequestMethod.POST)
     public CommonResponse searchQuestion(@RequestParam("disease_type_id") Integer disease_type_id,
                                          @RequestParam("search_text") String search_text,
                                          @RequestParam("currentPage") Integer cur) {
@@ -125,7 +125,7 @@ public class ExamManageController {
 
     @AdminMethod
     @ApiOperation(value = "试卷搜索")
-    @RequestMapping(value = "/searchPaper", method = RequestMethod.GET)
+    @RequestMapping(value = "/searchPaper", method = RequestMethod.POST)
     public CommonResponse searchPaper(@RequestParam("disease_type_id") Integer disease_type_id,
                                       @RequestParam("search_text") String search_text,
                                       @RequestParam("currentPage") Integer cur) {
@@ -196,7 +196,7 @@ public class ExamManageController {
 
     @AdminMethod
     @ApiOperation(value = "考试搜索")
-    @RequestMapping(value = "/searchExam", method = RequestMethod.GET)
+    @RequestMapping(value = "/searchExam", method = RequestMethod.POST)
     public CommonResponse searchExam(@RequestParam("search_text") String search_text,
                                      @RequestParam("currentPage") Integer cur) {
         return examManage.searchExam(search_text,cur);
