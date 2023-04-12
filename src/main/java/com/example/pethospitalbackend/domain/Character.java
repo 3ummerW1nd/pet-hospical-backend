@@ -1,6 +1,7 @@
 package com.example.pethospitalbackend.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "character")
+@Table(name = "db_character")
 public class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
