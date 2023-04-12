@@ -61,7 +61,7 @@ public class ExamManage {
         String d_name = diseaseTypeRepository.findNameById(q.getDisease_type_id());
         QuestionInfo questionInfo = new QuestionInfo(q,d_name);
         JSONObject o = new JSONObject();
-        o.put("questionInfo",questionInfo);
+        o.put("question_info",questionInfo);
         return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
@@ -203,7 +203,7 @@ public class ExamManage {
         paperInfo.put("question_score",score);
 
         JSONObject o = new JSONObject();
-        o.put("paperInfo",paperInfo);
+        o.put("paper_info",paperInfo);
         return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
@@ -320,7 +320,7 @@ public class ExamManage {
         examInfo.put("paper_info",paper);
 
         JSONObject o = new JSONObject();
-        o.put("examInfo",examInfo);
+        o.put("exam_info",examInfo);
         return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
