@@ -3,8 +3,10 @@ package com.example.pethospitalbackend.search.converter;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.pethospitalbackend.domain.*;
+import com.example.pethospitalbackend.domain.department.Department;
 import com.example.pethospitalbackend.domain.personnel.Personnel;
 import com.example.pethospitalbackend.domain.personnel.PersonnelVO;
+import com.example.pethospitalbackend.domain.profile.Pet;
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.domain.user.UserInfoEntity;
 import com.example.pethospitalbackend.search.entity.Searchable;
@@ -12,6 +14,7 @@ import com.example.pethospitalbackend.search.entity.SearchableEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class SearchEntityConverter {
     public static SearchableEntity getSearchableEntity(Searchable searchable) {
@@ -59,6 +62,36 @@ public class SearchEntityConverter {
                     .introduction(checkup.getIntroduction())
                     .type("checkup")
                     .other(checkup.getPrice().toString())
+                    .build();
+        } else if (searchable instanceof Department) {
+            Department department = (Department) searchable;
+            JSONObject jsonObject = new JSONObject();
+            Personnel personnel = department.getDirector();
+            jsonObject.put("directorId", personnel.getId());
+            jsonObject.put("directorName", personnel.getName());
+            String other = jsonObject.toJSONString();
+            return SearchableEntity.builder()
+                    .id("department_" + department.getId())
+                    .name(department.getName())
+                    .introduction(department.getFunctions())
+                    .phoneNumber(department.getPhoneNumber())
+                    .type("department")
+                    .other(other)
+                    .build();
+        } else if (searchable instanceof Pet) {
+            Pet pet = (Pet) searchable;
+            JSONObject jsonObject = new JSONObject();
+            Set<DiseaseType> diseases = pet.getDiseases();
+            List<String> names = new ArrayList<>();
+            diseases.forEach(diseaseType -> names.add(diseaseType.getName()));
+            jsonObject.put("diseases", names);
+            String other = jsonObject.toJSONString();
+            return SearchableEntity.builder()
+                    .id("pet_" + pet.getId())
+                    .name(pet.getName() + "_" + pet.getType() + "_" + (pet.getGender() ? "公" : "母"))
+                    .introduction(pet.getDescription())
+                    .other(other)
+                    .type("pet_profile")
                     .build();
         }
         return null;

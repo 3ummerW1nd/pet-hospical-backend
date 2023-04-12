@@ -31,7 +31,9 @@ public class DiseaseManage {
     //获取所有大病
     public CommonResponse getBigDisease(){
         List<String> types = typeRepository.getAllType();
-        return CommonResponse.builder().result(types).message("获取成功").code(0).build();
+        JSONObject o = new JSONObject();
+        o.put("big_disease",types);
+        return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
     //获取所有病类
@@ -55,7 +57,9 @@ public class DiseaseManage {
             disease_types.add(disease_type);
             i++;
         }
-        return CommonResponse.builder().result(disease_types).message("获取成功").code(0).build();
+        JSONObject o = new JSONObject();
+        o.put("disease_types",disease_types);
+        return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
 //    //获取所有病例
@@ -147,8 +151,9 @@ public class DiseaseManage {
         }
         disease_info.put("file_info",file_info);
 
-
-        return CommonResponse.builder().result(disease_info).message("获取成功").code(0).build();
+        JSONObject o = new JSONObject();
+        o.put("disease_info",disease_info);
+        return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
     //病例搜索
