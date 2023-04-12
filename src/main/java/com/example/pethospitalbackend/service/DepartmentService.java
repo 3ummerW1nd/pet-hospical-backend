@@ -1,15 +1,22 @@
 package com.example.pethospitalbackend.service;
 
 import com.example.pethospitalbackend.domain.Equipment;
+import com.example.pethospitalbackend.domain.Medicine;
 import com.example.pethospitalbackend.domain.department.Department;
 import com.example.pethospitalbackend.domain.department.DepartmentVO;
+import com.example.pethospitalbackend.domain.department.DepartmentVOEntity;
 import com.example.pethospitalbackend.domain.page.DepartmentPageInfo;
+import com.example.pethospitalbackend.domain.page.MedicinePageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.DepartmentRepository;
 import com.example.pethospitalbackend.repository.EquipmentRepository;
 import com.example.pethospitalbackend.repository.PersonnelRepository;
+import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
+import com.example.pethospitalbackend.search.entity.Result;
+import com.example.pethospitalbackend.search.entity.SearchableEntity;
 import com.example.pethospitalbackend.util.FileUtil;
 import com.example.pethospitalbackend.util.JsonUtil;
+import com.example.pethospitalbackend.util.SearchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +43,9 @@ public class DepartmentService {
 
     @Autowired
     private FileUtil fileUtil;
+
+    @Autowired
+    private SearchUtil searchUtil;
 
     @Transactional(rollbackFor = Exception.class)
     public CommonResponse createEquipment(String name, String functions, MultipartFile video, String process) {
@@ -149,7 +161,24 @@ public class DepartmentService {
     }
 
     private CommonResponse searchDepartments(Integer offset, String content) {
-        return null;
+        List<DepartmentVOEntity> searchResult = null;
+        try {
+            Result result = searchUtil.search(content, "department", offset - 1).get();
+            List<SearchableEntity> list = result.getSearchableEntityList();
+            searchResult = new ArrayList<>(SearchEntityConverter.getDepartmentsFromSearchableEntity(list));
+            DepartmentPageInfo pageInfo = DepartmentPageInfo.builder()
+                    .currentPage(offset)
+                    .totalPages((int) Math.ceil(result.getTotalCount().doubleValue() / 10.0))
+                    .departments(searchResult)
+                    .build();
+            return CommonResponse.builder()
+                    .code(0)
+                    .message("success")
+                    .result(pageInfo)
+                    .build();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private CommonResponse getDepartments(Integer offset) {

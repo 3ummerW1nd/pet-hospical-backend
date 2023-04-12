@@ -1,18 +1,24 @@
 package com.example.pethospitalbackend.search.converter;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.pethospitalbackend.domain.*;
 import com.example.pethospitalbackend.domain.department.Department;
+import com.example.pethospitalbackend.domain.department.DepartmentVO;
+import com.example.pethospitalbackend.domain.department.DepartmentVOEntity;
 import com.example.pethospitalbackend.domain.personnel.Personnel;
 import com.example.pethospitalbackend.domain.personnel.PersonnelVO;
 import com.example.pethospitalbackend.domain.profile.Pet;
+import com.example.pethospitalbackend.domain.profile.PetProfileListVO;
 import com.example.pethospitalbackend.domain.user.User;
 import com.example.pethospitalbackend.domain.user.UserInfoEntity;
 import com.example.pethospitalbackend.search.entity.Searchable;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
+import com.example.pethospitalbackend.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -84,10 +90,13 @@ public class SearchEntityConverter {
             Set<DiseaseType> diseases = pet.getDiseases();
             List<String> names = new ArrayList<>();
             diseases.forEach(diseaseType -> names.add(diseaseType.getName()));
-            jsonObject.put("diseases", names);
+            jsonObject.put("birthday", DateUtil.getDateString(pet.getBirthday()));
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.addAll(names);
+            jsonObject.put("diseases", jsonArray);
             String other = jsonObject.toJSONString();
             return SearchableEntity.builder()
-                    .id("pet_" + pet.getId())
+                    .id("petProfile" + pet.getId())
                     .name(pet.getName() + "_" + pet.getType() + "_" + (pet.getGender() ? "公" : "母"))
                     .introduction(pet.getDescription())
                     .other(other)
@@ -155,6 +164,45 @@ public class SearchEntityConverter {
             .introduction(searchable.getIntroduction())
             .price(Double.valueOf(searchable.getOther()))
             .build());
+        });
+        return result;
+    }
+
+    public static List<DepartmentVOEntity> getDepartmentsFromSearchableEntity(List<SearchableEntity> searchableEntity) {
+        List<DepartmentVOEntity> result = new ArrayList<>();
+        searchableEntity.forEach(searchable -> {
+            Integer id = Integer.valueOf(searchable.getId().split("_")[1]);
+            JSONObject jsonObject = JSON.parseObject(searchable.getOther());
+            result.add(DepartmentVOEntity.builder()
+                            .id(id)
+                            .name(searchable.getName())
+                            .functions(searchable.getIntroduction())
+                            .phoneNumber(searchable.getPhoneNumber())
+                            .directorId(jsonObject.getInteger("directorId"))
+                            .directorName(jsonObject.getString("directorName"))
+                    .build());
+        });
+        return result;
+    }
+
+    public static List<PetProfileListVO> getPetProfilesFromSearchableEntity(List<SearchableEntity> searchableEntity) {
+        List<PetProfileListVO> result = new ArrayList<>();
+        searchableEntity.forEach(searchable -> {
+            Integer id = Integer.valueOf(searchable.getId().split("_")[1]);
+            String[] nameTypeGender = searchable.getName().split("_");
+            JSONObject jsonObject = JSON.parseObject(searchable.getOther());
+            Date birthday = DateUtil.getDate(jsonObject.getString("birthday"));
+            long birthdayTime = birthday.getTime();
+            long now = System.currentTimeMillis();
+            long ageInMillis = (long) (365.25 * 24 * 60 * 60 * 1000);
+            result.add(PetProfileListVO.builder()
+                    .id(id)
+                    .name(nameTypeGender[0])
+                    .type(nameTypeGender[1])
+                    .gender(nameTypeGender[2])
+                    .age((now - birthdayTime) / ageInMillis)
+                    .diseases(jsonObject.getJSONArray("diseases").toJavaList(String.class))
+                    .build());
         });
         return result;
     }
