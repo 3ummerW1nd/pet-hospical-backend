@@ -24,12 +24,12 @@ public class ExamManageController {
     @ApiOperation(value = "添加单个试题")
     @RequestMapping(value = "/addOneQuestion", method = RequestMethod.POST)
     public CommonResponse addOneQuestion(@RequestParam("diseaseTypeId") Integer disease_id,
-                                   @RequestParam("title") String title,
-                                   @RequestParam("optionA") String optionA,
-                                   @RequestParam("optionB") String optionB,
-                                   @RequestParam("optionC") String optionC,
-                                   @RequestParam("optionD") String optionD,
-                                   @RequestParam("answer") String answer) {
+                                         @RequestParam("title") String title,
+                                         @RequestParam("optionA") String optionA,
+                                         @RequestParam("optionB") String optionB,
+                                         @RequestParam("optionC") String optionC,
+                                         @RequestParam("optionD") String optionD,
+                                         @RequestParam("answer") String answer) {
         return examManage.addOneQuestion(disease_id, title, optionA, optionB, optionC, optionD, answer);
     }
 
@@ -40,19 +40,19 @@ public class ExamManageController {
         return examManage.deleteOneQuestion(question_id);
     }
 
-//    @AdminMethod
-//    @ApiOperation(value = "批量删除试题")
-//    @RequestMapping(value = "/deleteMultiQuestions", method = RequestMethod.POST)
-//    public CommonResponse deleteMultiQuestions(@RequestParam("question_ids") String question_ids) {
-//        return examManage.deleteMultiQuestions(question_ids);
-//    }
+    //    @AdminMethod
+    //    @ApiOperation(value = "批量删除试题")
+    //    @RequestMapping(value = "/deleteMultiQuestions", method = RequestMethod.POST)
+    //    public CommonResponse deleteMultiQuestions(@RequestParam("question_ids") String question_ids) {
+    //        return examManage.deleteMultiQuestions(question_ids);
+    //    }
 
-//    @AdminMethod
-//    @ApiOperation(value = "获取所有试题")
-//    @RequestMapping(value = "/getAllQuestions", method = RequestMethod.GET)
-//    public CommonResponse getAllQuestions() {
-//        return examManage.getAllQuestions();
-//    }
+    //    @AdminMethod
+    //    @ApiOperation(value = "获取所有试题")
+    //    @RequestMapping(value = "/getAllQuestions", method = RequestMethod.GET)
+    //    public CommonResponse getAllQuestions() {
+    //        return examManage.getAllQuestions();
+    //    }
 
     @AdminMethod
     @ApiOperation(value = "试题搜索")
@@ -74,13 +74,13 @@ public class ExamManageController {
     @ApiOperation(value = "修改单个试题")
     @RequestMapping(value = "/modifyOneQuestion", method = RequestMethod.POST)
     public CommonResponse modifyOneQuestion(@RequestParam("question_id") Integer question_id,
-                                   @RequestParam("diseaseTypeId") Integer disease_id,
-                                   @RequestParam("title") String title,
-                                   @RequestParam("optionA") String optionA,
-                                   @RequestParam("optionB") String optionB,
-                                   @RequestParam("optionC") String optionC,
-                                   @RequestParam("optionD") String optionD,
-                                   @RequestParam("answer") String answer) {
+                                            @RequestParam("diseaseTypeId") Integer disease_id,
+                                            @RequestParam("title") String title,
+                                            @RequestParam("optionA") String optionA,
+                                            @RequestParam("optionB") String optionB,
+                                            @RequestParam("optionC") String optionC,
+                                            @RequestParam("optionD") String optionD,
+                                            @RequestParam("answer") String answer) {
         return examManage.modifyOneQuestion(question_id,disease_id, title, optionA, optionB, optionC, optionD, answer);
     }
 
@@ -88,10 +88,10 @@ public class ExamManageController {
     @ApiOperation(value = "添加单张试卷")
     @RequestMapping(value = "/addOnePaper", method = RequestMethod.POST)
     public CommonResponse addOnePaper(@RequestParam("diseaseTypeId") Integer disease_id,
-                                         @RequestParam("question_ids") String question_ids,
-                                         @RequestParam("questionNum") Integer questionNum,
-                                         @RequestParam("questionPoints") String questionPoints,
-                                         @RequestParam("name") String name) {
+                                      @RequestParam("question_ids") String question_ids,
+                                      @RequestParam("questionNum") Integer questionNum,
+                                      @RequestParam("questionPoints") String questionPoints,
+                                      @RequestParam("name") String name) {
         return examManage.addOnePaper(disease_id,name,question_ids,questionNum,questionPoints);
     }
 
@@ -102,19 +102,19 @@ public class ExamManageController {
         return examManage.deleteOnePaper(paper_id);
     }
 
-//    @AdminMethod
-//    @ApiOperation(value = "批量删除试卷")
-//    @RequestMapping(value = "/deleteMultiPapers", method = RequestMethod.POST)
-//    public CommonResponse deleteMultiPapers(@RequestParam("paper_ids") String paper_ids) {
-//        return examManage.deleteMultiPapers(paper_ids);
-//    }
+    //    @AdminMethod
+    //    @ApiOperation(value = "批量删除试卷")
+    //    @RequestMapping(value = "/deleteMultiPapers", method = RequestMethod.POST)
+    //    public CommonResponse deleteMultiPapers(@RequestParam("paper_ids") String paper_ids) {
+    //        return examManage.deleteMultiPapers(paper_ids);
+    //    }
 
-//    @AdminMethod
-//    @ApiOperation(value = "获取所有试卷")
-//    @RequestMapping(value = "/getAllPapers", method = RequestMethod.GET)
-//    public CommonResponse getAllPapers() {
-//        return examManage.getAllPapers();
-//    }
+    //    @AdminMethod
+    //    @ApiOperation(value = "获取所有试卷")
+    //    @RequestMapping(value = "/getAllPapers", method = RequestMethod.GET)
+    //    public CommonResponse getAllPapers() {
+    //        return examManage.getAllPapers();
+    //    }
 
     @AdminMethod
     @ApiOperation(value = "获取单张试卷详情")
@@ -147,10 +147,10 @@ public class ExamManageController {
     @ApiOperation(value = "添加单场考试")
     @RequestMapping(value = "/addOneExam", method = RequestMethod.POST)
     public CommonResponse addOneExam(@RequestParam("paper_id") Integer paper_id,
-                                      @RequestParam("start_time") String start_time,
-                                      @RequestParam("end_time") String end_time,
-                                      @RequestParam("authority") Integer authority,
-                                      @RequestParam("name") String name) {
+                                     @RequestParam("start_time") String start_time,
+                                     @RequestParam("end_time") String end_time,
+                                     @RequestParam("authority") Integer authority,
+                                     @RequestParam("name") String name) {
         return examManage.addOneExam(paper_id,name,start_time,end_time,authority);
     }
 
@@ -161,19 +161,19 @@ public class ExamManageController {
         return examManage.deleteOneExam(ExamId);
     }
 
-//    @AdminMethod
-//    @ApiOperation(value = "批量删除考试")
-//    @RequestMapping(value = "/deleteMultiExams", method = RequestMethod.POST)
-//    public CommonResponse deleteMultiExams(@RequestParam("examIds") String ExamIds) {
-//        return examManage.deleteMultiExams(ExamIds);
-//    }
+    //    @AdminMethod
+    //    @ApiOperation(value = "批量删除考试")
+    //    @RequestMapping(value = "/deleteMultiExams", method = RequestMethod.POST)
+    //    public CommonResponse deleteMultiExams(@RequestParam("examIds") String ExamIds) {
+    //        return examManage.deleteMultiExams(ExamIds);
+    //    }
 
-//    @AdminMethod
-//    @ApiOperation(value = "获取所有考试")
-//    @RequestMapping(value = "/getAllExams", method = RequestMethod.GET)
-//    public CommonResponse getAllExams() {
-//        return examManage.getAllExams();
-//    }
+    //    @AdminMethod
+    //    @ApiOperation(value = "获取所有考试")
+    //    @RequestMapping(value = "/getAllExams", method = RequestMethod.GET)
+    //    public CommonResponse getAllExams() {
+    //        return examManage.getAllExams();
+    //    }
 
     @AdminMethod
     @ApiOperation(value = "获取单场考试详情")
@@ -190,7 +190,7 @@ public class ExamManageController {
                                         @RequestParam("start_time") String start_time,
                                         @RequestParam("end_time") String end_time,
                                         @RequestParam("authority") Integer authority,
-                                         @RequestParam("exam_name") String name) {
+                                        @RequestParam("exam_name") String name) {
         return examManage.modifyOneExam(ExamId,paper_id,name,start_time,end_time,authority);
     }
 

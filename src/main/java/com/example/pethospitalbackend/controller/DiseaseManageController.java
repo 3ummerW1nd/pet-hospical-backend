@@ -85,14 +85,14 @@ public class DiseaseManageController {
     @ApiOperation(value = "修改单个病例")
     @RequestMapping(value = "/modifyOneDisease", method = RequestMethod.POST)
     public CommonResponse modifyOneQuestion(@RequestParam("disease_type_id") Integer disease_type_id,
-                                         @RequestParam("symptom") String symptom,
-                                         @RequestParam("examination") String examination,
-                                         @RequestParam("diagnosis") String diagnosis,
-                                         @RequestParam("treatment") String treatment,
-                                         @RequestParam("image") MultipartFile[] image,
-                                         @RequestParam("video") MultipartFile[] video,
-                                         @RequestParam("image_description") String[] image_description,
-                                         @RequestParam("video_description") String[] video_description) {
+                                            @RequestParam("symptom") String symptom,
+                                            @RequestParam("examination") String examination,
+                                            @RequestParam("diagnosis") String diagnosis,
+                                            @RequestParam("treatment") String treatment,
+                                            @RequestParam("image") MultipartFile[] image,
+                                            @RequestParam("video") MultipartFile[] video,
+                                            @RequestParam("image_description") String[] image_description,
+                                            @RequestParam("video_description") String[] video_description) {
         String image_ids = "";
         for (int i = 0; i < image.length; i++) {
             MultipartFile image_i = image[i];
@@ -123,8 +123,8 @@ public class DiseaseManageController {
     @ApiOperation(value = "试题搜索")
     @RequestMapping(value = "/searchDisease", method = RequestMethod.POST)
     public CommonResponse searchDisease(@RequestParam("disease_type") String disease_type,
-                                         @RequestParam("search_text") String search_text,
-                                         @RequestParam("currentPage") Integer cur) {
+                                        @RequestParam("search_text") String search_text,
+                                        @RequestParam("currentPage") Integer cur) {
         return diseaseManage.searchDisease(disease_type,search_text,cur);
     }
 }

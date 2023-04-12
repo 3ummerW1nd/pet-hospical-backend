@@ -60,7 +60,9 @@ public class ExamManage {
         Question q = questionRepository.getOne(question_id);
         String d_name = diseaseTypeRepository.findNameById(q.getDisease_type_id());
         QuestionInfo questionInfo = new QuestionInfo(q,d_name);
-        return CommonResponse.builder().result(questionInfo).message("获取成功").code(0).build();
+        JSONObject o = new JSONObject();
+        o.put("question_info",questionInfo);
+        return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
     //获取所有试题
@@ -200,7 +202,9 @@ public class ExamManage {
         paperInfo.put("name",paper.getName());
         paperInfo.put("question_score",score);
 
-        return CommonResponse.builder().result(paperInfo).message("获取成功").code(0).build();
+        JSONObject o = new JSONObject();
+        o.put("paper_info",paperInfo);
+        return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
     //修改单张试卷
@@ -315,7 +319,9 @@ public class ExamManage {
         paper.put("score",score);
         examInfo.put("paper_info",paper);
 
-        return CommonResponse.builder().result(examInfo).message("获取成功").code(0).build();
+        JSONObject o = new JSONObject();
+        o.put("exam_info",examInfo);
+        return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
     //修改单场考试

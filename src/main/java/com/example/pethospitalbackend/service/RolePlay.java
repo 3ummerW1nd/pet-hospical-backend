@@ -23,7 +23,9 @@ public class RolePlay {
     //获取所有角色
     public CommonResponse getAllRoles(){
         List<String> roles = characterRepository.getAllRoles();
-        return CommonResponse.builder().result(roles).message("获取成功").code(0).build();
+        JSONObject o = new JSONObject();
+        o.put("role_types",roles);
+        return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
     //根据角色获取action
@@ -36,7 +38,10 @@ public class RolePlay {
             action.put("action",info.getAction());
             action_infos.add(action);
         }
-        return CommonResponse.builder().result(action_infos).message("获取成功").code(0).build();
+
+        JSONObject o = new JSONObject();
+        o.put("action_infos",action_infos);
+        return CommonResponse.builder().result(o).message("获取成功").code(0).build();
     }
 
     //获取下一步
