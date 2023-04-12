@@ -21,8 +21,9 @@ public class ExamController {
 
     @ApiOperation(value = "获取所有考试")
     @RequestMapping(value = "/getAllExams", method = RequestMethod.POST)
-    public CommonResponse getAllExams(@RequestParam("user_id") Integer user_id,
-                                         @RequestParam("currentPage") Integer currentPage) {
+    public CommonResponse getAllExams(@RequestHeader("Authorization") String token,
+                                      @RequestParam("currentPage") Integer currentPage) {
+        int user_id = TokenUtil.getUserRoleFromToken(token).getId();
         return examService.getAllExams(user_id, currentPage);
     }
 
