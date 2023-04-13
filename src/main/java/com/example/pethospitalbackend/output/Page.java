@@ -20,9 +20,15 @@ public class Page {
             this.infos = infos;
         else {
             int i = currentPage -1;
-            this.infos = infos.subList(i * 10, i * 10 +10);
+            if(infos.size() >= i * 10 +10)
+                this.infos = infos.subList(i * 10, i * 10 +10);
+            else
+                this.infos = infos.subList(i * 10, infos.size());
         }
         this.currentPage = currentPage;
-        this.totalPages = infos.size() / 10 + 1;
+        if(infos.size() % 10 == 0)
+            this.totalPages = infos.size() / 10;
+        else
+            this.totalPages = infos.size() / 10 + 1;
     }
 }

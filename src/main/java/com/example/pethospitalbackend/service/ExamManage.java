@@ -13,12 +13,14 @@ import com.alibaba.fastjson.JSONObject;
 
 import com.alibaba.fastjson.JSON;
 
+import org.apache.commons.collections4.collection.CompositeCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -90,17 +92,25 @@ public class ExamManage {
 
     //试题搜索
     public CommonResponse searchQuestion(int disease_id,String text,int cur){
+        System.out.println("start");
         Collection<Question.SimpleInfo> collection;
-        if(text.equals("") && disease_id == -1)
+        if(text.equals("") && disease_id == -1) {
             collection = questionRepository.getAllQuestions();
-        else if(text.equals("") && disease_id != -1)
+            System.out.println("------");
+        }
+        else if(text.equals("") && disease_id != -1) {
             collection = questionRepository.searchQuestionByDisease(disease_id);
-        else
-            collection = questionRepository.searchQuestionByDiseaseAndText(disease_id,text);
+            System.out.println("++++:"+collection);
+        }
+        else {
+            collection = questionRepository.searchQuestionByDiseaseAndText(disease_id, text);
+            System.out.println("#####");
+        }
         List<JSONObject> questionInfos = new ArrayList<>();
         for(Question.SimpleInfo s : collection){
             JSONObject qs = new JSONObject();
             int d_id = s.getDisease_type_id();
+            System.out.println("***:"+d_id);
             qs.put("disease_type_name",diseaseTypeRepository.findNameById(d_id));
             qs.put("title",s.getTitle());
             qs.put("question_id",s.getId());

@@ -79,10 +79,12 @@ public class DiseaseManage {
 //    }
 
     //添加单个病例
-    public CommonResponse addOneDisease(String disease_type, String disease_name, String symptom, String examination,
+    public CommonResponse addOneDisease( String disease_type, String disease_name, String symptom, String examination,
                                         String diagnosis, String treatment, String image, String video){
-        if(!typeRepository.getId(disease_type,disease_name).equals(""))
-            return CommonResponse.builder().message("添加失败，数据库中已有该病例").code(1).build();
+//        if(diseaseRepository.getOne(disease_type_id).toString().length() < 10)
+//            return CommonResponse.builder().message("添加失败，数据库中已有该病例").code(1).build();
+//        if(typeRepository.getOne(disease_type_id).toString().length() < 5)
+//            return CommonResponse.builder().message("添加失败，数据库中已有该病例").code(1).build();
         DiseaseType type = new DiseaseType(null,disease_type,disease_name);
         typeRepository.save(type);
         Integer disease_type_id = Integer.parseInt(typeRepository.getId(disease_type,disease_name));
@@ -163,6 +165,8 @@ public class DiseaseManage {
             types = typeRepository.findAll();
         else if(text.equals("") && !type.equals(""))
             types = typeRepository.findByType(type);
+        else if(type.equals("") && !text.equals(""))
+            types = typeRepository.findByText(text);
         else
             types = typeRepository.findByTypeAndText(type,text);
         List<JSONObject> infos = new ArrayList<>();

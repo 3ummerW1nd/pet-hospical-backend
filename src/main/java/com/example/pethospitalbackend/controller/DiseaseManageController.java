@@ -115,12 +115,12 @@ public class DiseaseManageController {
     @AdminMethod
     @ApiOperation(value = "获取单个病例详情")
     @RequestMapping(value = "/getOneDisease", method = RequestMethod.GET)
-    public CommonResponse getOneDisease(@RequestParam("disease_type_id") Integer disease_id) {
+    public CommonResponse getOneDisease(@RequestParam("disease_id") Integer disease_id) {
         return diseaseManage.getOneDisease(disease_id);
     }
 
     @AdminMethod
-    @ApiOperation(value = "试题搜索")
+    @ApiOperation(value = "病例搜索")
     @RequestMapping(value = "/searchDisease", method = RequestMethod.POST)
     public CommonResponse searchDisease(@RequestParam("disease_type") String disease_type,
                                         @RequestParam("search_text") String search_text,
