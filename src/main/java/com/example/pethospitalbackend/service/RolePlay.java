@@ -77,6 +77,7 @@ public class RolePlay {
         JSONObject result = new JSONObject();
         result.put("next_step",next_step);
         result.put("is_last_step",is_end);
+        result.put("next_step_id",curr_step+1);
         return CommonResponse.builder().result(result).message("获取成功").code(0).build();
     }
 }
