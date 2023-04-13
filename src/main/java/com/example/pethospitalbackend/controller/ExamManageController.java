@@ -23,7 +23,7 @@ public class ExamManageController {
     @AdminMethod
     @ApiOperation(value = "添加单个试题")
     @RequestMapping(value = "/addOneQuestion", method = RequestMethod.POST)
-    public CommonResponse addOneQuestion(@RequestParam("diseaseTypeId") Integer disease_id,
+    public CommonResponse addOneQuestion(@RequestParam("disease_type_id") Integer disease_id,
                                          @RequestParam("title") String title,
                                          @RequestParam("optionA") String optionA,
                                          @RequestParam("optionB") String optionB,
@@ -74,7 +74,7 @@ public class ExamManageController {
     @ApiOperation(value = "修改单个试题")
     @RequestMapping(value = "/modifyOneQuestion", method = RequestMethod.POST)
     public CommonResponse modifyOneQuestion(@RequestParam("question_id") Integer question_id,
-                                            @RequestParam("diseaseTypeId") Integer disease_id,
+                                            @RequestParam("disease_type_id") Integer disease_id,
                                             @RequestParam("title") String title,
                                             @RequestParam("optionA") String optionA,
                                             @RequestParam("optionB") String optionB,
