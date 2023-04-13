@@ -9,6 +9,6 @@ import java.util.Collection;
 
 @Repository
 public interface DiseaseRepository extends JpaRepository<Disease,Integer> {
-//    @Query(value = "select id,disease_type_id from disease", nativeQuery = true)
-//    Collection<Disease.DiseaseInfo> getAllDisease();
+    @Query(value = "select symptom from disease where disease_type_id = ?1", nativeQuery = true)
+    String isExist(int id);
 }

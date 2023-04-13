@@ -26,7 +26,7 @@ public interface DiseaseTypeRepository extends JpaRepository<DiseaseType,Integer
     List<DiseaseType> findByTypeAndText(String type, String text);
 
     @Query(value = "select id from disease_type where type = ?1 and name = ?2", nativeQuery = true)
-    String getId(String type, String name);
+    Integer getId(String type, String name);
 
     @Query(value = "select distinct type from disease_type", nativeQuery = true)
     List<String> getAllType();

@@ -153,8 +153,8 @@ public class ExamManage {
     }*/
 
     //添加单张试卷
-    public CommonResponse addOnePaper(Integer disease_id, String name, String question_ids, Integer q_num, String point){
-        Paper paper = new Paper(null,disease_id,name,question_ids,q_num,Integer.parseInt(point));
+    public CommonResponse addOnePaper(Integer disease_id, String name, String question_ids, Integer q_num, Integer point){
+        Paper paper = new Paper(null,disease_id,name,question_ids,q_num,point);
         paperRepository.save(paper);
         return CommonResponse.builder().message("添加成功").code(0).build();
     }
@@ -218,9 +218,9 @@ public class ExamManage {
     }
 
     //修改单张试卷
-    public CommonResponse modifyOnePaper(Integer paper_id, String name, String question_ids, Integer q_num, String point){
+    public CommonResponse modifyOnePaper(Integer paper_id, String name, String question_ids, Integer q_num, int point){
         int disease_id = Integer.parseInt(paperRepository.searchDiseaseById(paper_id));
-        Paper paper = new Paper(paper_id,disease_id,name,question_ids,q_num,Integer.parseInt(point));
+        Paper paper = new Paper(paper_id,disease_id,name,question_ids,q_num,point);
         paperRepository.save(paper);
         return CommonResponse.builder().message("修改成功").code(0).build();
     }

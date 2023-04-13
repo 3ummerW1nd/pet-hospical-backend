@@ -87,10 +87,10 @@ public class ExamManageController {
     @AdminMethod
     @ApiOperation(value = "添加单张试卷")
     @RequestMapping(value = "/addOnePaper", method = RequestMethod.POST)
-    public CommonResponse addOnePaper(@RequestParam("diseaseTypeId") Integer disease_id,
+    public CommonResponse addOnePaper(@RequestParam("disease_type_id") Integer disease_id,
                                       @RequestParam("question_ids") String question_ids,
-                                      @RequestParam("questionNum") Integer questionNum,
-                                      @RequestParam("questionPoints") String questionPoints,
+                                      @RequestParam("question_num") Integer questionNum,
+                                      @RequestParam("question_points") Integer questionPoints,
                                       @RequestParam("name") String name) {
         return examManage.addOnePaper(disease_id,name,question_ids,questionNum,questionPoints);
     }
@@ -137,8 +137,8 @@ public class ExamManageController {
     @RequestMapping(value = "/modifyOnePaper", method = RequestMethod.POST)
     public CommonResponse modifyOnePaper(@RequestParam("paper_id") Integer paper_id,
                                          @RequestParam("question_ids") String question_ids,
-                                         @RequestParam("questionNum") Integer questionNum,
-                                         @RequestParam("question_point") String questionPoints,
+                                         @RequestParam("question_num") Integer questionNum,
+                                         @RequestParam("question_point") Integer questionPoints,
                                          @RequestParam("name") String name) {
         return examManage.modifyOnePaper(paper_id,name,question_ids,questionNum,questionPoints);
     }

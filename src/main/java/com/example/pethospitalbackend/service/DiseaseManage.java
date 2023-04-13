@@ -81,13 +81,17 @@ public class DiseaseManage {
     //添加单个病例
     public CommonResponse addOneDisease( String disease_type, String disease_name, String symptom, String examination,
                                         String diagnosis, String treatment, String image, String video){
-//        if(diseaseRepository.getOne(disease_type_id).toString().length() < 10)
-//            return CommonResponse.builder().message("添加失败，数据库中已有该病例").code(1).build();
-//        if(typeRepository.getOne(disease_type_id).toString().length() < 5)
-//            return CommonResponse.builder().message("添加失败，数据库中已有该病例").code(1).build();
-        DiseaseType type = new DiseaseType(null,disease_type,disease_name);
-        typeRepository.save(type);
-        Integer disease_type_id = Integer.parseInt(typeRepository.getId(disease_type,disease_name));
+
+        Integer disease_type_id = typeRepository.getId(disease_type,disease_name);
+        if(disease_type_id != null){
+            if(diseaseRepository.isExist(disease_type_id) != null)
+                return CommonResponse.builder().message("添加失败，数据库中已有该病例").code(1).build();
+        }
+        else {
+            DiseaseType type = new DiseaseType(null,disease_type,disease_name);
+            typeRepository.save(type);
+            disease_type_id = typeRepository.getId(disease_type,disease_name);
+        }
         Disease disease = new Disease(disease_type_id,symptom,examination,diagnosis,treatment,image,video);
         diseaseRepository.save(disease);
         return CommonResponse.builder().message("添加成功").code(0).build();
