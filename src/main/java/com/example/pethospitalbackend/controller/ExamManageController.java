@@ -90,7 +90,7 @@ public class ExamManageController {
     public CommonResponse addOnePaper(@RequestParam("disease_type_id") Integer disease_id,
                                       @RequestParam("question_ids") String question_ids,
                                       @RequestParam("question_num") Integer questionNum,
-                                      @RequestParam("question_points") Integer questionPoints,
+                                      @RequestParam("question_point") Integer questionPoints,
                                       @RequestParam("name") String name) {
         return examManage.addOnePaper(disease_id,name,question_ids,questionNum,questionPoints);
     }
