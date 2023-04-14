@@ -79,13 +79,19 @@ public class DiseaseManage {
 //    }
 
     //添加单个病例
-    public CommonResponse addOneDisease(String disease_type, String disease_name, String symptom, String examination,
+    public CommonResponse addOneDisease( String disease_type, String disease_name, String symptom, String examination,
                                         String diagnosis, String treatment, String image, String video){
-        if(!typeRepository.getId(disease_type,disease_name).equals(""))
-            return CommonResponse.builder().message("添加失败，数据库中已有该病例").code(1).build();
-        DiseaseType type = new DiseaseType(null,disease_type,disease_name);
-        typeRepository.save(type);
-        Integer disease_type_id = Integer.parseInt(typeRepository.getId(disease_type,disease_name));
+
+        Integer disease_type_id = typeRepository.getId(disease_type,disease_name);
+        if(disease_type_id != null){
+            if(diseaseRepository.isExist(disease_type_id) != null)
+                return CommonResponse.builder().message("添加失败，数据库中已有该病例").code(1).build();
+        }
+        else {
+            DiseaseType type = new DiseaseType(null,disease_type,disease_name);
+            typeRepository.save(type);
+            disease_type_id = typeRepository.getId(disease_type,disease_name);
+        }
         Disease disease = new Disease(disease_type_id,symptom,examination,diagnosis,treatment,image,video);
         diseaseRepository.save(disease);
         return CommonResponse.builder().message("添加成功").code(0).build();
@@ -126,31 +132,35 @@ public class DiseaseManage {
             treatment.add(t);
         disease_info.put("treatment",treatment);
 
-        String image_ids = disease.getImage_ids();
-        String[] images = image_ids.split(",");
-        String video_ids = disease.getVideo_ids();
-        String[] videos = video_ids.split(",");
         List<JSONObject> file_info = new ArrayList<>();
-        for(String image : images){
-            JSONObject f = new JSONObject();
-            Media media = mediaRepository.getOne(image);
-            f.put("name",media.getDescription());
-            f.put("type","image");
-            f.put("description",media.getDescription());
-            f.put("url",image);
-            file_info.add(f);
+        String image_ids = disease.getImage_ids();
+        if(image_ids != null) {
+            String[] images = image_ids.split(",");
+            for(String image : images){
+                JSONObject f = new JSONObject();
+                Media media = mediaRepository.getOne(image);
+                f.put("name",media.getDescription());
+                f.put("type","image");
+                f.put("description",media.getDescription());
+                f.put("url",image);
+                file_info.add(f);
+            }
         }
-        for(String video : videos){
-            JSONObject f = new JSONObject();
-            Media media = mediaRepository.getOne(video);
-            f.put("name",video);
-            f.put("type","video");
-            f.put("description",media.getDescription());
-            f.put("url",video);
-            file_info.add(f);
+
+        String video_ids = disease.getVideo_ids();
+        if(video_ids != null){
+            String[] videos = video_ids.split(",");
+            for(String video : videos){
+                JSONObject f = new JSONObject();
+                Media media = mediaRepository.getOne(video);
+                f.put("name",video);
+                f.put("type","video");
+                f.put("description",media.getDescription());
+                f.put("url",video);
+                file_info.add(f);
+            }
         }
         disease_info.put("file_info",file_info);
-
         JSONObject o = new JSONObject();
         o.put("disease_info",disease_info);
         return CommonResponse.builder().result(o).message("获取成功").code(0).build();
@@ -163,6 +173,8 @@ public class DiseaseManage {
             types = typeRepository.findAll();
         else if(text.equals("") && !type.equals(""))
             types = typeRepository.findByType(type);
+        else if(type.equals("") && !text.equals(""))
+            types = typeRepository.findByText(text);
         else
             types = typeRepository.findByTypeAndText(type,text);
         List<JSONObject> infos = new ArrayList<>();

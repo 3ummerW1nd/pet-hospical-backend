@@ -13,12 +13,14 @@ import com.alibaba.fastjson.JSONObject;
 
 import com.alibaba.fastjson.JSON;
 
+import org.apache.commons.collections4.collection.CompositeCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -90,17 +92,25 @@ public class ExamManage {
 
     //试题搜索
     public CommonResponse searchQuestion(int disease_id,String text,int cur){
+        System.out.println("start");
         Collection<Question.SimpleInfo> collection;
-        if(text.equals("") && disease_id == -1)
+        if(text.equals("") && disease_id == -1) {
             collection = questionRepository.getAllQuestions();
-        else if(text.equals("") && disease_id != -1)
+            System.out.println("------");
+        }
+        else if(text.equals("") && disease_id != -1) {
             collection = questionRepository.searchQuestionByDisease(disease_id);
-        else
-            collection = questionRepository.searchQuestionByDiseaseAndText(disease_id,text);
+            System.out.println("++++:"+collection);
+        }
+        else {
+            collection = questionRepository.searchQuestionByDiseaseAndText(disease_id, text);
+            System.out.println("#####");
+        }
         List<JSONObject> questionInfos = new ArrayList<>();
         for(Question.SimpleInfo s : collection){
             JSONObject qs = new JSONObject();
             int d_id = s.getDisease_type_id();
+            System.out.println("***:"+d_id);
             qs.put("disease_type_name",diseaseTypeRepository.findNameById(d_id));
             qs.put("title",s.getTitle());
             qs.put("question_id",s.getId());
@@ -143,8 +153,8 @@ public class ExamManage {
     }*/
 
     //添加单张试卷
-    public CommonResponse addOnePaper(Integer disease_id, String name, String question_ids, Integer q_num, String point){
-        Paper paper = new Paper(null,disease_id,name,question_ids,q_num,Integer.parseInt(point));
+    public CommonResponse addOnePaper(Integer disease_id, String name, String question_ids, Integer q_num, Integer point){
+        Paper paper = new Paper(null,disease_id,name,question_ids,q_num,point);
         paperRepository.save(paper);
         return CommonResponse.builder().message("添加成功").code(0).build();
     }
@@ -200,7 +210,8 @@ public class ExamManage {
         paperInfo.put("questions",infos);
         paperInfo.put("question_num",paper.getQuestion_num());
         paperInfo.put("name",paper.getName());
-        paperInfo.put("question_score",score);
+        paperInfo.put("question_score",point);
+        paperInfo.put("score",score);
 
         JSONObject o = new JSONObject();
         o.put("paper_info",paperInfo);
@@ -208,9 +219,9 @@ public class ExamManage {
     }
 
     //修改单张试卷
-    public CommonResponse modifyOnePaper(Integer paper_id, String name, String question_ids, Integer q_num, String point){
+    public CommonResponse modifyOnePaper(Integer paper_id, String name, String question_ids, Integer q_num, int point){
         int disease_id = Integer.parseInt(paperRepository.searchDiseaseById(paper_id));
-        Paper paper = new Paper(paper_id,disease_id,name,question_ids,q_num,Integer.parseInt(point));
+        Paper paper = new Paper(paper_id,disease_id,name,question_ids,q_num,point);
         paperRepository.save(paper);
         return CommonResponse.builder().message("修改成功").code(0).build();
     }

@@ -48,6 +48,8 @@ public class RolePlay {
     public CommonResponse getNextStep(Integer procedure_id, Integer curr_step){
         int count = procedureRepository.getamount(procedure_id);
         boolean is_end = false;
+//        JSONObject result = new JSONObject();
+//        result.put("next_step_id",curr_step+1);
         if(curr_step == count)
             is_end = true;
         String next_step = "";
@@ -75,6 +77,7 @@ public class RolePlay {
                 break;
         }
         JSONObject result = new JSONObject();
+        result.put("next_step_id",curr_step+1);
         result.put("next_step",next_step);
         result.put("is_last_step",is_end);
         return CommonResponse.builder().result(result).message("获取成功").code(0).build();

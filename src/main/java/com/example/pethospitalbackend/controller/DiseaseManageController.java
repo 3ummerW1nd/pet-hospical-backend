@@ -51,25 +51,30 @@ public class DiseaseManageController {
                                          @RequestParam("examination") String examination,
                                          @RequestParam("diagnosis") String diagnosis,
                                          @RequestParam("treatment") String treatment,
-                                         @RequestParam("image") MultipartFile[] image,
-                                         @RequestParam("video") MultipartFile[] video,
-                                         @RequestParam("image_description") String[] image_description,
-                                         @RequestParam("video_description") String[] video_description) {
+                                         @RequestParam(value = "image",required = false) MultipartFile[] image,
+                                         @RequestParam(value = "video",required = false) MultipartFile[] video,
+                                         @RequestParam(value = "image_description",required = false) String[] image_description,
+                                         @RequestParam(value = "video_description",required = false) String[] video_description) {
         String image_ids = "";
-        for (int i = 0; i < image.length; i++) {
-            MultipartFile image_i = image[i];
-            String image_id = fileUtil.upload(image_i);
-            Media media1 = new Media(image_id,image_description[i]);
-            mediaRepository.save(media1);
-            image_ids += image_id + ",";
+        if(image != null){
+            for (int i = 0; i < image.length; i++) {
+                MultipartFile image_i = image[i];
+                String image_id = fileUtil.upload(image_i);
+                Media media1 = new Media(image_id,image_description[i]);
+                mediaRepository.save(media1);
+                image_ids += image_id + ",";
+            }
         }
+
         String video_ids = "";
-        for (int i = 0; i < video.length; i++) {
-            MultipartFile vidoe_i = video[i];
-            String video_id = fileUtil.upload(vidoe_i);
-            Media media2 = new Media(video_id,video_description[i]);
-            mediaRepository.save(media2);
-            video_ids += video_id + ",";
+        if(video != null){
+            for (int i = 0; i < video.length; i++) {
+                MultipartFile vidoe_i = video[i];
+                String video_id = fileUtil.upload(vidoe_i);
+                Media media2 = new Media(video_id,video_description[i]);
+                mediaRepository.save(media2);
+                video_ids += video_id + ",";
+            }
         }
         return diseaseManage.addOneDisease(disease_type,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
     }
@@ -115,12 +120,12 @@ public class DiseaseManageController {
     @AdminMethod
     @ApiOperation(value = "获取单个病例详情")
     @RequestMapping(value = "/getOneDisease", method = RequestMethod.GET)
-    public CommonResponse getOneDisease(@RequestParam("disease_type_id") Integer disease_id) {
+    public CommonResponse getOneDisease(@RequestParam("disease_id") Integer disease_id) {
         return diseaseManage.getOneDisease(disease_id);
     }
 
     @AdminMethod
-    @ApiOperation(value = "试题搜索")
+    @ApiOperation(value = "病例搜索")
     @RequestMapping(value = "/searchDisease", method = RequestMethod.POST)
     public CommonResponse searchDisease(@RequestParam("disease_type") String disease_type,
                                         @RequestParam("search_text") String search_text,
