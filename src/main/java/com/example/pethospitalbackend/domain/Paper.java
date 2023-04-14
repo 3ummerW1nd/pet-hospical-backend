@@ -18,6 +18,7 @@ public class Paper {
     private Integer disease_type_id;
     @Column(length = 100)
     private String name;
+    @Column(length = 500)
     private String question_ids;
     private Integer question_num;
     private int point;

@@ -83,7 +83,9 @@ public class DiseaseManage {
                                         String diagnosis, String treatment, String image, String video){
 
         Integer disease_type_id = typeRepository.getId(disease_type,disease_name);
+        System.out.println(disease_type_id);
         if(disease_type_id != null){
+            System.out.println("*****");
             if(diseaseRepository.isExist(disease_type_id) != null)
                 return CommonResponse.builder().message("添加失败，数据库中已有该病例").code(1).build();
         }
@@ -91,9 +93,11 @@ public class DiseaseManage {
             DiseaseType type = new DiseaseType(null,disease_type,disease_name);
             typeRepository.save(type);
             disease_type_id = typeRepository.getId(disease_type,disease_name);
+            System.out.println("disease_id:"+disease_type_id);
         }
         Disease disease = new Disease(disease_type_id,symptom,examination,diagnosis,treatment,image,video);
         diseaseRepository.save(disease);
+        System.out.println("disease:"+disease);
         return CommonResponse.builder().message("添加成功").code(0).build();
     }
 
@@ -134,30 +138,38 @@ public class DiseaseManage {
 
         List<JSONObject> file_info = new ArrayList<>();
         String image_ids = disease.getImage_ids();
-        if(image_ids != null) {
+        if(!image_ids.equals("")) {
             String[] images = image_ids.split(",");
             for(String image : images){
                 JSONObject f = new JSONObject();
                 Media media = mediaRepository.getOne(image);
-                f.put("name",media.getDescription());
-                f.put("type","image");
-                f.put("description",media.getDescription());
-                f.put("url",image);
-                file_info.add(f);
+                String flag = mediaRepository.isExist(image);
+                if(flag != null){
+                    f.put("name",media.getDescription());
+                    f.put("type","image");
+                    f.put("description",media.getDescription());
+                    f.put("url",image);
+                    file_info.add(f);
+                }
+
             }
         }
 
         String video_ids = disease.getVideo_ids();
-        if(video_ids != null){
+        if(!video_ids.equals("")){
             String[] videos = video_ids.split(",");
             for(String video : videos){
                 JSONObject f = new JSONObject();
                 Media media = mediaRepository.getOne(video);
-                f.put("name",video);
-                f.put("type","video");
-                f.put("description",media.getDescription());
-                f.put("url",video);
-                file_info.add(f);
+                String flag = mediaRepository.isExist(video);
+                if(flag != null){
+                    f.put("name",video);
+                    f.put("type","video");
+                    f.put("description",media.getDescription());
+                    f.put("url",video);
+                    file_info.add(f);
+                }
+
             }
         }
         disease_info.put("file_info",file_info);

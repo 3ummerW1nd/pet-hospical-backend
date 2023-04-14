@@ -12,4 +12,7 @@ import java.util.Collection;
 public interface MediaRepository extends JpaRepository<Media,String> {
     @Query(value = "select description from media where name = ?1", nativeQuery = true)
     String getDescription(String name);
+
+    @Query(value = "select name from media where name = ?1", nativeQuery = true)
+    String isExist(String name);
 }
