@@ -16,6 +16,7 @@ import javax.persistence.Column;
 public class QuestionInfo {
     private Integer question_id;
     private String disease_type_name;
+    private Integer disease_type_id;
     private String title;
     @JsonProperty("optionA")
     private String optionA;
@@ -30,6 +31,7 @@ public class QuestionInfo {
     public QuestionInfo(Question q, String name) {
         this.question_id = q.getId();
         this.disease_type_name = name;
+        this.disease_type_id = q.getDisease_type_id();
         this.title = q.getTitle();
         this.optionA = q.getA();
         this.optionB = q.getB();
