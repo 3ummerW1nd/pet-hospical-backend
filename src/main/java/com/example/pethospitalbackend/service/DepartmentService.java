@@ -48,20 +48,12 @@ public class DepartmentService {
     private SearchUtil searchUtil;
 
     @Transactional(rollbackFor = Exception.class)
-    public CommonResponse createEquipment(String name, String functions, MultipartFile video, String process) {
-//        if (!FileUtil.isVideo(video)) {
-//            return CommonResponse.builder()
-//                    .code(1)
-//                    .message("请上传视频文件")
-//                    .build();
-//        }
-
-        String videoPath = fileUtil.upload(video);
+    public CommonResponse createEquipment(String name, String functions, String process) {
         Equipment equipment = Equipment.builder()
                 .functions(functions)
                 .name(name)
                 .process(JsonUtil.parseJson(process))
-                .video(videoPath)
+                .video("")
                 .build();
         equipmentRepository.save(equipment);
         return CommonResponse.builder()

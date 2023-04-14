@@ -25,9 +25,8 @@ public class DepartmentController {
     @RequestMapping(value = "/addOneEquipment", method = RequestMethod.POST)
     public CommonResponse addOneEquipment(@RequestParam("name") String name,
                                            @RequestParam("functions") String functions,
-                                           @RequestParam("video") MultipartFile video,
-                                           @RequestParam("process") String process) {
-        return departmentService.createEquipment(name, functions, video, process);
+                                           String process) {
+        return departmentService.createEquipment(name, functions, process);
     }
 
     @ApiOperation(value = "获取医疗器材")
