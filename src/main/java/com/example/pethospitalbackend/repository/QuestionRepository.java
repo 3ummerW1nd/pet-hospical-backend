@@ -22,6 +22,9 @@ public interface QuestionRepository extends JpaRepository<Question,Integer> {
     @Query(value = "select id,disease_type_id,title from question where title like %?2% and disease_type_id = ?1", nativeQuery = true)
     Collection<Question.SimpleInfo> searchQuestionByDiseaseAndText(int disease_id,String text);
 
+    @Query(value = "select id,disease_type_id,title from question where title like %?1% ", nativeQuery = true)
+    Collection<Question.SimpleInfo> searchQuestionByText(String text);
+
 //    @Query(value = "select id,disease_type_id,title from question where title like %?1%", nativeQuery = true)
 //    Collection<Question.SimpleInfo> searchQuestion(String text);
 

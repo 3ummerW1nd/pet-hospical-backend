@@ -102,6 +102,10 @@ public class ExamManage {
             collection = questionRepository.searchQuestionByDisease(disease_id);
             System.out.println("++++:"+collection);
         }
+        else if(!text.equals("") && disease_id == -1) {
+            collection = questionRepository.searchQuestionByText(text);
+            System.out.println("@@@@"+collection);
+        }
         else {
             collection = questionRepository.searchQuestionByDiseaseAndText(disease_id, text);
             System.out.println("#####");
@@ -236,6 +240,8 @@ public class ExamManage {
             papers = paperRepository.findAll();
         else if(text.equals("") && disease_id != -1)
             papers = paperRepository.searchPaperByDisease(disease_id);
+        else if(!text.equals("") && disease_id == -1)
+            papers = paperRepository.searchPaperByText(text);
         else
             papers = paperRepository.searchPaperByDiseaseAndText(disease_id,text);
         for (Paper paper : papers){
