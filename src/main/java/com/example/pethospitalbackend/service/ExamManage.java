@@ -210,7 +210,8 @@ public class ExamManage {
         paperInfo.put("questions",infos);
         paperInfo.put("question_num",paper.getQuestion_num());
         paperInfo.put("name",paper.getName());
-        paperInfo.put("question_score",score);
+        paperInfo.put("question_score",point);
+        paperInfo.put("score",score);
 
         JSONObject o = new JSONObject();
         o.put("paper_info",paperInfo);
