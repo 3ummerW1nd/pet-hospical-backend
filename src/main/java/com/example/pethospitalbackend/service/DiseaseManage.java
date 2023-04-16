@@ -190,11 +190,15 @@ public class DiseaseManage {
         else
             types = typeRepository.findByTypeAndText(type,text);
         List<JSONObject> infos = new ArrayList<>();
+        List<Integer> ids = diseaseRepository.findAllId();
         for(DiseaseType type1 : types){
+            int id = type1.getId();
+            if(!ids.contains(id))
+                continue;
             JSONObject d = new JSONObject();
             d.put("disease_type_name",type1.getType());
             d.put("disease_name",type1.getName());
-            d.put("disease_id",type1.getId());
+            d.put("disease_id",id);
             infos.add(d);
         }
         Page page = new  Page(infos,cur);
