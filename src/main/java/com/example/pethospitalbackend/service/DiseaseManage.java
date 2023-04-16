@@ -108,9 +108,10 @@ public class DiseaseManage {
     }
 
     //修改单个病例
-    public CommonResponse modifyOneDisease(int disease_type_id, String symptom, String examination,
+    public CommonResponse modifyOneDisease(int disease_type_id,String d_type, String d_name, String symptom, String examination,
                                            String diagnosis, String treatment, String image, String video){
-
+        DiseaseType type = new DiseaseType(disease_type_id,d_type,d_name);
+        typeRepository.save(type);
         Disease disease = new Disease(disease_type_id,symptom,examination,diagnosis,treatment,image,video);
         diseaseRepository.save(disease);
         return CommonResponse.builder().message("修改成功").code(0).build();
@@ -137,6 +138,7 @@ public class DiseaseManage {
         disease_info.put("treatment",treatment);
 
         List<JSONObject> file_info = new ArrayList<>();
+
         String image_ids = disease.getImage_ids();
         if(image_ids != null && !image_ids.equals("")) {
             String[] images = image_ids.split(",");
@@ -151,7 +153,6 @@ public class DiseaseManage {
                     f.put("url",image);
                     file_info.add(f);
                 }
-
             }
         }
 
@@ -169,7 +170,6 @@ public class DiseaseManage {
                     f.put("url",video);
                     file_info.add(f);
                 }
-
             }
         }
         disease_info.put("file_info",file_info);

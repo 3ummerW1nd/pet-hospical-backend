@@ -24,5 +24,6 @@ public class Disease {
     private String treatment;   //治疗
     private String image_ids;
     private String video_ids;
+    //private String media_ids;
 
 }

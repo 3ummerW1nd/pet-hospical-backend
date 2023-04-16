@@ -1,5 +1,6 @@
 package com.example.pethospitalbackend.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.pethospitalbackend.annotation.AdminMethod;
 import com.example.pethospitalbackend.domain.Media;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
@@ -8,12 +9,16 @@ import com.example.pethospitalbackend.service.DiseaseManage;
 import com.example.pethospitalbackend.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/diseaseManage")
@@ -51,29 +56,23 @@ public class DiseaseManageController {
                                          @RequestParam("examination") String examination,
                                          @RequestParam("diagnosis") String diagnosis,
                                          @RequestParam("treatment") String treatment,
-                                         @RequestParam(value = "image",required = false) MultipartFile[] image,
-                                         @RequestParam(value = "video",required = false) MultipartFile[] video,
-                                         @RequestParam(value = "image_description",required = false) String[] image_description,
-                                         @RequestParam(value = "video_description",required = false) String[] video_description) {
+                                         @RequestParam("file_items") JSONObject[] files) {
         String image_ids = "";
-        if(image != null){
-            for (int i = 0; i < image.length; i++) {
-                MultipartFile image_i = image[i];
-                String image_id = fileUtil.upload(image_i);
-                Media media1 = new Media(image_id,image_description[i]);
-                mediaRepository.save(media1);
-                image_ids += image_id + ",";
-            }
-        }
-
         String video_ids = "";
-        if(video != null){
-            for (int i = 0; i < video.length; i++) {
-                MultipartFile vidoe_i = video[i];
-                String video_id = fileUtil.upload(vidoe_i);
-                Media media2 = new Media(video_id,video_description[i]);
-                mediaRepository.save(media2);
-                video_ids += video_id + ",";
+        for (int i = 0; i < files.length; i++) {
+            JSONObject file = files[i];
+            String f_id = file.getString("url");
+            String type = file.getString("type");
+            String description = file.getString("description");
+            if(type.equals("image")) {
+                image_ids += f_id + ",";
+                Media media1 = new Media(f_id,description);
+                mediaRepository.save(media1);
+            }
+            else {
+                video_ids += f_id + ",";
+                Media media1 = new Media(f_id,description);
+                mediaRepository.save(media1);
             }
         }
         return diseaseManage.addOneDisease(disease_type,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
@@ -89,32 +88,64 @@ public class DiseaseManageController {
     @AdminMethod
     @ApiOperation(value = "修改单个病例")
     @RequestMapping(value = "/modifyOneDisease", method = RequestMethod.POST)
-    public CommonResponse modifyOneQuestion(@RequestParam("disease_type_id") Integer disease_type_id,
+    public CommonResponse modifyOneQuestion(@RequestParam("disease_type_id") Integer disease_id,
+                                            @RequestParam("disease_type") String disease_type_name,
+                                            @RequestParam("disease_name") String disease_name,
                                             @RequestParam("symptom") String symptom,
                                             @RequestParam("examination") String examination,
                                             @RequestParam("diagnosis") String diagnosis,
                                             @RequestParam("treatment") String treatment,
-                                            @RequestParam("image") MultipartFile[] image,
-                                            @RequestParam("video") MultipartFile[] video,
-                                            @RequestParam("image_description") String[] image_description,
-                                            @RequestParam("video_description") String[] video_description) {
+                                            @RequestParam("file_items") JSONObject[] files
+//                                            @RequestParam("image") MultipartFile[] image,
+//                                            @RequestParam("video") MultipartFile[] video,
+//                                            @RequestParam("image_description") String[] image_description,
+//                                            @RequestParam("video_description") String[] video_description
+                                            ) {
+
         String image_ids = "";
-        for (int i = 0; i < image.length; i++) {
-            MultipartFile image_i = image[i];
-            String image_id = fileUtil.upload(image_i);
-            Media media1 = new Media(image_id,image_description[i]);
-            mediaRepository.save(media1);
-            image_ids += image_id + ",";
-        }
         String video_ids = "";
-        for (int i = 0; i < video.length; i++) {
-            MultipartFile vidoe_i = video[i];
-            String video_id = fileUtil.upload(vidoe_i);
-            Media media2 = new Media(video_id,video_description[i]);
-            mediaRepository.save(media2);
-            video_ids += video_id + ",";
+        for (int i = 0; i < files.length; i++) {
+            JSONObject file = files[i];
+            String f_id = file.getString("url");
+            String type = file.getString("type");
+            String description = file.getString("description");
+            if(type.equals("image")) {
+                image_ids += f_id + ",";
+                Media media1 = new Media(f_id,description);
+                mediaRepository.save(media1);
+            }
+            else {
+                video_ids += f_id + ",";
+                Media media1 = new Media(f_id,description);
+                mediaRepository.save(media1);
+            }
         }
-        return diseaseManage.modifyOneDisease(disease_type_id,symptom,examination,diagnosis,treatment,image_ids,video_ids);
+        return diseaseManage.modifyOneDisease(disease_id,disease_type_name,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
+    }
+
+    @AdminMethod
+    @ApiOperation(value = "上传文件")
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.GET)
+    public CommonResponse uploadFile(@RequestParam("file") MultipartFile[] files) {
+
+        List<JSONObject> infos = new ArrayList<>();
+        for (int i = 0; i < files.length; i++) {
+            JSONObject info = new JSONObject();
+            MultipartFile file = files[i];
+            String f_id = fileUtil.upload(file);
+            info.put("file_url",f_id);
+            String fname = file.getOriginalFilename();
+            String type = fname.substring(fname.lastIndexOf('.') + 1).toLowerCase();
+            if (type.equals("jpg") || type.equals("gif") || type.equals("png") || type.equals("bmp") )
+                info.put("file_type","image");
+            else
+                info.put("file_type","image");
+            infos.add(info);
+        }
+        JSONObject object = new JSONObject();
+        object.put("file_info",infos);
+
+        return CommonResponse.builder().result(object).message("上传成功").code(0).build();
     }
 
     @AdminMethod

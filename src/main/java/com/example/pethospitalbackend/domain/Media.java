@@ -13,8 +13,10 @@ import javax.persistence.*;
 @Table(name = "media")
 public class Media {
     @Id
-    @Column(length = 50)
+    @Column(length = 500)
     private String name;
     @Column(length = 100)
     private String description;
+//    @Column(length = 10)
+//    private String type;
 }
