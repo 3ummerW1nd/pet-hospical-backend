@@ -124,16 +124,16 @@ public class DiseaseManage {
         disease_info.put("disease_type_name",typeRepository.findTypeById(disease_id));
         disease_info.put("disease_name",typeRepository.findNameById(disease_id));
         disease_info.put("symptom",disease.getSymptom());
-        List<String> examination = new ArrayList<>();
+        List<Integer> examination = new ArrayList<>();
         String[] es = disease.getExamination().split(",");
         for(String e : es)
-            examination.add(e);
+            examination.add(Integer.parseInt(e));
         disease_info.put("examination",examination);
         disease_info.put("diagnosis",disease.getDiagnosis());
-        List<String> treatment = new ArrayList<>();
+        List<Integer> treatment = new ArrayList<>();
         String[] ts = disease.getTreatment().split(",");
         for(String t : ts)
-            treatment.add(t);
+            treatment.add(Integer.parseInt(t));
         disease_info.put("treatment",treatment);
 
         List<JSONObject> file_info = new ArrayList<>();
