@@ -138,7 +138,7 @@ public class DiseaseManage {
 
         List<JSONObject> file_info = new ArrayList<>();
         String image_ids = disease.getImage_ids();
-        if(!image_ids.equals("")) {
+        if(image_ids != null && !image_ids.equals("")) {
             String[] images = image_ids.split(",");
             for(String image : images){
                 JSONObject f = new JSONObject();
@@ -156,7 +156,7 @@ public class DiseaseManage {
         }
 
         String video_ids = disease.getVideo_ids();
-        if(!video_ids.equals("")){
+        if(video_ids != null && !video_ids.equals("")){
             String[] videos = video_ids.split(",");
             for(String video : videos){
                 JSONObject f = new JSONObject();
