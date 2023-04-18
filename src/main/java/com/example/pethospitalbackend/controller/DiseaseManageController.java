@@ -128,7 +128,7 @@ public class DiseaseManageController {
         return diseaseManage.modifyOneDisease(disease_id,disease_type_name,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
     }
 
-    @AdminMethod
+    //@AdminMethod
     @ApiOperation(value = "上传文件")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public CommonResponse uploadFile(@RequestParam("file") MultipartFile[] files) {
