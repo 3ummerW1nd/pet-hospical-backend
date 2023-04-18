@@ -184,7 +184,7 @@ public class UserService {
                         .message("只有管理员可以改权限")
                         .build();
         }
-        if (level != null && role != user.getRole()) {
+        if (level != null && level != user.getLevel()) {
             if (level < 1 || level > 5) {
                 return CommonResponse.builder()
                         .code(1)
@@ -192,7 +192,7 @@ public class UserService {
                         .build();
             }
             if (operator.getRole())
-                user.setRole(role);
+                user.setLevel(level);
             else
                 return CommonResponse.builder()
                         .code(1)
