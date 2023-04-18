@@ -66,8 +66,10 @@ public class ExamService {
     //更新用户考试信息
     public CommonResponse updateUserExam(int user_id, int exam_id, int history_score){
         Boolean flag = userExamRepository.isExist(user_id,exam_id);
-        if(flag == null)
-            userExamRepository.insertScore(user_id,exam_id,history_score);
+        if(flag == null) {
+            UserExam userExam = new UserExam(user_id, exam_id, true, history_score);
+            userExamRepository.save(userExam);
+        }
         else
             userExamRepository.updateScore(user_id,exam_id,history_score);
         return CommonResponse.builder().message("更新成功").code(0).build();
