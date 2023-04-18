@@ -32,6 +32,7 @@ public interface PetProfileRepository extends JpaRepository<Pet,Integer> {
     @Query(nativeQuery = true, value = "SELECT CEIL(COUNT(*) / :limit) AS pageCount FROM pet_profiles")
     Integer getPageCount(@Param("limit") int limit);
 
+
     @Query("SELECT a.id AS id, a.name AS name, a.birthday AS birthday," +
             " a.type AS type, a.gender AS gender," +
             " a.images AS images, a.description AS description," +
@@ -42,6 +43,9 @@ public interface PetProfileRepository extends JpaRepository<Pet,Integer> {
             " FROM Pet a JOIN a.diseases b JOIN a.checkups c" +
             " JOIN a.medicines d WHERE a.id = :id")
     PetProfileDTO getProfileById(@Param("id") Integer id);
+
+    @Query(value = "SELECT count(petId) from pet_profile_diseases where diseaseId = :id", nativeQuery = true)
+    Integer isExistDisease(Integer id);
 }
 
 

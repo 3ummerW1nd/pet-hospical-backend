@@ -6,9 +6,7 @@ import com.example.pethospitalbackend.domain.Media;
 import com.example.pethospitalbackend.domain.Question;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.output.Page;
-import com.example.pethospitalbackend.repository.DiseaseRepository;
-import com.example.pethospitalbackend.repository.DiseaseTypeRepository;
-import com.example.pethospitalbackend.repository.MediaRepository;
+import com.example.pethospitalbackend.repository.*;
 import lombok.SneakyThrows;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,12 @@ public class DiseaseManage {
     private DiseaseTypeRepository typeRepository;
     @Autowired
     private MediaRepository mediaRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
+    private PaperRepository paperRepository;
+    @Autowired
+    private  PetProfileRepository petProfileRepository;
 
     //获取所有大病
     public CommonResponse getBigDisease(){
@@ -103,6 +107,12 @@ public class DiseaseManage {
 
     //删除单个病例
     public CommonResponse deleteOneDisease(Integer disease_id){
+        if(questionRepository.isExistDisease(disease_id) != 0)
+            return CommonResponse.builder().message("有关联试题，无法删除").code(1).build();
+        if(paperRepository.isExistDisease(disease_id) != 0)
+            return CommonResponse.builder().message("有关联试卷，无法删除").code(1).build();
+        if(petProfileRepository.isExistDisease(disease_id) != 0)
+            return CommonResponse.builder().message("有关联真实病例，无法删除").code(1).build();
         diseaseRepository.deleteById(disease_id);
         return CommonResponse.builder().message("删除成功").code(0).build();
     }
