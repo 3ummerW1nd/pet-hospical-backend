@@ -27,10 +27,10 @@ public class ExamController {
     @ApiOperation(value = "更新用户考试信息")
     @RequestMapping(value = "/updateUserExam", method = RequestMethod.POST)
     public CommonResponse updateUserExam(@RequestHeader("Authorization") String token,
-                                         @RequestParam("paper_id") Integer paper_id,
+                                         @RequestParam("exam_id") Integer exam_id,
                                          @RequestParam("history_score") Integer history_score) {
         int user_id = TokenUtil.getUserRoleFromToken(token).getId();
-        return examService.updateUserExam(user_id, paper_id,history_score);
+        return examService.updateUserExam(user_id, exam_id,history_score);
     }
 
 
