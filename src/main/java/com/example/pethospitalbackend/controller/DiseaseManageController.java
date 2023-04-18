@@ -56,23 +56,25 @@ public class DiseaseManageController {
                                          @RequestParam("examination") String examination,
                                          @RequestParam("diagnosis") String diagnosis,
                                          @RequestParam("treatment") String treatment,
-                                         @RequestParam("file_items") JSONObject[] files) {
+                                         @RequestParam(value = "file_items",required = false) JSONObject[] files) {
         String image_ids = "";
         String video_ids = "";
-        for (int i = 0; i < files.length; i++) {
-            JSONObject file = files[i];
-            String f_id = file.getString("url");
-            String type = file.getString("type");
-            String description = file.getString("description");
-            if(type.equals("image")) {
-                image_ids += f_id + ",";
-                Media media1 = new Media(f_id,description);
-                mediaRepository.save(media1);
-            }
-            else {
-                video_ids += f_id + ",";
-                Media media1 = new Media(f_id,description);
-                mediaRepository.save(media1);
+        if(files != null){
+            for (int i = 0; i < files.length; i++) {
+                JSONObject file = files[i];
+                String f_id = file.getString("url");
+                String type = file.getString("type");
+                String description = file.getString("description");
+                if(type.equals("image")) {
+                    image_ids += f_id + ",";
+                    Media media1 = new Media(f_id,description);
+                    mediaRepository.save(media1);
+                }
+                else {
+                    video_ids += f_id + ",";
+                    Media media1 = new Media(f_id,description);
+                    mediaRepository.save(media1);
+                }
             }
         }
         return diseaseManage.addOneDisease(disease_type,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
@@ -95,7 +97,7 @@ public class DiseaseManageController {
                                             @RequestParam("examination") String examination,
                                             @RequestParam("diagnosis") String diagnosis,
                                             @RequestParam("treatment") String treatment,
-                                            @RequestParam("file_items") JSONObject[] files
+                                            @RequestParam(value = "file_items",required = false) JSONObject[] files
 //                                            @RequestParam("image") MultipartFile[] image,
 //                                            @RequestParam("video") MultipartFile[] video,
 //                                            @RequestParam("image_description") String[] image_description,
@@ -104,28 +106,31 @@ public class DiseaseManageController {
 
         String image_ids = "";
         String video_ids = "";
-        for (int i = 0; i < files.length; i++) {
-            JSONObject file = files[i];
-            String f_id = file.getString("url");
-            String type = file.getString("type");
-            String description = file.getString("description");
-            if(type.equals("image")) {
-                image_ids += f_id + ",";
-                Media media1 = new Media(f_id,description);
-                mediaRepository.save(media1);
-            }
-            else {
-                video_ids += f_id + ",";
-                Media media1 = new Media(f_id,description);
-                mediaRepository.save(media1);
+        if(files != null){
+            for (int i = 0; i < files.length; i++) {
+                JSONObject file = files[i];
+                String f_id = file.getString("url");
+                String type = file.getString("type");
+                String description = file.getString("description");
+                if(type.equals("image")) {
+                    image_ids += f_id + ",";
+                    Media media1 = new Media(f_id,description);
+                    mediaRepository.save(media1);
+                }
+                else {
+                    video_ids += f_id + ",";
+                    Media media1 = new Media(f_id,description);
+                    mediaRepository.save(media1);
+                }
             }
         }
+
         return diseaseManage.modifyOneDisease(disease_id,disease_type_name,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
     }
 
     @AdminMethod
     @ApiOperation(value = "上传文件")
-    @RequestMapping(value = "/uploadFile", method = RequestMethod.GET)
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public CommonResponse uploadFile(@RequestParam("file") MultipartFile[] files) {
 
         List<JSONObject> infos = new ArrayList<>();
