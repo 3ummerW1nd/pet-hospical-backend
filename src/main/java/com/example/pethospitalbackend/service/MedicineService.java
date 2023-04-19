@@ -33,13 +33,22 @@ public class MedicineService {
     @Transactional
     public CommonResponse createOrUpdateMedicine(Integer id, String name, String introduction, Double price, Integer quantity) {
         Medicine medicine = null;
+        List<Medicine> medicineList = medicineRepository.findMedicinesByName(name);
         if (id != null) {
-            Boolean exist = medicineRepository.existsById(id);
-            if (!exist) {
+            Optional<Medicine> optionalMedicine = medicineRepository.findById(id);
+            if (!optionalMedicine.isPresent()) {
                 return CommonResponse.builder()
                         .code(1)
                         .message("id不存在，请检查")
                         .build();
+            }
+            for (Medicine medicine1 : medicineList) {
+                if (medicine1.getId() != id) {
+                    return CommonResponse.builder()
+                            .code(1)
+                            .message("名称重复，请检查")
+                            .build();
+                }
             }
             medicine = Medicine.builder()
                     .id(id)
@@ -49,6 +58,12 @@ public class MedicineService {
                     .quantity(quantity)
                     .build();
         } else {
+            if (!medicineList.isEmpty()) {
+                return CommonResponse.builder()
+                        .code(1)
+                        .message("名称重复，请检查")
+                        .build();
+            }
             medicine = Medicine.builder()
                     .name(name)
                     .introduction(introduction)
