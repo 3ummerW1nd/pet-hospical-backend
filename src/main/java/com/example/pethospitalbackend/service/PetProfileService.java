@@ -137,9 +137,9 @@ public class PetProfileService {
                 .description(pet.getDescription())
                 .type(pet.getType())
                 .age(getPetAge(pet.getBirthday()))
-                .checkups(medicines)
-                .diseases(checkups)
-                .medicines(diseases)
+                .checkups(checkups)
+                .diseases(diseases)
+                .medicines(medicines)
                 .build();
     }
 
