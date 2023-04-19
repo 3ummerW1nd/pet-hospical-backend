@@ -1,6 +1,5 @@
 package com.example.pethospitalbackend.domain.profile;
 
-import com.example.pethospitalbackend.domain.BasicInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,9 +31,9 @@ public class PetProfileVO {
 
     private Double weight;
 
-    private List<BasicInfo> checkups;
+    private List<IBasicInfo> checkups;
 
-    private List<BasicInfo> medicines;
+    private List<IBasicInfo> medicines;
 
-    private List<BasicInfo> diseases;
+    private List<IBasicInfo> diseases;
 }
