@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class UserService {
@@ -140,7 +139,13 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public CommonResponse deleteUserById(Integer id) {
+    public CommonResponse deleteUserById(Integer id, UserRole userRole) {
+        if (userRole.getId() == id) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("用户不能删除自己")
+                    .build();
+        }
         Optional<User> optionalUser = userRepository.findById(id);
         if (!optionalUser.isPresent()) {
             return CommonResponse.builder()

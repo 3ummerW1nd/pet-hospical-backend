@@ -55,8 +55,9 @@ public class UserController {
     @AdminMethod
     @ApiOperation(value = "删除指定用户")
     @RequestMapping(value = "/deleteOneUser", method = RequestMethod.POST)
-    public CommonResponse deleteOneUser(Integer id) {
-        return userService.deleteUserById(id);
+    public CommonResponse deleteOneUser(@RequestHeader("Authorization") String token, Integer id) {
+        UserRole userRole = TokenUtil.getUserRoleFromToken(token);
+        return userService.deleteUserById(id, userRole);
     }
 
 

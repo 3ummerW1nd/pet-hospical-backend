@@ -102,6 +102,7 @@ public class PetProfileService {
             pet.setId(id);
         }
         petProfileRepository.save(pet);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(pet));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
