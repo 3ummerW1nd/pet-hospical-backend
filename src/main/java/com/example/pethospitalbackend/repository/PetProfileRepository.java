@@ -44,16 +44,16 @@ public interface PetProfileRepository extends JpaRepository<Pet,Integer> {
             " FROM Pet a WHERE a.id = :id")
     PetProfileDTO getProfileById(@Param("id") Integer id);
 
-    @Query(value = "select a.id as id, a.name as name from disease_type a join pet_profile_diseases b on a.id = b.diseaseId where b.petId = :id", nativeQuery = true)
+    @Query(value = "select a.id as id, a.name as name from disease_type a join pet_profile_diseases b on a.id = b.disease_id where b.pet_id = :id", nativeQuery = true)
     List<IBasicInfo> getDiseasesByProfile(Integer id);
 
-    @Query(value = "select a.id as id, a.name as name from checkups a join pet_profile_checkups b on a.id = b.checkupId where b.petId = :id", nativeQuery = true)
+    @Query(value = "select a.id as id, a.name as name from checkups a join pet_profile_checkups b on a.id = b.checkup_id where b.pet_id = :id", nativeQuery = true)
     List<IBasicInfo> getCheckupsByProfile(Integer id);
 
-    @Query(value = "select a.id as id, a.name as name from medicines a join pet_profile_medicines b on a.id = b.medicineId where b.petId = :id", nativeQuery = true)
+    @Query(value = "select a.id as id, a.name as name from medicines a join pet_profile_medicines b on a.id = b.medicine_id where b.pet_id = :id", nativeQuery = true)
     List<IBasicInfo> getMedicinesByProfile(Integer id);
 
-    @Query(value = "SELECT count(petId) from pet_profile_diseases where diseaseId = :id", nativeQuery = true)
+    @Query(value = "SELECT count(petId) from pet_profile_diseases where disease_id = :id", nativeQuery = true)
     Integer isExistDisease(Integer id);
 }
 

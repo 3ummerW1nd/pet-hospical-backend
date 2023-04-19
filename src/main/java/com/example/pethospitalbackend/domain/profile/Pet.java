@@ -50,19 +50,19 @@ public class Pet implements Searchable {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "pet_profile_checkups", joinColumns = {
-            @JoinColumn(name = "petId", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "checkupId", referencedColumnName = "id")})
+            @JoinColumn(name = "pet_id", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "checkup_id", referencedColumnName = "id")})
     private Set<Checkup> checkups;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "pet_profile_medicines", joinColumns = {
-            @JoinColumn(name = "petId", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "medicineId", referencedColumnName = "id")})
+            @JoinColumn(name = "pet_id", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "medicine_id", referencedColumnName = "id")})
     private Set<Medicine> medicines;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "pet_profile_diseases", joinColumns = {
-            @JoinColumn(name = "petId", referencedColumnName = "id")}, inverseJoinColumns = {
-            @JoinColumn(name = "diseaseId", referencedColumnName = "id")})
+            @JoinColumn(name = "pet_id", referencedColumnName = "id")}, inverseJoinColumns = {
+            @JoinColumn(name = "disease_id", referencedColumnName = "id")})
     private Set<DiseaseType> diseases;
 }
