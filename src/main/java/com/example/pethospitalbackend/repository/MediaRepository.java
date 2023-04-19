@@ -18,7 +18,7 @@ public interface MediaRepository extends JpaRepository<Media,String> {
     @Transactional
     @Modifying
     @Query(value = "update media set description = ?2 where name = ?1", nativeQuery = true)
-    String setDescription(String name, String description);
+    void setDescription(String name, String description);
 
     @Query(value = "select name from media where name = ?1", nativeQuery = true)
     String isExist(String name);
