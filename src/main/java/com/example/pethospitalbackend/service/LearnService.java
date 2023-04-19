@@ -18,17 +18,17 @@ public class LearnService {
     private CheckupRepository checkupRepository;
 
     //计算检查价格
-    public CommonResponse getTotalPrice(List<String> m_ids, List<String> c_ids){
+    public CommonResponse getTotalPrice(Integer[] m_ids, Integer[] c_ids){
         JSONObject object = new JSONObject();
         double m_price = 0.0;
-        for (String m_id : m_ids){
-            double price = medicineRepository.findMedicinePrice(Integer.parseInt(m_id));
+        for (int m_id : m_ids){
+            double price = medicineRepository.findMedicinePrice(m_id);
             m_price += price;
         }
         object.put("treatment_price",m_price);
         double c_price = 0.0;
-        for (String c_id : c_ids){
-            double price = checkupRepository.findCheckPrice(Integer.parseInt(c_id));
+        for (int c_id : c_ids){
+            double price = checkupRepository.findCheckPrice(c_id);
             c_price += price;
         }
         object.put("examination_price",c_price);

@@ -22,8 +22,8 @@ public class LearnController {
 
     @ApiOperation(value = "计算检查价格")
     @RequestMapping(value = "/getTotalPrice", method = RequestMethod.POST)
-    public CommonResponse getTotalPrice(@RequestParam("examination") List<String> e_ids,
-                                      @RequestParam("treatment") List<String> t_ids) {
+    public CommonResponse getTotalPrice(@RequestParam("examination") Integer[] e_ids,
+                                      @RequestParam("treatment") Integer[] t_ids) {
         return learnService.getTotalPrice(t_ids,e_ids);
     }
 
