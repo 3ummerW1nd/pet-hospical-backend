@@ -1,8 +1,6 @@
 package com.example.pethospitalbackend.service;
 
 import com.example.pethospitalbackend.domain.*;
-import com.example.pethospitalbackend.domain.department.DepartmentVOEntity;
-import com.example.pethospitalbackend.domain.page.DepartmentPageInfo;
 import com.example.pethospitalbackend.domain.page.PetProfileInfo;
 import com.example.pethospitalbackend.domain.profile.*;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
@@ -110,9 +108,11 @@ public class PetProfileService {
                 .build();
     }
 
-
     public CommonResponse getPetProfileByPetId(Integer id) {
         PetProfileDTO pet = petProfileRepository.getProfileById(id);
+        List<IBasicInfo> medicines = petProfileRepository.getMedicinesByProfile(id);
+        List<IBasicInfo> checkups = petProfileRepository.getCheckupsByProfile(id);
+        List<IBasicInfo> diseases = petProfileRepository.getDiseasesByProfile(id);
         if (pet == null) {
             return CommonResponse.builder()
                     .message("宠物档案不存在")
@@ -122,7 +122,24 @@ public class PetProfileService {
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
-                .result(getPetProfileVO(pet))
+                .result(getPetProfileVO(pet, medicines, checkups, diseases))
+                .build();
+    }
+
+    private PetProfileVO getPetProfileVO(PetProfileDTO pet, List<IBasicInfo> medicines, List<IBasicInfo> checkups, List<IBasicInfo> diseases) {
+        return PetProfileVO.builder()
+                .id(pet.getId())
+                .name(pet.getName())
+                .birthday(pet.getBirthday())
+                .gender(pet.getGender() ? "公" : "母")
+                .images(pet.getImages())
+                .weight(pet.getWeight())
+                .description(pet.getDescription())
+                .type(pet.getType())
+                .age(getPetAge(pet.getBirthday()))
+                .checkups(medicines)
+                .diseases(checkups)
+                .medicines(diseases)
                 .build();
     }
 
@@ -223,36 +240,4 @@ public class PetProfileService {
         return result;
 
     }
-
-
-    private PetProfileVO getPetProfileVO(PetProfileDTO pet) {
-        List<BasicInfo> checkupBasic = new ArrayList<>();
-        List<BasicInfo> diseaseBasic = new ArrayList<>();
-        List<BasicInfo> medicineBasic = new ArrayList<>();
-
-        for (int i = 0; i < pet.getCheckupIds().size(); i ++) {
-            checkupBasic.add(new BasicInfo(pet.getCheckupIds().get(i), pet.getCheckupNames().get(i)));
-        }
-        for (int i = 0; i < pet.getCheckupIds().size(); i ++) {
-            diseaseBasic.add(new BasicInfo(pet.getDiseaseIds().get(i), pet.getDiseaseNames().get(i)));
-        }
-        for (int i = 0; i < pet.getCheckupIds().size(); i ++) {
-            medicineBasic.add(new BasicInfo(pet.getMedicineIds().get(i), pet.getMedicineNames().get(i)));
-        }
-        return PetProfileVO.builder()
-                .id(pet.getId())
-                .name(pet.getName())
-                .birthday(pet.getBirthday())
-                .gender(pet.getGender() ? "公" : "母")
-                .images(pet.getImages())
-                .weight(pet.getWeight())
-                .description(pet.getDescription())
-                .type(pet.getType())
-                .age(getPetAge(pet.getBirthday()))
-                .checkups(checkupBasic)
-                .diseases(diseaseBasic)
-                .medicines(medicineBasic)
-                .build();
-    }
-
 }

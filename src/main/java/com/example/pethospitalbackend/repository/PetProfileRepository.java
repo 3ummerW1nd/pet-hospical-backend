@@ -1,5 +1,6 @@
 package com.example.pethospitalbackend.repository;
 
+import com.example.pethospitalbackend.domain.profile.IBasicInfo;
 import com.example.pethospitalbackend.domain.profile.Pet;
 import com.example.pethospitalbackend.domain.profile.PetProfileDTO;
 import com.example.pethospitalbackend.domain.profile.PetProfileListDTO;
@@ -36,13 +37,21 @@ public interface PetProfileRepository extends JpaRepository<Pet,Integer> {
     @Query("SELECT a.id AS id, a.name AS name, a.birthday AS birthday," +
             " a.type AS type, a.gender AS gender," +
             " a.images AS images, a.description AS description," +
-            " a.weight AS weight," +
-            " b.name AS diseaseNames, b.id AS diseaseIds," +
-            " c.name AS checkupNames, c.id AS checkupIds," +
-            " d.name AS medicineNames, d.id AS medicineIds" +
-            " FROM Pet a JOIN a.diseases b JOIN a.checkups c" +
-            " JOIN a.medicines d WHERE a.id = :id")
+            " a.weight AS weight" +
+//            " b.name AS diseaseNames, b.id AS diseaseIds," +
+//            " c.name AS checkupNames, c.id AS checkupIds," +
+//            " d.name AS medicineNames, d.id AS medicineIds" +
+            " FROM Pet a WHERE a.id = :id")
     PetProfileDTO getProfileById(@Param("id") Integer id);
+
+    @Query(value = "select a.id as id, a.name as name from disease_type a join pet_profile_diseases b on a.id = b.diseaseId where b.petId = :id", nativeQuery = true)
+    List<IBasicInfo> getDiseasesByProfile(Integer id);
+
+    @Query(value = "select a.id as id, a.name as name from checkups a join pet_profile_checkups b on a.id = b.checkupId where b.petId = :id", nativeQuery = true)
+    List<IBasicInfo> getCheckupsByProfile(Integer id);
+
+    @Query(value = "select a.id as id, a.name as name from medicines a join pet_profile_medicines b on a.id = b.medicineId where b.petId = :id", nativeQuery = true)
+    List<IBasicInfo> getMedicinesByProfile(Integer id);
 
     @Query(value = "SELECT count(petId) from pet_profile_diseases where diseaseId = :id", nativeQuery = true)
     Integer isExistDisease(Integer id);
