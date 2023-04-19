@@ -109,11 +109,12 @@ public class DiseaseManage {
     public CommonResponse deleteOneDisease(Integer disease_id){
         if(questionRepository.isExistDisease(disease_id) != 0)
             return CommonResponse.builder().message("有关联试题，无法删除").code(1).build();
-        if(petProfileRepository.isExistDisease(disease_id) != 0)
+        if(paperRepository.isExistDisease(disease_id) != 0)
             return CommonResponse.builder().message("有关联试卷，无法删除").code(1).build();
         if(petProfileRepository.isExistDisease(disease_id) != 0)
             return CommonResponse.builder().message("有关联真实病例，无法删除").code(1).build();
         diseaseRepository.deleteById(disease_id);
+        typeRepository.deleteById(disease_id);
         return CommonResponse.builder().message("删除成功").code(0).build();
     }
 
