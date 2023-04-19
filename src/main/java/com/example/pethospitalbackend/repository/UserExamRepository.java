@@ -21,9 +21,9 @@ public interface UserExamRepository extends JpaRepository<UserExam, Integer> {
 
     @Transactional
     @Modifying
-    @Query(value = "update user_exam set is_done = true, history_score = ?3 from user_exam where user_id =?1 and exam_id = ?2",
+    @Query(value = "update user_exam set is_done = true, history_score = ?3 where user_id =?1 and exam_id = ?2",
             nativeQuery = true)
-    List<UserExam> updateScore(int user_id, int exam_id, int score);
+    void updateScore(int user_id, int exam_id, int score);
 
 //    @Transactional
 //    @Modifying
