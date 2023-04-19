@@ -4,6 +4,7 @@ import com.example.pethospitalbackend.domain.Checkup;
 import com.example.pethospitalbackend.domain.page.CheckupPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.CheckupRepository;
+import com.example.pethospitalbackend.repository.PetProfileRepository;
 import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
 import com.example.pethospitalbackend.search.entity.Result;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
@@ -24,6 +25,9 @@ public class CheckupService {
 
     @Autowired
     private SearchUtil searchUtil;
+
+    @Autowired
+    private PetProfileRepository petProfileRepository;
 
     @Transactional
     public CommonResponse createOrUpdateCheckup(Integer id, String name, String introduction, Double price) {
@@ -65,6 +69,12 @@ public class CheckupService {
             return CommonResponse.builder()
                     .code(1)
                     .message("检查不存在，请检查id")
+                    .build();
+        }
+        if (petProfileRepository.isExistCheckup(id) > 0) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("有真实病例引用，不可被删除")
                     .build();
         }
         Checkup checkup = optionalPersonnel.get();

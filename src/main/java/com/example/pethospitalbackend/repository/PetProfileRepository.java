@@ -55,6 +55,12 @@ public interface PetProfileRepository extends JpaRepository<Pet,Integer> {
 
     @Query(value = "SELECT count(*) from pet_profile_diseases where disease_id = :id", nativeQuery = true)
     Integer isExistDisease(Integer id);
+
+    @Query(value = "SELECT count(*) from pet_profile_checkups where checkup_id = :id", nativeQuery = true)
+    Integer isExistCheckup(Integer id);
+
+    @Query(value = "SELECT count(*) from pet_profile_medicines where medicine_id = :id", nativeQuery = true)
+    Integer isExistMedicine(Integer id);
 }
 
 

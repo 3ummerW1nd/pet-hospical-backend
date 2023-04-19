@@ -19,4 +19,6 @@ public interface CheckupRepository extends CrudRepository<Checkup, Integer> {
 
     @Query(nativeQuery = true, value = "select price from checkups where id = ?1")
     Double findCheckPrice(int id);
+
+    List<Checkup> findCheckupsByName(String name);
 }

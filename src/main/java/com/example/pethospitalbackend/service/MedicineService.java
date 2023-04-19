@@ -4,6 +4,7 @@ import com.example.pethospitalbackend.domain.Medicine;
 import com.example.pethospitalbackend.domain.page.MedicinePageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.MedicineRepository;
+import com.example.pethospitalbackend.repository.PetProfileRepository;
 import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
 import com.example.pethospitalbackend.search.entity.Result;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
@@ -19,6 +20,10 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 public class MedicineService {
+
+    @Autowired
+    private PetProfileRepository petProfileRepository;
+
     @Autowired
     private MedicineRepository medicineRepository;
 
@@ -67,6 +72,12 @@ public class MedicineService {
             return CommonResponse.builder()
                     .code(1)
                     .message("药品不存在，请检查id")
+                    .build();
+        }
+        if (petProfileRepository.isExistMedicine(id) > 0) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("有真实病例引用，不可被删除")
                     .build();
         }
         Medicine medicine = optionalPersonnel.get();
