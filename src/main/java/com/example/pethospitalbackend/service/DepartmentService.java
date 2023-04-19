@@ -120,6 +120,7 @@ public class DepartmentService {
                     .build();
         }
         departmentRepository.save(department);
+        searchUtil.upload(SearchEntityConverter.getSearchableEntity(department));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
@@ -137,6 +138,7 @@ public class DepartmentService {
                     .build();
         }
         Department department = optionalDepartment.get();
+        searchUtil.delete(SearchEntityConverter.getSearchableEntity(department));
         departmentRepository.deleteById(id);
         return CommonResponse.builder()
                 .code(0)

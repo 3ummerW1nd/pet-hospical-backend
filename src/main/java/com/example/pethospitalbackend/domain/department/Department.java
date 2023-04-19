@@ -22,7 +22,7 @@ import javax.persistence.*;
 @DynamicUpdate
 @Table(name = "departments",
         indexes = {@Index(name = "my_index_name",  columnList="name", unique = true)})
-public class Department {
+public class Department implements Searchable{
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
