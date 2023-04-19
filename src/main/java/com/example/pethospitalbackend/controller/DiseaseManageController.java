@@ -2,6 +2,7 @@ package com.example.pethospitalbackend.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.pethospitalbackend.annotation.AdminMethod;
+import com.example.pethospitalbackend.annotation.NoLoginMethod;
 import com.example.pethospitalbackend.domain.Media;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.MediaRepository;
@@ -56,25 +57,24 @@ public class DiseaseManageController {
                                          @RequestParam("examination") String examination,
                                          @RequestParam("diagnosis") String diagnosis,
                                          @RequestParam("treatment") String treatment,
-                                         @RequestParam(value = "file_items",required = false) JSONObject[] files) {
+                                         @RequestParam(value = "file_url",required = false) String file_url,
+                                         @RequestParam(value = "file_description",required = false) String file_description,
+                                         @RequestParam(value = "file_type",required = false) String file_type) {
         String image_ids = "";
         String video_ids = "";
-        if(files != null){
-            for (int i = 0; i < files.length; i++) {
-                JSONObject file = files[i];
-                String f_id = file.getString("url");
-                String type = file.getString("type");
-                String description = file.getString("description");
-                if(type.equals("image")) {
+        if(file_url != null){
+            String[] urls = file_url.split(",");
+            String[] descriptions = file_description.split(",");
+            String[] types = file_type.split(",");
+            for (int i = 0; i < urls.length; i++) {
+                String f_id = urls[i];
+                String description = descriptions[i];
+                String type = types[i];
+                mediaRepository.setDescription(f_id,description);
+                if(type.equals("image"))
                     image_ids += f_id + ",";
-                    Media media1 = new Media(f_id,description);
-                    mediaRepository.save(media1);
-                }
-                else {
+                else
                     video_ids += f_id + ",";
-                    Media media1 = new Media(f_id,description);
-                    mediaRepository.save(media1);
-                }
             }
         }
         return diseaseManage.addOneDisease(disease_type,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
@@ -97,7 +97,9 @@ public class DiseaseManageController {
                                             @RequestParam("examination") String examination,
                                             @RequestParam("diagnosis") String diagnosis,
                                             @RequestParam("treatment") String treatment,
-                                            @RequestParam(value = "file_items",required = false) JSONObject[] files
+                                            @RequestParam(value = "file_url",required = false) String file_url,
+                                            @RequestParam(value = "file_description",required = false) String file_description,
+                                            @RequestParam(value = "file_type",required = false) String file_type
 //                                            @RequestParam("image") MultipartFile[] image,
 //                                            @RequestParam("video") MultipartFile[] video,
 //                                            @RequestParam("image_description") String[] image_description,
@@ -106,32 +108,27 @@ public class DiseaseManageController {
 
         String image_ids = "";
         String video_ids = "";
-        if(files != null){
-            for (int i = 0; i < files.length; i++) {
-                JSONObject file = files[i];
-                String f_id = file.getString("url");
-                String type = file.getString("type");
-                String description = file.getString("description");
-                if(type.equals("image")) {
+        if(file_url != null){
+            String[] urls = file_url.split(",");
+            String[] descriptions = file_description.split(",");
+            String[] types = file_type.split(",");
+            for (int i = 0; i < urls.length; i++) {
+                String f_id = urls[i];
+                String description = descriptions[i];
+                String type = types[i];
+                mediaRepository.setDescription(f_id,description);
+                if(type.equals("image"))
                     image_ids += f_id + ",";
-                    Media media1 = new Media(f_id,description);
-                    mediaRepository.save(media1);
-                }
-                else {
+                else
                     video_ids += f_id + ",";
-                    Media media1 = new Media(f_id,description);
-                    mediaRepository.save(media1);
-                }
             }
         }
 
-        CommonResponse response = diseaseManage.modifyOneDisease(disease_id,disease_type_name,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
-        response.setMessage(files.toString());
-        return response;
-        //return diseaseManage.modifyOneDisease(disease_id,disease_type_name,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
+        return diseaseManage.modifyOneDisease(disease_id,disease_type_name,disease_name, symptom,examination,diagnosis,
+                treatment,image_ids,video_ids);
     }
 
-    //@AdminMethod
+    @NoLoginMethod
     @ApiOperation(value = "上传文件")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public CommonResponse uploadFile(@RequestParam("file") MultipartFile[] files) {
@@ -144,10 +141,16 @@ public class DiseaseManageController {
             info.put("file_url",f_id);
             String fname = file.getOriginalFilename();
             String type = fname.substring(fname.lastIndexOf('.') + 1).toLowerCase();
-            if (type.equals("jpg") || type.equals("gif") || type.equals("png") || type.equals("bmp") )
-                info.put("file_type","image");
-            else
-                info.put("file_type","image");
+            if (type.equals("jpg") || type.equals("gif") || type.equals("png") || type.equals("bmp") ) {
+                info.put("file_type", "image");
+                Media media1 = new Media(f_id,null,"image");
+                mediaRepository.save(media1);
+            }
+            else {
+                info.put("file_type", "image");
+                Media media1 = new Media(f_id,null,"video");
+                mediaRepository.save(media1);
+            }
             infos.add(info);
         }
         JSONObject object = new JSONObject();

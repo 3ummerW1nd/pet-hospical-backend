@@ -19,6 +19,9 @@ public interface UserExamRepository extends JpaRepository<UserExam, Integer> {
     @Query(value = "select is_done from user_exam where user_id =?1 and exam_id = ?2", nativeQuery = true)
     Boolean isExist(int user_id, int exam_id);
 
+    @Query(value = "select * from user_exam where user_id =?1 and exam_id = ?2", nativeQuery = true)
+    UserExam getOneUserExam(int user_id, int exam_id);
+
     @Transactional
     @Modifying
     @Query(value = "update user_exam set is_done = true, history_score = ?3 where user_id =?1 and exam_id = ?2",

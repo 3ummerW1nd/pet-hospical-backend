@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,8 +23,16 @@ public class LearnController {
 
     @ApiOperation(value = "计算检查价格")
     @RequestMapping(value = "/getTotalPrice", method = RequestMethod.POST)
-    public CommonResponse getTotalPrice(@RequestParam("examination") Integer[] e_ids,
-                                      @RequestParam("treatment") Integer[] t_ids) {
+    public CommonResponse getTotalPrice(@RequestParam("examination") String examination,
+                                      @RequestParam("treatment") String treatment) {
+        List<Integer> t_ids = new ArrayList<>();
+        List<Integer> e_ids = new ArrayList<>();
+        String[] ts = treatment.split(",");
+        String[] es = examination.split(",");
+        for (int i = 0; i < ts.length; i++) {
+            t_ids.add(Integer.parseInt(ts[i]));
+            e_ids.add(Integer.parseInt(es[i]));
+        }
         return learnService.getTotalPrice(t_ids,e_ids);
     }
 

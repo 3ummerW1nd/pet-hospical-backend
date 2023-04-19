@@ -18,7 +18,7 @@ public class LearnService {
     private CheckupRepository checkupRepository;
 
     //计算检查价格
-    public CommonResponse getTotalPrice(Integer[] m_ids, Integer[] c_ids){
+    public CommonResponse getTotalPrice(List<Integer> m_ids, List<Integer> c_ids){
         JSONObject object = new JSONObject();
         double m_price = 0.0;
         for (int m_id : m_ids){

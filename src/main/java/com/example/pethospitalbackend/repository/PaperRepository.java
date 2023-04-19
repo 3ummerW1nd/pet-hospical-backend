@@ -23,4 +23,7 @@ public interface PaperRepository extends JpaRepository<Paper,Integer> {
 
     @Query(value = "select disease_type_id from paper where id =?1", nativeQuery = true)
     String searchDiseaseById(int id);
+
+    @Query(value = "select count(id) from paper where disease_type_id =?1", nativeQuery = true)
+    Integer isExistDisease(int d_id);
 }
