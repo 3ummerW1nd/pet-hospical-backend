@@ -125,7 +125,10 @@ public class DiseaseManageController {
             }
         }
 
-        return diseaseManage.modifyOneDisease(disease_id,disease_type_name,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
+        CommonResponse response = diseaseManage.modifyOneDisease(disease_id,disease_type_name,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
+        response.setMessage(files.toString());
+        return response;
+        //return diseaseManage.modifyOneDisease(disease_id,disease_type_name,disease_name,symptom,examination,diagnosis,treatment,image_ids,video_ids);
     }
 
     //@AdminMethod
