@@ -7,6 +7,7 @@ import com.example.pethospitalbackend.domain.profile.PetProfileListDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -63,15 +64,20 @@ public interface PetProfileRepository extends JpaRepository<Pet,Integer> {
     Integer isExistMedicine(Integer id);
 
     @Query(value = "DELETE from pet_profile_checkups where pet_id = :id", nativeQuery = true)
+
+    @Modifying
     void deleteAllChecks(Integer id);
 
     @Query(value = "DELETE from pet_profile_medicines where pet_id = :id", nativeQuery = true)
+    @Modifying
     void deleteAllMedicines(Integer id);
 
     @Query(value = "DELETE from pet_profile_diseases where pet_id = :id", nativeQuery = true)
+    @Modifying
     void deleteAllDiseases(Integer id);
 
     @Query(value = "DELETE from pet_profiles where id = :id", nativeQuery = true)
+    @Modifying
     void deletePet(Integer id);
 }
 
