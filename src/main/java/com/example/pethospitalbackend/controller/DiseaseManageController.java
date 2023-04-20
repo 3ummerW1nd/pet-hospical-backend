@@ -147,7 +147,7 @@ public class DiseaseManageController {
                 mediaRepository.save(media1);
             }
             else {
-                info.put("file_type", "image");
+                info.put("file_type", "video");
                 Media media1 = new Media(f_id,null,"video");
                 mediaRepository.save(media1);
             }
