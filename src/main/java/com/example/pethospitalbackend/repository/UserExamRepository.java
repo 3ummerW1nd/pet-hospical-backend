@@ -30,7 +30,7 @@ public interface UserExamRepository extends JpaRepository<UserExam, Integer> {
 
     @Transactional
     @Modifying
-    @Query(value = "delete from user_exam where and exam_id = ?1", nativeQuery = true)
+    @Query(value = "delete from user_exam where exam_id = ?1", nativeQuery = true)
     void deleteByExam(int exam_id);
 
 //    @Transactional
