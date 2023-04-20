@@ -28,6 +28,11 @@ public interface UserExamRepository extends JpaRepository<UserExam, Integer> {
             nativeQuery = true)
     void updateScore(int user_id, int exam_id, int score);
 
+    @Transactional
+    @Modifying
+    @Query(value = "delete from user_exam where and exam_id = ?1", nativeQuery = true)
+    void deleteByExam(int exam_id);
+
 //    @Transactional
 //    @Modifying
 //    @Query(value = "insert into user_exam (user_id,exam_id,is_done,history_score) values (?1,?2,true,?3)",

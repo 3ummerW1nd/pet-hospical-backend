@@ -15,4 +15,7 @@ public interface ExamRepository extends JpaRepository<Exam,Integer> {
 
     @Query(value = "select * from exam where authority = ?1", nativeQuery = true)
     List<Exam> searchExamByAuthority(int authority);
+
+    @Query(value = "select count(*) from exam where paper_id =?1", nativeQuery = true)
+    Integer isExistPaper(int p_id);
 }

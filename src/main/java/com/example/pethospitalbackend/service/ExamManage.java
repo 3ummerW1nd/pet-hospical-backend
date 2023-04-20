@@ -5,10 +5,7 @@ import com.example.pethospitalbackend.domain.Paper;
 import com.example.pethospitalbackend.domain.Question;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.output.*;
-import com.example.pethospitalbackend.repository.DiseaseTypeRepository;
-import com.example.pethospitalbackend.repository.ExamRepository;
-import com.example.pethospitalbackend.repository.PaperRepository;
-import com.example.pethospitalbackend.repository.QuestionRepository;
+import com.example.pethospitalbackend.repository.*;
 import com.alibaba.fastjson.JSONObject;
 
 import com.alibaba.fastjson.JSON;
@@ -33,6 +30,8 @@ public class ExamManage {
     private ExamRepository examRepository;
     @Autowired
     private DiseaseTypeRepository diseaseTypeRepository;
+    @Autowired
+    private UserExamRepository userExamRepository;
 
     //添加单个试题
     public CommonResponse addOneQuestion(Integer disease_id, String title, String a, String b, String c, String d, String answer){
@@ -43,6 +42,8 @@ public class ExamManage {
 
     //删除单个试题
     public CommonResponse deleteOneQuestion(Integer question_id){
+        if(paperRepository.isExistQs(question_id.toString()) != 0)
+            return CommonResponse.builder().message("有试卷选用该试题，请先删除相关试卷").code(1).build();
         questionRepository.deleteById(question_id);
         return CommonResponse.builder().message("删除成功").code(0).build();
     }
@@ -165,6 +166,8 @@ public class ExamManage {
 
     //删除单个试卷
     public CommonResponse deleteOnePaper(Integer paper_id){
+        if(examRepository.isExistPaper(paper_id) != 0)
+            return CommonResponse.builder().message("有考试选用该试卷，请先删除相关考试").code(1).build();
         paperRepository.deleteById(paper_id);
         return CommonResponse.builder().message("删除成功").code(0).build();
     }
@@ -289,6 +292,7 @@ public class ExamManage {
     //删除单个考试
     public CommonResponse deleteOneExam(Integer exam_id){
         examRepository.deleteById(exam_id);
+        userExamRepository.deleteByExam(exam_id);
         return CommonResponse.builder().message("删除成功").code(0).build();
     }
 
