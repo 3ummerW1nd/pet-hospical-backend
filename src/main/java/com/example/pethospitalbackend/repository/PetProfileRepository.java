@@ -61,6 +61,18 @@ public interface PetProfileRepository extends JpaRepository<Pet,Integer> {
 
     @Query(value = "SELECT count(*) from pet_profile_medicines where medicine_id = :id", nativeQuery = true)
     Integer isExistMedicine(Integer id);
+
+    @Query(value = "DELETE from pet_profile_checkups where pet_id = :id", nativeQuery = true)
+    void deleteAllChecks(Integer id);
+
+    @Query(value = "DELETE from pet_profile_medicines where pet_id = :id", nativeQuery = true)
+    void deleteAllMedicines(Integer id);
+
+    @Query(value = "DELETE from pet_profile_diseases where pet_id = :id", nativeQuery = true)
+    void deleteAllDiseases(Integer id);
+
+    @Query(value = "DELETE from pet_profiles where id = :id", nativeQuery = true)
+    void deletePet(Integer id);
 }
 
 

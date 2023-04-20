@@ -146,13 +146,18 @@ public class PetProfileService {
 
     @Transactional
     public CommonResponse deletePetProfileByPetId(Integer id) {
-        if (!petProfileRepository.existsById(id)) {
+        Optional<Pet> petOptional = petProfileRepository.findById(id);
+        if (!petOptional.isPresent()) {
             return CommonResponse.builder()
                     .message("宠物档案不存在")
                     .code(1)
                     .build();
         }
-        petProfileRepository.deleteById(id);
+        petProfileRepository.deleteAllChecks(id);
+        petProfileRepository.deleteAllMedicines(id);
+        petProfileRepository.deleteAllDiseases(id);
+        petProfileRepository.deletePet(id);
+        searchUtil.delete(SearchEntityConverter.getSearchableEntity(petOptional.get()));
         return CommonResponse.builder()
                 .code(0)
                 .message("success")
