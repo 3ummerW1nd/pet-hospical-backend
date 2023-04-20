@@ -62,7 +62,7 @@ public class PetProfileController {
 
     @AdminMethod
     @ApiOperation(value = "根据id删除宠物病例")
-    @RequestMapping(value = "/deleteOnePetProfile", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteOnePetProfile", method = RequestMethod.POST)
     public CommonResponse deleteOnePetProfile(@RequestParam("id") Integer id) {
         return petProfileService.deletePetProfileByPetId(id);
     }
