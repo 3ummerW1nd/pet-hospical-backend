@@ -133,6 +133,7 @@ public class SearchEntityConverter {
             .duty(nameAndDuty[1])
             .name(nameAndDuty[0])
             .gender(searchable.getOther())
+            .department(searchable.getIntroduction())
             .build());
         });
         return result;
