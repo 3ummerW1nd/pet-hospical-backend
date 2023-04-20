@@ -42,7 +42,8 @@ public class CheckupService {
                         .build();
             }
             for (Checkup checkup1 : checkupList) {
-                if (checkup1.getName().equals(name) && checkup1.getId() != id) {
+                if (!checkup1.getId().equals(id)) {
+                    // System.out.println(id + " " + checkup1.getId());
                     return CommonResponse.builder()
                             .code(1)
                             .message("名称重复")

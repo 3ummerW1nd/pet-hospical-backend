@@ -34,6 +34,7 @@ public class MedicineService {
     public CommonResponse createOrUpdateMedicine(Integer id, String name, String introduction, Double price, Integer quantity) {
         Medicine medicine = null;
         List<Medicine> medicineList = medicineRepository.findMedicinesByName(name);
+        medicineList.forEach(System.out::println);
         if (id != null) {
             Optional<Medicine> optionalMedicine = medicineRepository.findById(id);
             if (!optionalMedicine.isPresent()) {
@@ -43,7 +44,8 @@ public class MedicineService {
                         .build();
             }
             for (Medicine medicine1 : medicineList) {
-                if (medicine1.getId() != id) {
+                if (!medicine1.getId().equals(id)) {
+                    // System.out.println(id + " " + medicine1.getId());
                     return CommonResponse.builder()
                             .code(1)
                             .message("名称重复，请检查")
