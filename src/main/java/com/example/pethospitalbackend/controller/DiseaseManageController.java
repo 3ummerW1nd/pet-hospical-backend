@@ -141,7 +141,7 @@ public class DiseaseManageController {
             info.put("file_url",f_id);
             String fname = file.getOriginalFilename();
             String type = fname.substring(fname.lastIndexOf('.') + 1).toLowerCase();
-            if (type.equals("jpg") || type.equals("gif") || type.equals("png") || type.equals("bmp") ) {
+            if (type.equals("jpg") || type.equals("gif") || type.equals("png") || type.equals("bmp") || type.equals("jpeg")) {
                 info.put("file_type", "image");
                 Media media1 = new Media(f_id,null,"image");
                 mediaRepository.save(media1);
