@@ -96,7 +96,7 @@ public class SearchEntityConverter {
             jsonObject.put("diseases", jsonArray);
             String other = jsonObject.toJSONString();
             return SearchableEntity.builder()
-                    .id("petProfile" + pet.getId())
+                    .id("petProfile_" + pet.getId())
                     .name(pet.getName() + "_" + pet.getType() + "_" + (pet.getGender() ? "公" : "母"))
                     .introduction(pet.getDescription())
                     .other(other)
