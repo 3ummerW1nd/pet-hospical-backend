@@ -4,6 +4,7 @@ import com.example.pethospitalbackend.domain.Medicine;
 import com.example.pethospitalbackend.domain.page.MedicinePageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.MedicineRepository;
+import com.example.pethospitalbackend.repository.PetProfileRepository;
 import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
 import com.example.pethospitalbackend.search.entity.Result;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
@@ -19,6 +20,10 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 public class MedicineService {
+
+    @Autowired
+    private PetProfileRepository petProfileRepository;
+
     @Autowired
     private MedicineRepository medicineRepository;
 
@@ -28,13 +33,22 @@ public class MedicineService {
     @Transactional
     public CommonResponse createOrUpdateMedicine(Integer id, String name, String introduction, Double price, Integer quantity) {
         Medicine medicine = null;
+        List<Medicine> medicineList = medicineRepository.findMedicinesByName(name);
         if (id != null) {
-            Boolean exist = medicineRepository.existsById(id);
-            if (!exist) {
+            Optional<Medicine> optionalMedicine = medicineRepository.findById(id);
+            if (!optionalMedicine.isPresent()) {
                 return CommonResponse.builder()
                         .code(1)
                         .message("id不存在，请检查")
                         .build();
+            }
+            for (Medicine medicine1 : medicineList) {
+                if (medicine1.getId() != id) {
+                    return CommonResponse.builder()
+                            .code(1)
+                            .message("名称重复，请检查")
+                            .build();
+                }
             }
             medicine = Medicine.builder()
                     .id(id)
@@ -44,6 +58,12 @@ public class MedicineService {
                     .quantity(quantity)
                     .build();
         } else {
+            if (!medicineList.isEmpty()) {
+                return CommonResponse.builder()
+                        .code(1)
+                        .message("名称重复，请检查")
+                        .build();
+            }
             medicine = Medicine.builder()
                     .name(name)
                     .introduction(introduction)
@@ -67,6 +87,12 @@ public class MedicineService {
             return CommonResponse.builder()
                     .code(1)
                     .message("药品不存在，请检查id")
+                    .build();
+        }
+        if (petProfileRepository.isExistMedicine(id) > 0) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("有真实病例引用，不可被删除")
                     .build();
         }
         Medicine medicine = optionalPersonnel.get();

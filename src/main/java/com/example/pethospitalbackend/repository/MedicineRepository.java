@@ -18,4 +18,6 @@ public interface MedicineRepository extends CrudRepository<Medicine, Integer> {
 
     @Query(nativeQuery = true, value = "select price from medicines where id = ?1")
     Double findMedicinePrice(int id);
+
+    List<Medicine> findMedicinesByName(String name);
 }

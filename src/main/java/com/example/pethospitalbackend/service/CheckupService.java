@@ -4,6 +4,7 @@ import com.example.pethospitalbackend.domain.Checkup;
 import com.example.pethospitalbackend.domain.page.CheckupPageInfo;
 import com.example.pethospitalbackend.domain.response.CommonResponse;
 import com.example.pethospitalbackend.repository.CheckupRepository;
+import com.example.pethospitalbackend.repository.PetProfileRepository;
 import com.example.pethospitalbackend.search.converter.SearchEntityConverter;
 import com.example.pethospitalbackend.search.entity.Result;
 import com.example.pethospitalbackend.search.entity.SearchableEntity;
@@ -25,16 +26,28 @@ public class CheckupService {
     @Autowired
     private SearchUtil searchUtil;
 
+    @Autowired
+    private PetProfileRepository petProfileRepository;
+
     @Transactional
     public CommonResponse createOrUpdateCheckup(Integer id, String name, String introduction, Double price) {
         Checkup checkup = null;
+        List<Checkup> checkupList = checkupRepository.findCheckupsByName(name);
         if (id != null) {
-            Boolean exist = checkupRepository.existsById(id);
-            if (!exist) {
+            Optional<Checkup> optionalCheckup = checkupRepository.findById(id);
+            if (!optionalCheckup.isPresent()) {
                 return CommonResponse.builder()
                         .code(1)
                         .message("id不存在，请检查")
                         .build();
+            }
+            for (Checkup checkup1 : checkupList) {
+                if (checkup1.getName().equals(name) && checkup1.getId() != id) {
+                    return CommonResponse.builder()
+                            .code(1)
+                            .message("名称重复")
+                            .build();
+                }
             }
             checkup = Checkup.builder()
                     .id(id)
@@ -43,6 +56,12 @@ public class CheckupService {
                     .price(price)
                     .build();
         } else {
+            if (!checkupList.isEmpty()) {
+                return CommonResponse.builder()
+                        .code(1)
+                        .message("名称重复")
+                        .build();
+            }
             checkup = Checkup.builder()
                     .name(name)
                     .introduction(introduction)
@@ -65,6 +84,12 @@ public class CheckupService {
             return CommonResponse.builder()
                     .code(1)
                     .message("检查不存在，请检查id")
+                    .build();
+        }
+        if (petProfileRepository.isExistCheckup(id) > 0) {
+            return CommonResponse.builder()
+                    .code(1)
+                    .message("有真实病例引用，不可被删除")
                     .build();
         }
         Checkup checkup = optionalPersonnel.get();
